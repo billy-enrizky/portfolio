@@ -669,6 +669,13 @@ h3.my-profession
     width: 100%;
     display: block;
 }
+.section#portfolio p,
+.section#portfolio h3,
+.section#portfolio ul,
+.section#portfolio li
+{
+    color: var(--text-black-900);
+}
 /* contact */
 .contact-title
 {
