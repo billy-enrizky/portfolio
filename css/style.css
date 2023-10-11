@@ -672,7 +672,11 @@ h3.my-profession
 .section#portfolio p,
 .section#portfolio h3,
 .section#portfolio ul,
-.section#portfolio li
+.section#portfolio li,
+.section li,
+.section p,
+.section#about li,
+.section#about p,
 {
     color: var(--text-black-900);
 }
