@@ -90,3 +90,5 @@ const nav = document.querySelector(".nav"),
                     allSection[i].classList.toggle("open");
                 }
             }
+
+const contactForm = document.getElementById()
