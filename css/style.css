@@ -646,7 +646,10 @@ h3.my-profession
     max-width: 100%;
     margin-bottom: 40px;
 }
-.portfolio .portfolio-heading h2
+.portfolio .portfolio-heading h2,
+.portfolio-item p,
+.portfolio .portfolio-item-inner .p,
+.portfolio .portfolio-item-inner .h3
 {
     color: var(--text-black-900);
     font-weight: 500;
@@ -663,11 +666,20 @@ h3.my-profession
     border-radius: 10px;
     overflow: hidden;
     cursor: pointer;
+    color: var(--text-black-900);
+    font-weight: 500;
 }
 .portfolio .portfolio-item-inner .portfolio-img img
 {
     width: 100%;
     display: block;
+}
+.section#portfolio p,
+.section#portfolio h3,
+.section#portfolio ul,
+.section#portfolio li
+{
+    color: var(--text-black-900);
 }
 /* contact */
 .contact-title
