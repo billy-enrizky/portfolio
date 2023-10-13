@@ -677,7 +677,14 @@ h3.my-profession
 .section#portfolio p,
 .section#portfolio h3,
 .section#portfolio ul,
+<<<<<<< HEAD
 .section#portfolio li
+=======
+.section#portfolio li,
+.section#about li,
+.section#about p,
+.section#about ul
+>>>>>>> 189dbee51efcaa39bdff1f6b5b8063c8d80ff56f
 {
     color: var(--text-black-900);
 }
