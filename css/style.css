@@ -660,6 +660,17 @@ h3.my-profession
     max-width: 33.33%;
     margin-bottom: 30px;
 }
+.section#portfolio p,
+.section#portfolio h3,
+.section#portfolio ul,
+.section#portfolio li,
+.section#portfolio li,
+.section#about li,
+.section#about p,
+.section#about ul
+{
+    color: var(--text-black-900);
+}
 .portfolio .portfolio-item-inner
 {
     border: 6px solid var(--bg-black-100);
