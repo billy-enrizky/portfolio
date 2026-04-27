@@ -731,6 +731,10 @@ h3.my-profession
     color: var(--text-black-700);
     font-weight: 400;
 }
+.contact form
+{
+    width: 100%;
+}
 .contact .contact-form
 {
     flex: 0 0 100%;
