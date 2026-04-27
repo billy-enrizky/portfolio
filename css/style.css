@@ -19,7 +19,7 @@ body
 {
     line-height: 1.5;
     font-size: 16px;
-    font-family: 'Poppins' sans-serif;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 *
 {
@@ -193,7 +193,7 @@ ul
 }
 .aside .logo a span
 {
-    font-family: 'Clicker Script', cursive;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 40px;
 }
 .aside .logo a::before
@@ -321,7 +321,7 @@ h3.hello
 }
 h3.hello span
 {
-    font-family: 'Clicker Script' , cursive;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 30px;
     font-weight: 700;
     color: var(--skin-color);
