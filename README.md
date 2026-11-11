@@ -1,46 +1,53 @@
-# Muhammad Enrizky Brillian's Website
+# Muhammad Enrizky Brillian: Software and AI Infrastructure Portfolio
 
-Visit the website [here](https://billy-enrizky.github.io/portfolio/): https://billy-enrizky.github.io/portfolio/
+A static portfolio for software engineering, AI infrastructure, model serving, and data platform roles.
 
-This is the README file for Muhammad Enrizky Brillian's personal website project. Below, you will find information about the project structure, the purpose of the website, and its features.
+## Positioning
 
-## Project Structure
-The project consists of the following files and folders:
+I build the systems between AI research and production: agent runtimes, browser infrastructure, applied ML, and the data platforms around them.
 
-- `index.html`: The main HTML file for the website.
-- `css/`: A folder containing CSS files for styling the website.
-- `images/`: A folder containing images used on the website.
-- `js/`: A folder containing JavaScript files for website functionality.
-- `README.md`: This README file providing project information.
+## Sections
 
-## Purpose
-Muhammad Enrizky Brillian's website is designed to serve as a professional online portfolio and resume. It provides visitors with information about Muhammad Enrizky Brillian, his background, skills, experience, and projects. The website's purpose is to showcase Muhammad's qualifications as a Data Scientist, allowing potential employers or collaborators to learn more about his expertise and accomplishments.
+- Selected work: OpenBrowser, Context Atlas, the MTP benchmark, and enterprise AI infrastructure.
+- Research: two browser-agent papers with exact results.
+- Experience: IBM and Sanofi, with business impact next to the technical work.
+- Systems lab: Baton and Muse Spark kernel work.
+- About and contact.
 
-## Features
-The website includes the following sections and features:
+## Evidence
 
-- **Home**: Provides an introduction to Muhammad Enrizky Brillian, his name, profession, and a call to action to download his resume.
+- OpenBrowser: 53,327 PyPI downloads from Pepy on November 10, 2026, 279 GitHub stars, 52 releases, and 7,007 test functions.
+- Model serving: 10,410.60 tok/s at N=512, $0.77 per million tokens at N=512, and 172x lower cost than N=1.
+- MTP benchmark: 144/144 runs, 8.9x to 26.8x vLLM versus Transformers, and 2.06x on A10 code prompts.
+- Enterprise delivery: 1,400,883-row BigQuery fact table, 984 files to pre-production in 24 weeks, and January to September control totals within $0.11.
 
-- **About Me**: Contains information about Muhammad's background, including his contact details, educational background, skills, and a "Hire Me" button.
+Each public metric states its scope. Projected metrics are not presented as achieved.
 
-- **Services**: Highlights the services Muhammad offers, such as data analysis, financial analysis, data visualization, machine learning, and business analysis.
+## Local Preview
 
-- **Portfolio**: Showcases Muhammad's recent projects. However, project descriptions need to be updated with detailed content.
+```bash
+uv run python -m http.server 8000
+```
 
-- **Contact Me**: Offers multiple ways to contact Muhammad, including his phone number, office location, email address, and a contact form.
+Open `http://127.0.0.1:8000/`.
 
-- **Style Switcher**: A style switcher allows users to change the website's theme color. This can be customized further.
+## Checks
 
-## How to Use
-To use this website template, you can follow these steps:
+```bash
+npx html-validate index.html
+/Users/billy/.agents/skills/impeccable/scripts/impeccable detect --json index.html css/style.css js/script.js
+```
 
-1. Clone or download the project files to your local machine.
-2. Modify the content, including text, images, and links, to reflect your own information.
-3. Update the project descriptions in the "Portfolio" section to showcase your own work.
-4. Customize the style switcher if needed by modifying the CSS files.
-5. Host the website on a web server to make it accessible to others.
+The site loads local Satoshi and JetBrains Mono files. It has no build step. GitHub Pages serves `main` at https://billy-enrizky.github.io/portfolio/.
 
-## Author
-- Muhammad Enrizky Brillian
+## Deploy
 
-This website template is open for personal and professional use, subject to proper attribution to Muhammad Enrizky Brillian. Enjoy using this template for your personal website or portfolio!
+```bash
+git add .
+git commit -m "Redesign portfolio around systems evidence"
+git push origin main
+```
+
+## License
+
+Content and personal assets belong to Muhammad Enrizky Brillian. See `LICENSE` for the template license.
