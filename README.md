@@ -8,11 +8,14 @@ I build the systems between AI research and production: agent runtimes, browser 
 
 ## Sections
 
-- Selected work: OpenBrowser, Context Atlas, the MTP benchmark, and enterprise AI infrastructure.
-- Research: two browser-agent papers with exact results.
+- Summary: software engineering focus and selected proof points.
+- Technical skills: model serving, data, backend, browser, cloud, and core concepts.
 - Experience: IBM and Sanofi, with business impact next to the technical work.
+- Education: University of Toronto and Georgia Tech, with GPA, coursework, and awards.
+- Research: STAD68 and STAD80 course papers from 2026, with exact results.
+- Selected work: OpenBrowser, Context Atlas, the MTP benchmark, and enterprise AI infrastructure.
 - Systems lab: Baton and Muse Spark kernel work.
-- About and contact.
+- Contact.
 
 ## Evidence
 
@@ -35,7 +38,7 @@ Open `http://127.0.0.1:8000/`.
 
 ```bash
 npx html-validate index.html
-/Users/billy/.agents/skills/impeccable/scripts/impeccable detect --json index.html css/style.css js/script.js
+"$HOME/.agents/skills/impeccable/scripts/impeccable" detect --json index.html css/style.css js/script.js
 ```
 
 The site loads local Satoshi and JetBrains Mono files. It has no build step. GitHub Pages serves `main` at https://billy-enrizky.github.io/portfolio/.

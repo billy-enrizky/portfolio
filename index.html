@@ -53,10 +53,11 @@
         Menu
       </button>
       <ul class="nav-links" id="nav-links">
-        <li><a href="#work">Work</a></li>
-        <li><a href="#research">Research</a></li>
+        <li><a href="#summary">Summary</a></li>
+        <li><a href="#skills">Technical skills</a></li>
         <li><a href="#experience">Experience</a></li>
-        <li><a href="#about">About</a></li>
+        <li><a href="#education">Education</a></li>
+        <li><a href="#research">Research</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
       <a class="nav-cta" href="assets/Muhammad-Enrizky-Brillian-Software-Engineer-CV.pdf">Download CV</a>
@@ -64,61 +65,170 @@
   </header>
 
   <main id="main">
-    <section class="hero" id="top">
-      <div class="hero-copy" data-reveal>
-        <h1>I build the systems between AI research and production.</h1>
-        <p class="lede">Model serving, browser automation, data platforms, and the tooling that keeps them reliable.</p>
-        <div class="hero-actions">
-          <a class="button button-primary" href="#work">View selected work</a>
-          <a class="button button-secondary" href="assets/Muhammad-Enrizky-Brillian-Software-Engineer-CV.pdf">Download CV</a>
+    <section id="summary" aria-label="Summary">
+      <div class="hero" id="top">
+        <div class="hero-copy" data-reveal>
+          <h1>I build the systems between AI research and production.</h1>
+          <p class="lede">Software engineer in IBM’s AI and Automation Practice. I build model serving, browser automation, data platforms, and the tooling that keeps them reliable.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#work">View selected work</a>
+            <a class="button button-secondary" href="assets/Muhammad-Enrizky-Brillian-Software-Engineer-CV.pdf">Download CV</a>
+          </div>
+        </div>
+        <div class="hero-art" data-reveal role="img" aria-label="System map from models to serving, agents, and data">
+          <div class="system-map">
+            <div class="system-layer">
+              <span>Models</span>
+              <strong>Gemma 4, Qwen3, ReFusion</strong>
+            </div>
+            <div class="system-line" aria-hidden="true"></div>
+            <div class="system-layer">
+              <span>Serving</span>
+              <strong>vLLM, FP8, MTP, tensor parallel</strong>
+            </div>
+            <div class="system-line" aria-hidden="true"></div>
+            <div class="system-layer">
+              <span>Agents</span>
+              <strong>OpenBrowser, MCP, raw CDP</strong>
+            </div>
+            <div class="system-line" aria-hidden="true"></div>
+            <div class="system-layer">
+              <span>Data</span>
+              <strong>BigQuery, SAP, partitioned facts</strong>
+            </div>
+          </div>
+          <p class="hero-note">The work sits where inference, tooling, and data meet.</p>
         </div>
       </div>
-      <div class="hero-art" data-reveal role="img" aria-label="System map from models to serving, agents, and data">
-        <div class="system-map">
-          <div class="system-layer">
-            <span>Models</span>
-            <strong>Gemma 4, Qwen3, ReFusion</strong>
-          </div>
-          <div class="system-line" aria-hidden="true"></div>
-          <div class="system-layer">
-            <span>Serving</span>
-            <strong>vLLM, FP8, MTP, tensor parallel</strong>
-          </div>
-          <div class="system-line" aria-hidden="true"></div>
-          <div class="system-layer">
-            <span>Agents</span>
-            <strong>OpenBrowser, MCP, raw CDP</strong>
-          </div>
-          <div class="system-line" aria-hidden="true"></div>
-          <div class="system-layer">
-            <span>Data</span>
-            <strong>BigQuery, SAP, partitioned facts</strong>
-          </div>
+
+      <div class="proof" role="group" aria-label="Selected proof points">
+        <div class="proof-item">
+          <strong>53,327</strong>
+          <span>PyPI downloads</span>
+          <small>Pepy, Nov 10 2026</small>
         </div>
-        <p class="hero-note">The work sits where inference, tooling, and data meet.</p>
+        <div class="proof-item">
+          <strong>279</strong>
+          <span>GitHub stars</span>
+          <small>OpenBrowser repository</small>
+        </div>
+        <div class="proof-item">
+          <strong>$0.77</strong>
+          <span>per million tokens</span>
+          <small>N=512, eight A100 GPUs</small>
+        </div>
+        <div class="proof-item">
+          <strong>984</strong>
+          <span>files to pre-production</span>
+          <small>Delivered in 24 weeks</small>
+        </div>
       </div>
     </section>
 
-    <section class="proof" aria-label="Selected proof points">
-      <div class="proof-item">
-        <strong>53,327</strong>
-        <span>PyPI downloads</span>
-        <small>Pepy, Nov 10 2026</small>
+    <section class="section" id="skills">
+      <div class="section-head" data-reveal>
+        <h2>Technical skills</h2>
+        <p>Model serving, data platforms, backend systems, browser automation, and cloud infrastructure.</p>
       </div>
-      <div class="proof-item">
-        <strong>279</strong>
-        <span>GitHub stars</span>
-        <small>OpenBrowser repository</small>
+      <div class="capability-grid" data-reveal>
+        <div><h3>Model serving</h3><p>vLLM, SageMaker, FP8, MTP, tensor parallel, KV cache, SSE, structured outputs</p></div>
+        <div><h3>Data</h3><p>BigQuery, Snowflake, Spark and PySpark, ETL, partitioning, clustering, data quality</p></div>
+        <div><h3>Backend</h3><p>Python, TypeScript, Flask, FastAPI, Node.js, REST, MCP, Pydantic, Zod, OOP</p></div>
+        <div><h3>Browser</h3><p>Raw CDP, Chrome Manifest V3, ONNX Runtime Web, WebGPU, WASM</p></div>
+        <div><h3>Cloud</h3><p>AWS, GCP, Terraform, Docker, VPC, IAM, Cognito, WAF, CI/CD</p></div>
+        <div><h3>Core</h3><p>Algorithms, data structures, concurrency, reliability, observability, testing</p></div>
       </div>
-      <div class="proof-item">
-        <strong>$0.77</strong>
-        <span>per million tokens</span>
-        <small>N=512, eight A100 GPUs</small>
+    </section>
+
+    <section class="section" id="experience">
+      <div class="section-head" data-reveal>
+        <h2>Experience</h2>
+        <p>Delivery roles with the measured outcome next to the technical work.</p>
       </div>
-      <div class="proof-item">
-        <strong>984</strong>
-        <span>files to pre-production</span>
-        <small>Delivered in 24 weeks</small>
+      <div class="ledger">
+        <article class="ledger-row" data-reveal>
+          <div class="ledger-meta">
+            <h3>Software Engineer, AI and Automation Practice</h3>
+            <p>IBM, Toronto</p>
+            <p class="ledger-date">May 2025 to present</p>
+          </div>
+          <ul class="ledger-list">
+            <li><strong>Self-hosted inference.</strong> Deployed Gemma 4 31B on four A10G GPUs with vLLM 0.32.0, FP8 weights, TP=4, and MTP. Production acceptance length reached 4.56. <em>Impact: kept regulated data in the VPC and removed the managed-model dependency.</em></li>
+            <li><strong>Capacity benchmark.</strong> Reached 10,410.60 tok/s at N=512 on eight A100 GPUs and cut cost from $132.56 to $0.77 per million tokens. <em>Impact: 172x lower token cost at high concurrency.</em></li>
+            <li><strong>Finance data platform.</strong> Published a 1,400,883-row BigQuery fact table with staging, schema validation, duplicate detection, a run lock, and atomic publication. <em>Impact: manual month-end pulls removed, >50% Phase 1 analyst efficiency, and January to September control totals within $0.11.</em></li>
+            <li><strong>Document platform.</strong> Delivered a pre-production AWS system for 984 files in 24 weeks with Flask, Vue 3, ECS Fargate, S3, VPC, Cognito, WAF, and Terraform. <em>Impact: pre-production readiness across a 984-file corpus.</em></li>
+          </ul>
+        </article>
+        <article class="ledger-row" data-reveal>
+          <div class="ledger-meta">
+            <h3>Data Scientist</h3>
+            <p>Sanofi, Toronto</p>
+            <p class="ledger-date">January 2024 to August 2025</p>
+          </div>
+          <ul class="ledger-list">
+            <li><strong>Manufacturing ETL.</strong> Built Python and SQL pipelines for vaccine manufacturing records with quality-control checkpoints across production lines. <em>Impact: production data became available for quality analytics with less manual preparation.</em></li>
+            <li><strong>Self-service reporting.</strong> Built a two-click Snowflake and Streamlit workflow. <em>Impact: manual reporting moved from days to seconds and team productivity improved 40%.</em></li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section about" id="education">
+      <div class="about-portrait" data-reveal>
+        <img src="images/portrait-640.jpg" srcset="images/portrait-640.jpg 640w, images/portrait-1200.jpg 1200w" sizes="(max-width: 760px) 80vw, 360px" width="640" height="640" alt="Portrait of Muhammad Enrizky Brillian">
+      </div>
+      <div class="about-copy" id="about" data-reveal>
+        <h2>Education</h2>
+        <article class="education-entry">
+          <div class="ledger-meta">
+            <h3>University of Toronto</h3>
+            <p class="ledger-date">June 2026</p>
+          </div>
+          <p>Honours Bachelor of Science with High Distinction.</p>
+          <p>Data Science and Machine Learning Specialist, Computer Science Major, Economics Minor. <strong>CGPA 3.87/4.00.</strong></p>
+          <p><strong>Relevant coursework:</strong> Algorithms, Data Structures, Software Design, Software Engineering, Computer Organization.</p>
+          <p><strong>Awards:</strong> Dean’s List (2023–2025), T-CAIREM Research Award, and Advanced Indonesian Scholarship.</p>
+        </article>
+        <article class="education-entry">
+          <div class="ledger-meta">
+            <h3>Georgia Institute of Technology</h3>
+            <p class="ledger-date">2026 to present</p>
+          </div>
+          <p>Master of Science in Computer Science, Artificial Intelligence Specialization.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="research">
+      <div class="section-head" data-reveal>
+        <h2>Research</h2>
+        <p>Two browser-agent papers, plus the evaluation work behind them. Both are course papers from 2026.</p>
+      </div>
+      <div class="research-grid">
+        <article class="research-item" data-reveal>
+          <p class="research-status">STAD68 final paper, 2026</p>
+          <h3><a href="https://www.researchgate.net/publication/403258687_Browser-in-the-Loop_Reinforcement_Fine-Tuning_LLM_Agents_for_Web_Form_Filling">Browser-in-the-Loop: Reinforcement Fine-Tuning LLM Agents for Web Form Filling</a></h3>
+          <p>QLoRA-tuned Qwen3-8B on 992 demonstrations, then ran online GRPO against live Chromium forms. The reward combines submission, field accuracy, and execution completeness.</p>
+          <dl class="result-list">
+            <div><dt>Validation reward</dt><dd>0.614 to 0.670, +9.1%, p=0.007</dd></div>
+            <div><dt>Test reward</dt><dd>0.635 to 0.669, +5.4%</dd></div>
+            <div><dt>Scale</dt><dd>1,240 FormFactory tasks</dd></div>
+          </dl>
+          <p class="impact"><strong>Impact:</strong> fewer failed form workflows and less manual recovery.</p>
+          <a class="text-link" href="https://www.researchgate.net/publication/403258687_Browser-in-the-Loop_Reinforcement_Fine-Tuning_LLM_Agents_for_Web_Form_Filling">Read the paper</a>
+        </article>
+        <article class="research-item" data-reveal>
+          <p class="research-status">STAD80 paper, 2026</p>
+          <h3><a href="https://www.researchgate.net/publication/403258870_Concentrate_or_Collapse_When_Reinforcement_Learning_Meets_Diffusion_Language_Models_for_Web_Planning">Concentrate or Collapse: When Reinforcement Learning Meets Diffusion Language Models for Web Planning</a></h3>
+          <p>Evaluated Qwen3-8B, ReFusion-8B, and FS-DFM-1.3B with browser-native Pass@1. The study compares greedy success, parser validity, and full execution on 1,240 FormFactory tasks.</p>
+          <dl class="result-list">
+            <div><dt>Best diffusion result</dt><dd>ReFusion MDPO, 11/124, 8.9%</dd></div>
+            <div><dt>FS-DFM greedy</dt><dd>0/124, 0.0%</dd></div>
+            <div><dt>FS-DFM stochastic</dt><dd>76.6% to 87.9% parser validity</dd></div>
+          </dl>
+          <p class="impact"><strong>Impact:</strong> exposes policies that look competent under shaped reward but fail exact browser execution, reducing deployment risk.</p>
+          <a class="text-link" href="https://www.researchgate.net/publication/403258870_Concentrate_or_Collapse_When_Reinforcement_Learning_Meets_Diffusion_Language_Models_for_Web_Planning">Read the paper</a>
+        </article>
       </div>
     </section>
 
@@ -268,72 +378,6 @@ openbrowser-ai --mcp</code></pre>
       </article>
     </section>
 
-    <section class="section" id="research">
-      <div class="section-head" data-reveal>
-        <h2>Research</h2>
-        <p>Two browser-agent papers, plus the evaluation work behind them. Both are course papers from 2026.</p>
-      </div>
-      <div class="research-grid">
-        <article class="research-item" data-reveal>
-          <p class="research-status">STAD68 final paper, 2026</p>
-          <h3><a href="https://www.researchgate.net/publication/403258687_Browser-in-the-Loop_Reinforcement_Fine-Tuning_LLM_Agents_for_Web_Form_Filling">Browser-in-the-Loop: Reinforcement Fine-Tuning LLM Agents for Web Form Filling</a></h3>
-          <p>QLoRA-tuned Qwen3-8B on 992 demonstrations, then ran online GRPO against live Chromium forms. The reward combines submission, field accuracy, and execution completeness.</p>
-          <dl class="result-list">
-            <div><dt>Validation reward</dt><dd>0.614 to 0.670, +9.1%, p=0.007</dd></div>
-            <div><dt>Test reward</dt><dd>0.635 to 0.669, +5.4%</dd></div>
-            <div><dt>Scale</dt><dd>1,240 FormFactory tasks</dd></div>
-          </dl>
-          <p class="impact"><strong>Impact:</strong> fewer failed form workflows and less manual recovery.</p>
-          <a class="text-link" href="https://www.researchgate.net/publication/403258687_Browser-in-the-Loop_Reinforcement_Fine-Tuning_LLM_Agents_for_Web_Form_Filling">Read the paper</a>
-        </article>
-        <article class="research-item" data-reveal>
-          <p class="research-status">STAD80 paper, 2026</p>
-          <h3><a href="https://www.researchgate.net/publication/403258870_Concentrate_or_Collapse_When_Reinforcement_Learning_Meets_Diffusion_Language_Models_for_Web_Planning">Concentrate or Collapse: When Reinforcement Learning Meets Diffusion Language Models for Web Planning</a></h3>
-          <p>Evaluated Qwen3-8B, ReFusion-8B, and FS-DFM-1.3B with browser-native Pass@1. The study compares greedy success, parser validity, and full execution on 1,240 FormFactory tasks.</p>
-          <dl class="result-list">
-            <div><dt>Best diffusion result</dt><dd>ReFusion MDPO, 11/124, 8.9%</dd></div>
-            <div><dt>FS-DFM greedy</dt><dd>0/124, 0.0%</dd></div>
-            <div><dt>FS-DFM stochastic</dt><dd>76.6% to 87.9% parser validity</dd></div>
-          </dl>
-          <p class="impact"><strong>Impact:</strong> exposes policies that look competent under shaped reward but fail exact browser execution, reducing deployment risk.</p>
-          <a class="text-link" href="https://www.researchgate.net/publication/403258870_Concentrate_or_Collapse_When_Reinforcement_Learning_Meets_Diffusion_Language_Models_for_Web_Planning">Read the paper</a>
-        </article>
-      </div>
-    </section>
-
-    <section class="section" id="experience">
-      <div class="section-head" data-reveal>
-        <h2>Experience</h2>
-        <p>Delivery roles with the measured outcome next to the technical work.</p>
-      </div>
-      <div class="ledger">
-        <article class="ledger-row" data-reveal>
-          <div class="ledger-meta">
-            <h3>Software Engineer, AI and Automation Practice</h3>
-            <p>IBM, Toronto</p>
-            <p class="ledger-date">May 2025 to present</p>
-          </div>
-          <ul class="ledger-list">
-            <li><strong>Self-hosted inference.</strong> Deployed Gemma 4 31B on four A10G GPUs with vLLM 0.32.0, FP8 weights, TP=4, and MTP. Production acceptance length reached 4.56. <em>Impact: kept regulated data in the VPC and removed the managed-model dependency.</em></li>
-            <li><strong>Capacity benchmark.</strong> Reached 10,410.60 tok/s at N=512 on eight A100 GPUs and cut cost from $132.56 to $0.77 per million tokens. <em>Impact: 172x lower token cost at high concurrency.</em></li>
-            <li><strong>Finance data platform.</strong> Published a 1,400,883-row BigQuery fact table with staging, schema validation, duplicate detection, a run lock, and atomic publication. <em>Impact: manual month-end pulls removed, >50% Phase 1 analyst efficiency, and January to September control totals within $0.11.</em></li>
-            <li><strong>Document platform.</strong> Delivered a pre-production AWS system for 984 files in 24 weeks with Flask, Vue 3, ECS Fargate, S3, VPC, Cognito, WAF, and Terraform. <em>Impact: pre-production readiness across a 984-file corpus.</em></li>
-          </ul>
-        </article>
-        <article class="ledger-row" data-reveal>
-          <div class="ledger-meta">
-            <h3>Data Scientist</h3>
-            <p>Sanofi, Toronto</p>
-            <p class="ledger-date">January 2024 to August 2025</p>
-          </div>
-          <ul class="ledger-list">
-            <li><strong>Manufacturing ETL.</strong> Built Python and SQL pipelines for vaccine manufacturing records with quality-control checkpoints across production lines. <em>Impact: production data became available for quality analytics with less manual preparation.</em></li>
-            <li><strong>Self-service reporting.</strong> Built a two-click Snowflake and Streamlit workflow. <em>Impact: manual reporting moved from days to seconds and team productivity improved 40%.</em></li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
     <section class="section" id="systems">
       <div class="section-head" data-reveal>
         <h2>Systems lab</h2>
@@ -352,26 +396,6 @@ openbrowser-ai --mcp</code></pre>
           <p>Optimized dense projection, MoE W4A16, attention decode, and decoder kernels for one H200 GPU.</p>
           <p class="impact"><strong>Impact:</strong> 1.53x to 1.96x kernel speedups, lowering dense and MoE inference time.</p>
         </article>
-      </div>
-    </section>
-
-    <section class="section about" id="about">
-      <div class="about-portrait" data-reveal>
-        <img src="images/portrait-640.jpg" srcset="images/portrait-640.jpg 640w, images/portrait-1200.jpg 1200w" sizes="(max-width: 760px) 80vw, 360px" width="640" height="640" alt="Portrait of Muhammad Enrizky Brillian">
-      </div>
-      <div class="about-copy" data-reveal>
-        <h2>About</h2>
-        <p>I build the systems between AI research and production: inference, browser automation, data platforms, and the tooling that makes them reliable. I care about measured outcomes, clear interfaces, and software that operators can trust.</p>
-        <p>I am in IBM's AI and Automation Practice and hold an Honours BSc in Data Science and Machine Learning from the University of Toronto. I am also pursuing an MSc in Computer Science at Georgia Tech.</p>
-        <p><strong>Awards:</strong> Dean’s List (2023–2025), T-CAIREM Research Award, and Advanced Indonesian Scholarship.</p>
-        <div class="capability-grid">
-          <div><h3>Model serving</h3><p>vLLM, SageMaker, FP8, MTP, tensor parallel, KV cache, SSE, structured outputs</p></div>
-          <div><h3>Data</h3><p>BigQuery, Snowflake, Spark and PySpark, ETL, partitioning, clustering, data quality</p></div>
-          <div><h3>Backend</h3><p>Python, TypeScript, Flask, FastAPI, Node.js, REST, MCP, Pydantic, Zod, OOP</p></div>
-          <div><h3>Browser</h3><p>Raw CDP, Chrome Manifest V3, ONNX Runtime Web, WebGPU, WASM</p></div>
-          <div><h3>Cloud</h3><p>AWS, GCP, Terraform, Docker, VPC, IAM, Cognito, WAF, CI/CD</p></div>
-          <div><h3>Core</h3><p>Algorithms, data structures, concurrency, reliability, observability, testing</p></div>
-        </div>
       </div>
     </section>
 
