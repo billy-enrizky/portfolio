@@ -178,6 +178,9 @@ openbrowser-ai --mcp</code></pre>
             <li>72 Python and 96 JavaScript tests cover routing, fallback, and packaging.</li>
           </ul>
           <p class="impact"><strong>Impact:</strong> private page search by default, lower cloud inference for routine queries, and auditable answers tied to visible source text.</p>
+          <div class="work-links">
+            <a href="https://chromewebstore.google.com/detail/context-atlas-find-what-m/plehanpnecnjdbkcmbhgphhglkkkgfhd?authuser=1&amp;hl=en&amp;pli=1">Chrome Web Store</a>
+          </div>
         </div>
         <div class="work-visual">
           <section class="atlas-demo" aria-label="Context Atlas search demo">
@@ -273,7 +276,7 @@ openbrowser-ai --mcp</code></pre>
       <div class="research-grid">
         <article class="research-item" data-reveal>
           <p class="research-status">STAD68 final paper, 2026</p>
-          <h3>Browser-in-the-Loop: Reinforcement Fine-Tuning LLM Agents for Web Form Filling</h3>
+          <h3><a href="https://www.researchgate.net/publication/403258687_Browser-in-the-Loop_Reinforcement_Fine-Tuning_LLM_Agents_for_Web_Form_Filling">Browser-in-the-Loop: Reinforcement Fine-Tuning LLM Agents for Web Form Filling</a></h3>
           <p>QLoRA-tuned Qwen3-8B on 992 demonstrations, then ran online GRPO against live Chromium forms. The reward combines submission, field accuracy, and execution completeness.</p>
           <dl class="result-list">
             <div><dt>Validation reward</dt><dd>0.614 to 0.670, +9.1%, p=0.007</dd></div>
@@ -281,11 +284,11 @@ openbrowser-ai --mcp</code></pre>
             <div><dt>Scale</dt><dd>1,240 FormFactory tasks</dd></div>
           </dl>
           <p class="impact"><strong>Impact:</strong> fewer failed form workflows and less manual recovery.</p>
-          <a class="text-link" href="assets/papers/browser-in-the-loop-stad68.pdf">Read the paper</a>
+          <a class="text-link" href="https://www.researchgate.net/publication/403258687_Browser-in-the-Loop_Reinforcement_Fine-Tuning_LLM_Agents_for_Web_Form_Filling">Read the paper</a>
         </article>
         <article class="research-item" data-reveal>
           <p class="research-status">STAI-X 2026 submission</p>
-          <h3>Concentrate or Collapse: Exact Browser Success Reveals Concentration Failure in Diffusion Web Agents</h3>
+          <h3><a href="https://www.researchgate.net/publication/403258870_Concentrate_or_Collapse_When_Reinforcement_Learning_Meets_Diffusion_Language_Models_for_Web_Planning">Concentrate or Collapse: When Reinforcement Learning Meets Diffusion Language Models for Web Planning</a></h3>
           <p>Evaluated Qwen3-8B, ReFusion-8B, and FS-DFM-1.3B with browser-native Pass@1. The study compares greedy success, parser validity, and full execution on 1,240 FormFactory tasks.</p>
           <dl class="result-list">
             <div><dt>Best diffusion result</dt><dd>ReFusion MDPO, 11/124, 8.9%</dd></div>
@@ -293,7 +296,7 @@ openbrowser-ai --mcp</code></pre>
             <div><dt>FS-DFM stochastic</dt><dd>76.6% to 87.9% parser validity</dd></div>
           </dl>
           <p class="impact"><strong>Impact:</strong> exposes policies that look competent under shaped reward but fail exact browser execution, reducing deployment risk.</p>
-          <a class="text-link" href="assets/papers/concentrate-or-collapse-staix-2026.pdf">Read the submission</a>
+          <a class="text-link" href="https://www.researchgate.net/publication/403258870_Concentrate_or_Collapse_When_Reinforcement_Learning_Meets_Diffusion_Language_Models_for_Web_Planning">Read the submission</a>
         </article>
       </div>
     </section>
@@ -360,6 +363,7 @@ openbrowser-ai --mcp</code></pre>
         <h2>About</h2>
         <p>I build the systems between AI research and production: inference, browser automation, data platforms, and the tooling that makes them reliable. I care about measured outcomes, clear interfaces, and software that operators can trust.</p>
         <p>I am in IBM's AI and Automation Practice and hold an Honours BSc in Data Science and Machine Learning from the University of Toronto. I am also pursuing an MSc in Computer Science at Georgia Tech.</p>
+        <p><strong>Awards:</strong> Dean’s List (2023–2025), T-CAIREM Research Award, and Advanced Indonesian Scholarship.</p>
         <div class="capability-grid">
           <div><h3>Model serving</h3><p>vLLM, SageMaker, FP8, MTP, tensor parallel, KV cache, SSE, structured outputs</p></div>
           <div><h3>Data</h3><p>BigQuery, Snowflake, Spark and PySpark, ETL, partitioning, clustering, data quality</p></div>
