@@ -1,6 +1,6 @@
 # Muhammad Enrizky Brillian: Software and AI Infrastructure Portfolio
 
-A complete static portfolio covering professional work, academic and healthcare research, software projects, data analysis, teaching, education, and credentials.
+A complete static portfolio covering professional work, academic and healthcare research, software projects, data analysis, teaching, education, and credentials. Keep it complete and long, but easy to navigate.
 
 ## Positioning
 
@@ -8,16 +8,15 @@ I build the systems between AI research and production: agent runtimes, browser 
 
 ## Sections
 
-- Summary: career scope and independent technical-focus categories.
-- Technical skills: model serving, data, backend, browser, cloud, and core concepts.
-- Experience: eleven professional and research records recovered from Git history, with newer IBM delivery, the original achievements, and teaching restored.
-- Education: University of Toronto and Georgia Tech, with the corrected GPA, coursework, awards, co-op distinction, graduate admissions, and three campus service roles.
-- Research: expanded STAD68 and STAD80 paper summaries, with methods, findings, and evaluation scope.
-- Certifications and credentials: Anthropic, OpenAI, Google, IBM, Microsoft, and AWS records, with training distinguished from certifications.
-- Case studies: OpenBrowser, Context Atlas, the MTP benchmark, AI infrastructure, and a separate finance data-engineering case.
-- Systems lab: Baton and Muse Spark kernel work.
-- Project portfolio: all 24 original projects accounted for, including OpenBrowser in the current case studies and 23 additional project records.
-- Contact.
+Summary, Skills, Experience, Education, Research, My work, Credentials, Contact.
+
+- 11 role records, 30 project/system records, 2 course papers, and 27 credential/learning records. The work collection includes all 24 original projects, newer cases, and systems work. Finance data engineering stays separate from AI infrastructure.
+- Education includes University of Toronto (CGPA 3.87/4.00), Georgia Tech, coursework, awards, co-op distinction, graduate admissions, and 3 campus service roles. STAD68 and STAD80 are course papers, not conference publications. Formal credential names remain unchanged; training is distinct from certification.
+- Fixed desktop index and mobile **Sections** menu with instant section jumps; role jump; project search/category filters; native disclosures and show-all; manual real-image gallery; keyboard skill tabs; system light/dark and reduced-motion support.
+
+The hero is typography-only. The author's image is absent from page content, social-preview metadata, and image preloads; the favicon is retained. Genuine project images remain, with image motion applied to the gallery slides.
+
+**View my work** leads to the full collection. **How I built it** opens preserved technical evidence. Original record text and public links remain available. See [PRODUCT.md](PRODUCT.md) for coverage and factual boundaries, and [DESIGN.md](DESIGN.md) for the observed design system.
 
 ## Evidence
 
@@ -26,7 +25,7 @@ I build the systems between AI research and production: agent runtimes, browser 
 - MTP benchmark: 144/144 runs, 8.9x to 26.8x vLLM versus Transformers, and 2.06x on A10 code prompts.
 - Enterprise delivery: 1,400,883-row BigQuery fact table, 984 files to pre-production in 24 weeks, and January to September control totals within $0.11.
 
-Each public metric states its scope. Projected metrics are not presented as achieved.
+These are scoped snapshots, not live counters. Preserve source units and conditions. Do not invent business outcomes or present projected savings as achieved. Do not expose client identities or confidential terminology.
 
 ## Local Preview
 
@@ -34,24 +33,22 @@ Each public metric states its scope. Projected metrics are not presented as achi
 uv run python -m http.server 8000
 ```
 
-Open `http://127.0.0.1:8000/`.
+Run from the repository root, then open `http://127.0.0.1:8000/`. Add `?noanim` to skip GSAP during inspection.
+
+There is no build step. HTML, CSS, JavaScript, Satoshi/JetBrains Mono fonts, GSAP, and ScrollTrigger are served locally. Native disclosures and all records remain readable without JavaScript; enhanced controls require it.
 
 ## Checks
 
 ```bash
 npx html-validate index.html
-"$HOME/.agents/skills/impeccable/scripts/impeccable" detect --json index.html css/style.css js/script.js
+node --check js/script.js
 ```
 
-The site loads local Satoshi and JetBrains Mono files. It has no build step. GitHub Pages serves `main` at https://billy-enrizky.github.io/portfolio/.
+When Impeccable is installed, also run its `detect --json index.html css/style.css js/script.js` command. Manually check instant navigation, focus after the mobile menu opens, anchor clearance without a double gap, active section, deep links, search/reset/empty state, filters, disclosures/show-all, gallery, keyboard controls, both themes, reduced motion, and no-JavaScript reading. Check inventory and source-link parity before publishing.
 
 ## Deploy
 
-```bash
-git add .
-git commit -m "Update the complete portfolio record"
-git push origin main
-```
+Publish the static repository root from `main` through GitHub Pages, retaining `.nojekyll`. Site: https://billy-enrizky.github.io/portfolio/. Review the intended files before publishing; no generated build directory is needed. Verify the deployed page separately from local preview.
 
 ## License
 
