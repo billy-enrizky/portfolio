@@ -104,7 +104,7 @@ input::placeholder{color:var(--muted);opacity:1}
 .paper-record>h3 a{color:var(--ink)}
 .paper-record .outcome-copy{max-width:76ch}
 .project-gallery{margin:0 0 30px}
-.gallery-toolbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:12px}
+.gallery-toolbar{display:flex;justify-content:flex-end;align-items:center;gap:16px;margin-bottom:12px}
 .gallery-toolbar>p{font-size:14px;font-weight:500}
 .gallery-toolbar>div{display:flex;gap:8px}
 .gallery-toolbar button{min-height:40px;padding:7px 12px;font-size:13px}
@@ -233,3 +233,10 @@ html:not(.js) .skill-panel{display:block!important}
 .hero-intro{max-width:58ch}
 @media(max-width:900px){.profile-hero{padding:42px 0}.profile-hero h1{font-size:clamp(2rem,5vw,3rem)}}
 @media(max-width:700px){.profile-hero{padding:32px 0 36px}.profile-hero h1{font-size:clamp(2rem,8vw,2.7rem);max-width:18ch}}
+
+.project-figure{margin:0 0 18px}
+.project-figure .project-image{margin-bottom:8px}
+.project-figure figcaption{font-size:13px;color:var(--muted);line-height:1.5}
+.project-image-link:hover .project-image{transform:translateY(-2px)}
+
+.project-image-link{display:block}
