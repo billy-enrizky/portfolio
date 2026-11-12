@@ -123,7 +123,7 @@ The complete record stays long. A persistent index and native controls make it e
 - Calm paper-and-ink surfaces with one rust accent.
 - Flat, rule-separated records rather than elevated card shells.
 - Persistent navigation and complete, progressively disclosed evidence.
-- Real imagery, manual browsing, and restrained image/text motion.
+- Real project imagery, direct search, and restrained text motion.
 
 Observed sources: [stylesheet](css/style.css), [page](index.html), and [behavior](js/script.js). The frontmatter records implemented tokens, not a replacement identity. Light values are the default; `prefers-color-scheme: dark` swaps all seven semantic color properties to their `dark-` counterparts. Breakpoints, motion, and component snippets are sidecar extensions rather than unsupported frontmatter groups.
 
@@ -171,8 +171,8 @@ Locally hosted Satoshi files supply weights 400, 500, and 700. The local JetBrai
 - The hero contains only the heading, introduction, and actions, with no author photograph. The existing favicon is retained; author-image social metadata and preload references are absent. Genuine project images remain in the work collection and use containment rather than invented replacement artwork.
 - Sections use 54px vertical padding, reducing to 42px below the navigation breakpoint. Rules, headings, and compact record spacing create hierarchy instead of giant empty sections.
 - Education, credentials, tools, and projects use two columns before collapsing to one at 700px. Project flow is dense; the final visible project spans both columns when a filter leaves an odd count.
-- The gallery uses manual horizontal scroll snapping and Previous/Next controls. It shows three real application images. Gallery and code overflow are local exceptions, not horizontal page scrolling or fixed-height reading panels.
-- Without JavaScript, all project records remain available, all skill panels are shown, and mobile section navigation becomes an in-flow list. Enhanced search, filter, jump, tab, gallery-button, and show-all controls are hidden; native disclosures still work.
+- The work collection starts with **Find a project**, using the standard h2 size and the search input’s accessible name. There is no separate My work introduction, preview gallery, or Previous/Next control. All project records remain below search and filters. Code overflow is local, not horizontal page scrolling.
+- Without JavaScript, all project records remain available, all skill panels are shown, and mobile section navigation becomes an in-flow list. Enhanced search, filter, jump, tab, and show-all controls are hidden; native disclosures still work.
 
 **The Complete Record Rule.** Improve entry points and disclosure, not by deleting historical work or turning the page into a short selection.
 
@@ -195,17 +195,17 @@ Category filters and skill tabs are outlined rectangular controls, not pills. Th
 ### Cards / Containers
 Each work record keeps its own title, purpose, supported outcome, links, and **How I built it** disclosure. Work plates, benchmark tables, research entries, the full experience ledger, independent capability areas, and issuer-grouped credentials remain distinct evidence patterns. Finance data engineering stays separate from model-serving infrastructure. Retain all prior technical copy and source links inside the record.
 
-Project images lift 2px on record hover over 0.45s. Gallery images scale to 1.025 over 0.5s on link hover. These are small image interactions, not card elevation or automatic playback.
+Project images lift 2px on record hover over 0.45s. These are small image interactions, not card elevation or automatic playback.
 
 ### Inputs / Fields
-Search and the role-jump select use the surface background, rule border, shared radius, 46px minimum height, and `10px 12px` padding. Search has a visible label, purpose/tool placeholder, clear action, polite live result count, and empty-state message. Search matches every entered word against the full project text, including disclosure content, within the selected category. Clear search resets both the query and category.
+Search and the role-jump select use the surface background, rule border, shared radius, 46px minimum height, and `10px 12px` padding. Search is labeled by the visible Find a project h2 heading and has a purpose/tool placeholder, clear action, polite live result count, and empty-state message. Search matches every entered word against the full project text, including disclosure content, within the selected category. Clear search resets both the query and category.
 
 ### Navigation
 The section order is Summary, Skills, Experience, Education, Research, My work, Credentials, Contact. Desktop rows have a 42px minimum height, muted default text, surface hover, and rust current state with a soft wash and `aria-current="location"`.
 
 The mobile control changes from **Sections** to **Close** and maintains `aria-expanded`. After the opening transition finishes, focus moves to the first section link with `preventScroll`, provided the menu is still open. Escape or the backdrop closes it and restores control focus. Moving focus outside the open drawer closes it rather than trapping focus. The skip link remains available.
 
-Persistent section links jump directly with `behavior: "instant"`, rather than animating through the whole long page. Document scrolling defaults to `auto`. This avoids navigation timing races and keeps distant sections immediately reachable. Choosing an anchor closes the menu and focuses the target's first heading, or the target itself when no heading exists, without a second scroll. The role select uses the same direct hash navigation. Hash navigation opens containing disclosures and clears project filters if they hide the target. These document jumps are distinct from the manual gallery's optional smooth horizontal movement.
+Persistent section links jump directly with `behavior: "instant"`, rather than animating through the whole long page. Document scrolling defaults to `auto`. This avoids navigation timing races and keeps distant sections immediately reachable. Choosing an anchor closes the menu and focuses the target's first heading, or the target itself when no heading exists, without a second scroll. The role select uses the same direct hash navigation. Hash navigation opens containing disclosures and clears project filters if they hide the target.
 
 ### Disclosures and skill panels
 Use native `details`/`summary` for full role details, research methods, coursework, project implementations, and issuer groups. **Show all details** opens every main-content disclosure; **Hide extra details** closes them. Neither action deletes records or clears project filters. Preserve exact formal credential names, even when their wording is more technical than surrounding copy.
@@ -215,9 +215,9 @@ Skill tabs expose one area at a time with roving tab stops, Left/Right arrows, H
 ### Focus and motion
 The shared focus treatment is a 3px accent outline with a 4px offset. Keep visible focus on links, controls, summaries, and tabs.
 
-Locally hosted GSAP and ScrollTrigger animate the real gallery slides and contact heading without pinning. Gallery slides scrub from scale 0.98/opacity 0.85 to full size/opacity with `ease: "none"`, as the project gallery moves between `top 90%` and `top 60%`. Contact words scrub from opacity 0.65 to 1 with 0.06 stagger, between `top 90%` and `top 58%`. No animated content starts fully hidden. Disclosures, filters, and tabs refresh ScrollTrigger after layout changes. There is no author-image animation.
+Locally hosted GSAP and ScrollTrigger animate the contact heading without pinning. The removed gallery has no observers, event handlers, or motion targets. Contact words scrub from opacity 0.65 to 1 with 0.06 stagger, between `top 90%` and `top 58%`. No animated content starts fully hidden. Disclosures, filters, and tabs refresh ScrollTrigger after layout changes. There is no author-image animation.
 
-Reduced motion excludes or reverts the GSAP animations through the system preference, removes image transforms, and disables the gallery's smooth scrolling; document navigation is instant in either motion mode. Contact text is restored when the motion context is cleaned up. `?noanim` skips GSAP only, useful for repeatable inspection. Core reading and navigation do not depend on the animation libraries. There is no typewriter, marquee, perpetual animation, scroll hijack, pinned sequence, or automatic carousel.
+Reduced motion excludes or reverts the GSAP animations through the system preference, removes image transforms, and keeps document navigation is instant in either motion mode. Contact text is restored when the motion context is cleaned up. `?noanim` skips GSAP only, useful for repeatable inspection. Core reading and navigation do not depend on the animation libraries. There is no typewriter, marquee, perpetual animation, scroll hijack, pinned sequence, or automatic carousel.
 
 **The Evidence First Rule.** Lead with plain purpose and source-backed outcomes; keep the complete methods, qualifications, units, and links available underneath.
 
@@ -227,7 +227,7 @@ Reduced motion excludes or reverts the GSAP animations through the system prefer
 - **Do** preserve the established paper, ink, steel, rust, and Satoshi identity across both system themes.
 - **Do** keep persistent section access, direct record links, and the complete long-form record.
 - **Do** put plain purpose and supported outcomes before full technical evidence.
-- **Do** keep the hero typography-only, retain the existing favicon, and use actual project images with manual gallery controls.
+- **Do** keep the hero typography-only, retain the existing favicon, and use actual images within project records.
 - **Do** preserve visible focus, native disclosures, keyboard skill tabs, and no-JavaScript reading.
 - **Do** respect reduced motion and keep animation independent of content access.
 

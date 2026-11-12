@@ -12,9 +12,9 @@ Summary, Skills, Experience, Education, Research, My work, Credentials, Contact.
 
 - 11 role records, 30 project/system records, 2 course papers, and 27 credential/learning records. The work collection includes all 24 original projects, newer cases, and systems work. Finance data engineering stays separate from AI infrastructure.
 - Education includes University of Toronto (CGPA 3.87/4.00), Georgia Tech, coursework, awards, co-op distinction, graduate admissions, and 3 campus service roles. STAD68 and STAD80 are course papers, not conference publications. Formal credential names remain unchanged; training is distinct from certification.
-- Fixed desktop index and mobile **Sections** menu with instant section jumps; role jump; project search/category filters; native disclosures and show-all; manual real-image gallery; keyboard skill tabs; system light/dark and reduced-motion support.
+- Fixed desktop index and mobile **Sections** menu with instant section jumps; role jump; project search/category filters; native disclosures and show-all; keyboard skill tabs; system light/dark and reduced-motion support.
 
-The hero is typography-only. The author's image is absent from page content, social-preview metadata, and image preloads; the favicon is retained. Genuine project images remain, with image motion applied to the gallery slides.
+The hero is typography-only. The author's image is absent from page content, social-preview metadata, and image preloads; the favicon is retained. Genuine images remain within their project records. The project collection begins directly with the Find a project search heading.
 
 **View my work** leads to the full collection. **How I built it** opens preserved technical evidence. Original record text and public links remain available. See [PRODUCT.md](PRODUCT.md) for coverage and factual boundaries, and [DESIGN.md](DESIGN.md) for the observed design system.
 
@@ -44,7 +44,7 @@ npx html-validate index.html
 node --check js/script.js
 ```
 
-When Impeccable is installed, also run its `detect --json index.html css/style.css js/script.js` command. Manually check instant navigation, focus after the mobile menu opens, anchor clearance without a double gap, active section, deep links, search/reset/empty state, filters, disclosures/show-all, gallery, keyboard controls, both themes, reduced motion, and no-JavaScript reading. Check inventory and source-link parity before publishing.
+When Impeccable is installed, also run its `detect --json index.html css/style.css js/script.js` command. Manually check instant navigation, focus after the mobile menu opens, anchor clearance without a double gap, active section, deep links, search/reset/empty state, filters, disclosures/show-all, keyboard controls, both themes, reduced motion, and no-JavaScript reading. Check inventory and source-link parity before publishing.
 
 ## Deploy
 

@@ -35,10 +35,10 @@ I build the systems between AI research and production: agent runtimes, browser 
 - Keep the section index available at every depth: fixed on desktop, with a fixed **Sections** control on mobile. Indicate the current section.
 - Section links jump directly to their destination instead of animating through the long page. On mobile, focus moves to the first section link after the menu's opening transition finishes.
 - Let readers jump directly to a role. Combine project highlights, systems work, and the original project catalog into one searchable work collection, without combining unrelated projects.
-- Offer project search and the categories All, AI and automation, Data and analysis, Web and mobile, and Research tools. Include the result count, an empty state, and a clear-search action.
+- Head the work collection with **Find a project** at the standard section-heading size. Offer project search and the categories All, AI and automation, Data and analysis, Web and mobile, and Research tools. Include the result count, an empty state, and a clear-search action.
 - Lead with purpose and supported outcomes. Keep full technical records in native disclosure panels, with **Show all details** and **Hide extra details** controls.
 - Use **View my work** for the primary work link and **How I built it** for project disclosures.
-- Keep the hero typography-only, without the author's photograph. Retain the existing favicon, but no author image in page content, social-preview metadata, or image preloads. Preserve actual project images and keep their gallery manual, not automatic. Skill panels support keyboard navigation.
+- Keep the hero typography-only, without the author's photograph. Retain the existing favicon, but no author image in page content, social-preview metadata, or image preloads. Preserve actual images within project records. Do not add a separate preview gallery above project search. Skill panels support keyboard navigation.
 - Keep all records and native disclosures available without JavaScript. Search, filters, and other enhanced controls require JavaScript.
 
 ## Voice
