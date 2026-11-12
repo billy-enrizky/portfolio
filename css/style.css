@@ -256,7 +256,6 @@ ul {
 }
 
 .hero,
-.proof,
 .section,
 .contact,
 .site-footer {
@@ -346,86 +345,29 @@ ul {
   gap: 18px;
 }
 
-.system-map {
-  padding: 22px;
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+.focus-list {
+  border-block: 1px solid var(--rule);
 }
 
-.system-layer {
-  padding: 16px;
-  background: var(--paper);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
+.focus-list > div {
+  padding: 18px 0;
 }
 
-.system-layer span {
-  display: block;
-  margin-bottom: 4px;
-  color: var(--steel);
-  font-family: var(--mono);
-  font-size: 12px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.system-layer strong {
-  display: block;
-  font-size: 15px;
-  font-weight: 500;
-  line-height: 1.35;
-}
-
-.system-line {
-  width: 1px;
-  height: 22px;
-  margin: 0 0 0 22px;
-  background: var(--rule);
-}
-
-.hero-note {
-  max-width: 36ch;
-  color: var(--steel);
-  font-family: var(--mono);
-  font-size: 12px;
-  line-height: 1.5;
-}
-
-.proof {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 32px;
-  padding: 24px 0;
+.focus-list > div + div {
   border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
 }
 
-.proof-item {
-  display: grid;
-  gap: 2px;
-}
-
-.proof-item strong {
-  font-family: var(--mono);
-  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
-  font-weight: 500;
-  letter-spacing: -0.04em;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-}
-
-.proof-item span {
+.focus-list dt {
+  color: var(--ink);
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 700;
 }
 
-.proof-item small {
+.focus-list dd {
+  margin-top: 6px;
   color: var(--steel);
-  font-family: var(--mono);
-  font-size: 12px;
-  line-height: 1.4;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 .section {
@@ -1167,11 +1109,6 @@ ul {
     max-width: 100%;
   }
 
-  .proof {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 24px;
-  }
-
   .work,
   .ledger-row,
   .about,
@@ -1229,16 +1166,6 @@ ul {
 
   .lede {
     font-size: 16px;
-  }
-
-  .proof {
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-    padding: 20px 0;
-  }
-
-  .proof-item strong {
-    font-size: 1.35rem;
   }
 
   .section {
@@ -1332,4 +1259,60 @@ ul {
     opacity: 1 !important;
     transform: none !important;
   }
+}
+
+/* Each earlier project remains a distinct, fully visible record. */
+.archive-project {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(200px, 0.65fr);
+  gap: 48px;
+  align-items: start;
+  padding: 48px 0;
+  border-top: 1px solid var(--rule);
+}
+
+.archive-project h3 {
+  font-size: clamp(1.35rem, 2.5vw, 1.9rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.archive-project .fact-list {
+  margin-top: 20px;
+}
+
+.archive-project .work-links {
+  margin-top: 20px;
+}
+
+.archive-project-image {
+  width: 100%;
+  max-height: 280px;
+  object-fit: contain;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+}
+
+@media (max-width: 860px) {
+  .archive-project {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .archive-project-image {
+    max-width: 420px;
+  }
+}
+
+#credentials .ledger-list span {
+  display: block;
+  margin-top: 4px;
+  color: var(--steel);
+  font-size: 13px;
+}
+
+.archive-source-note {
+  margin-top: 20px;
+  color: var(--steel);
+  font-size: 13px;
 }

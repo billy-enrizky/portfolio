@@ -46,9 +46,10 @@ Experience. The work leads. The interface recedes.
 
 ## Components
 
-- Evidence rail: four exact metrics with dates or scope.
-- Work plate: problem, system, outcome, links.
+- Work plate: one coherent project, its methods, outcome, and links. Finance data engineering is separate from model-serving infrastructure.
 - Metric table: exact benchmark values with scope.
 - Research entry: title, status, result, link.
-- Experience ledger: role, company, dates, impact.
-- Capability matrix: tools tied to evidence.
+- Experience ledger: every historical role, company, dates, and full achievements. No job-specific deletion of the career record.
+- Capability matrix: independent skill areas, not a fabricated pipeline across unrelated projects.
+- Project portfolio: all original projects retained as visible rows with their own summaries, evidence, and assets.
+- Credentials: actual credential names and issuers, distinct from education and awards.

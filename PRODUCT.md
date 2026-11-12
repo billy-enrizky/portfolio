@@ -2,7 +2,7 @@
 
 ## Product
 
-Personal portfolio for Muhammad Enrizky Brillian, a software and AI infrastructure engineer.
+A complete career and project portfolio for Muhammad Enrizky Brillian: software engineering, AI, data engineering, analytics, healthcare research, applications, and teaching.
 
 ## Audience
 
@@ -10,18 +10,20 @@ Hiring managers, staff engineers, founders, and research collaborators who need 
 
 ## Job To Be Done
 
-In 60 seconds, explain what he builds, show proof from OpenBrowser, research, and enterprise systems, then lead to a case study or resume.
+Let readers understand the current work quickly, then explore the complete professional, academic, research, teaching, and project record. The portfolio is broader than a tailored CV.
 
 ## Positioning
 
 I build the systems between AI research and production: agent runtimes, browser infrastructure, applied ML, and the data platforms around them.
 
-## Proof Priorities
+## Coverage
 
-1. OpenBrowser: open-source adoption, benchmarks, architecture, and release engineering.
-2. Research: browser-agent reinforcement learning, diffusion planning, and model-serving evaluation.
-3. Enterprise delivery: self-hosted inference, data platforms, and business outcomes.
-4. Context Atlas: local-first page search with exact source links.
+- Preserve every historical role, project, and achievement when adding newer work.
+- Keep finance data engineering separate from AI infrastructure.
+- Explain each research study and project within its own methods, results, and scope.
+- Include education, awards, admissions, certifications, and credentials when supported by the record.
+- Never expose client identities or confidential document terminology in text, links, assets, or metadata.
+- Remove records only at the user's explicit request. The summary metric strip was explicitly removed.
 
 ## Voice
 
@@ -29,8 +31,8 @@ Direct, specific, calm. Show evidence. No generic service marketing.
 
 ## Non-Goals
 
-No service menu, skill percentages, theme switcher, exhaustive coursework, role carousel, or client names.
+No invented architecture connecting unrelated projects, skill percentages, or client identities. Do not filter the lifetime record down to a job-specific selection.
 
 ## Success
 
-A recruiter can name the positioning and one proof point after 30 seconds. An engineer can verify a claim in two clicks. Mobile and keyboard users receive the same content.
+Readers can find every role and project from the earlier portfolio, alongside newer work. Methods and outcomes remain correctly attributed. Mobile and keyboard users receive the full record.
