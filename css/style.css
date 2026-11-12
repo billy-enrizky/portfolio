@@ -103,16 +103,6 @@ input::placeholder{color:var(--muted);opacity:1}
 .paper-record>h3{font-size:1.5rem;max-width:45ch}
 .paper-record>h3 a{color:var(--ink)}
 .paper-record .outcome-copy{max-width:76ch}
-.project-gallery{margin:0 0 30px}
-.gallery-toolbar{display:flex;justify-content:flex-end;align-items:center;gap:16px;margin-bottom:12px}
-.gallery-toolbar>p{font-size:14px;font-weight:500}
-.gallery-toolbar>div{display:flex;gap:8px}
-.gallery-toolbar button{min-height:40px;padding:7px 12px;font-size:13px}
-.gallery-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:18px;padding-bottom:12px;scrollbar-width:thin}
-.gallery-slide{flex:0 0 calc(50% - 9px);scroll-snap-align:start;text-decoration:none;color:var(--ink);overflow:hidden}
-.gallery-slide img{width:100%;height:180px;object-fit:contain;background:var(--surface);border-radius:var(--radius);transition:transform .5s ease}
-.gallery-slide span{display:block;margin-top:8px;font-size:14px}
-.gallery-slide:hover img{transform:scale(1.025)}
 .work-controls{display:flex;gap:12px;align-items:end;margin-bottom:16px}
 .work-controls>div{display:grid;gap:8px;flex:1}
 .work-controls>button{min-height:46px;padding:10px 13px;white-space:nowrap;font-size:14px}
@@ -206,8 +196,6 @@ html:not(.js) #details-toggle,html:not(.js) .work-controls,html:not(.js) .projec
  .outcome-copy .outcome-lead{font-size:17px}
  .outcome-copy p{font-size:15px}
  .paper-record>h3{font-size:1.35rem}
- .gallery-slide{flex-basis:82%}
- .gallery-slide img{height:160px}
  .project-image{height:190px}
  .work-controls{align-items:stretch;flex-direction:column;gap:9px}
  .work-controls>button{align-self:flex-start;min-height:40px}
@@ -219,12 +207,12 @@ html:not(.js) #details-toggle,html:not(.js) .work-controls,html:not(.js) .projec
  .detail-block th,.detail-block td{padding:5px;font-size:12px;overflow-wrap:anywhere}
 }
 @media(max-width:360px){.profile-hero{grid-template-columns:minmax(0,1fr) 82px;column-gap:12px}.hero-portrait{width:82px}.profile-hero h1{font-size:28px}.mobile-name{max-width:165px}.hero-actions .button{padding-inline:12px;font-size:12px}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.hero-portrait img,.project-image,.gallery-slide img{transform:none!important}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.hero-portrait img,.project-image{transform:none!important}}
 .record-heading h3 a,.project-record>h3 a{color:var(--ink);text-decoration:none}
 .record-heading h3 a:hover,.project-record>h3 a:hover{text-decoration:underline}
 .project-record>h3 a{display:inline-flex;align-items:center;gap:10px}
 .inline-project-image{display:inline-block;width:36px;height:36px;object-fit:contain;border-radius:var(--radius);flex-shrink:0}
-html:not(.js) .jump-control,html:not(.js) .skills-tabs,html:not(.js) .gallery-toolbar>div{display:none}
+html:not(.js) .jump-control,html:not(.js) .skills-tabs{display:none}
 html:not(.js) .skill-panel{display:block!important}
 
 /* The author requested no portrait on the page. Keep the introduction typographic. */

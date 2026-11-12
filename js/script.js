@@ -2,7 +2,6 @@
   "use strict";
   document.documentElement.classList.add("js");
 
-  const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
   const noAnimation = new URLSearchParams(window.location.search).has("noanim");
   const menuButton = document.querySelector(".nav-toggle");
   const sidebar = document.getElementById("site-index");
@@ -194,35 +193,11 @@
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { showHash(false); });
   else showHash(false);
 
-  const track = document.querySelector(".gallery-track");
-  const previous = document.querySelector('[data-gallery="previous"]');
-  const next = document.querySelector('[data-gallery="next"]');
-  function syncGallery() {
-    const max = Math.max(0, track.scrollWidth - track.clientWidth);
-    previous.disabled = track.scrollLeft <= 2;
-    next.disabled = track.scrollLeft >= max - 2;
-  }
-  function moveGallery(direction) {
-    track.scrollBy({ left: direction * (track.clientWidth * 0.82 + 18), behavior: motionPreference.matches ? "instant" : "smooth" });
-  }
-  previous.addEventListener("click", function () { moveGallery(-1); });
-  next.addEventListener("click", function () { moveGallery(1); });
-  if ("IntersectionObserver" in window) {
-    const galleryObserver = new IntersectionObserver(syncGallery, { root: track, threshold: [0, 0.5, 1] });
-    track.querySelectorAll(".gallery-slide").forEach(function (slide) { galleryObserver.observe(slide); });
-  }
-  if ("ResizeObserver" in window) new ResizeObserver(syncGallery).observe(track);
-  syncGallery();
-
   // Motion supports orientation and hierarchy. It adds no pinned scrolling or hidden content.
   if (!noAnimation && window.gsap && window.ScrollTrigger) {
     window.gsap.registerPlugin(window.ScrollTrigger);
     const motion = window.gsap.matchMedia();
     motion.add("(prefers-reduced-motion: no-preference)", function () {
-    window.gsap.fromTo(".gallery-slide", { scale: 0.98, opacity: 0.85 }, {
-      scale: 1, opacity: 1, ease: "none",
-      scrollTrigger: { trigger: ".project-gallery", start: "top 90%", end: "top 60%", scrub: true }
-    });
     const heading = document.querySelector(".contact-reveal");
     const originalHeading = heading.textContent;
     const words = originalHeading.trim().split(/\s+/);
