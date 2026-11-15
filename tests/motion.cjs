@@ -296,7 +296,11 @@ async function navigationSettle(browser){
   assert.equal(await activeOpacity(),'1','A far element focused programmatically is visible immediately');
   for(let i=1;i<=3;i++){
    await page.keyboard.press('Shift+Tab');
-   assert.notEqual(await activeOpacity(),'0',`Keyboard focus step ${i} lands on visible content`);
+   const landed=await page.evaluate(()=>{
+    const a=document.activeElement,r=a.getBoundingClientRect(),h=a.closest('[data-reveal]');
+    return {inView:r.bottom>0&&r.top<innerHeight&&r.width>0,opacity:h?getComputedStyle(h).opacity:'1'};
+   });
+   assert.deepEqual(landed,{inView:true,opacity:'1'},`Keyboard focus step ${i} lands on content that is on screen and visible`);
   }
  });
 }
@@ -393,7 +397,7 @@ async function motionVisuals(browser){
    const svg=document.querySelector('#experience svg.career-route');
    return svg?{aria:svg.getAttribute('aria-hidden'),shown:getComputedStyle(svg).display!=='none',paths:svg.querySelectorAll('path').length}:null;
   });
-  assert.deepEqual(route,{aria:'true',shown:true,paths:route&&route.paths},'Career route is a decorative visible svg in #experience');
+  assert.deepEqual({aria:route.aria,shown:route.shown},{aria:'true',shown:true},'Career route is a decorative visible svg in #experience');
   assert.ok(route.paths>=1,'Career route draws at least one path');
   const dash=()=>page.evaluate(()=>getComputedStyle(document.querySelector('svg.career-route path')).strokeDashoffset);
   const dashStart=await dash();
@@ -576,6 +580,17 @@ async function reviewRegressions(browser){
    route:getComputedStyle(document.querySelector('.career-route')).display,
   }));
   assert.deepEqual(paused,{turn:'none',img:'block',route:'none'},'Pausing at runtime restores the static tile and hides the career route');
+ });
+
+ await withSession(browser,{},async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
+  await loadView(page);
+  for(const top of [3000,5200,8580,11000]){
+   await page.evaluate(y=>scrollTo({top:y,behavior:'instant'}),top);
+   await page.waitForTimeout(2500);
+   const stuck=await page.evaluate(()=>[...document.querySelectorAll('[data-reveal]')].filter(e=>{const r=e.getBoundingClientRect();return r.top<innerHeight&&r.bottom>0&&getComputedStyle(e).opacity!=='1'}).map(e=>e.id||e.className));
+   assert.deepEqual(stuck,[],`Every reveal element on screen is visible after resting at scrollY ${top}`);
+  }
  });
 
  await withSession(browser,{blocked:true},async({page})=>{
