@@ -6,67 +6,93 @@ A complete static portfolio covering professional work, academic and healthcare 
 
 I build the systems between AI research and production: agent runtimes, browser infrastructure, applied ML, and the data platforms around them.
 
-## Sections
+## Complete record
 
-Summary, Skills, Experience, Education, Research, My work, Credentials, Contact.
+The page follows Summary, Skills, Experience, Education, Research, My work, Credentials, Contact.
 
-- 11 role records, 30 project/system records, 2 course papers, and 27 credential/learning records. The work collection includes all 24 original projects, newer cases, and systems work. Finance data engineering stays separate from AI infrastructure.
-- Education includes University of Toronto (CGPA 3.87/4.00), Georgia Tech, coursework, awards, co-op distinction, graduate admissions, and 3 campus service roles. STAD68 and STAD80 are course papers, not conference publications. Formal credential names remain unchanged; training is distinct from certification.
-- Fixed desktop index and mobile **Sections** menu with instant section jumps; role jump; project search/category filters; native disclosures and show-all; keyboard skill tabs; manual/system light/dark themes, five accent choices, saved appearance preferences, and reduced-motion support.
+- 11 role records, 30 project records, 2 course papers, and 27 credential and learning entries. The collection retains all 24 original projects alongside newer projects and systems work. Finance data engineering stays separate from AI infrastructure.
+- Education includes University of Toronto, with CGPA 3.87/4.00, Georgia Tech, coursework, awards, co-op distinction, graduate admissions, and 3 campus service roles. Admissions are not additional earned degrees.
+- STAD68 is a final course paper, 2026. STAD80 is a course paper, 2026. Neither is a conference publication. Certifications, partner credentials, applied skills, training badges, and coursework retain their original classifications and formal names.
+- Original record text, anchors, source links, images, and public CV bytes remain intact. Plain-language purpose and supported outcomes precede the full technical evidence in native disclosures.
 
-The hero is typography-only. The author's image is absent from page content, social-preview metadata, and image preloads; the favicon is retained. Genuine images remain within their project records. The project collection begins directly with the Find a project search heading.
+**View my work** leads to the complete **Find a project** collection. Search matches every entered word against a project's full text, including its disclosure. Category filters, result counts, an empty state, and Clear search support the full collection. Clear search resets both query and category. A role selector, keyboard skill tabs, and **Show all details** provide other entry points.
 
-**View my work** leads to the full collection. **How I built it** opens preserved technical evidence. Original record text and public links remain available. See [PRODUCT.md](PRODUCT.md) for coverage and factual boundaries, and [DESIGN.md](DESIGN.md) for the observed design system.
+## Visual system
 
-## Appearance
+The presentation follows the editorial direction of [leonlin.de](https://leonlin.de/), with this portfolio's own identity, projects, and evidence. It uses locally hosted variable Geist, large two-line identity type, neutral light and dark palettes, rounded actions, and flat source-record grids. JetBrains Mono remains the code face.
 
-Open **Appearance** in the desktop section index or the mobile **Sections** menu. Choose **System**, **Light**, or **Dark**, then **Red**, **Orange**, **Green**, **Blue**, or **Pink**. The theme and color are independent and saved on the device when browser storage is available. The default follows the OS and retains the current orange accent.
+A full-width fixed header contains the name, desktop GitHub and CV links, an independent **Appearance** popover, and **Sections**. Sections opens a drawer from the right on every screen size. The hero pairs the introduction with one actual OpenBrowser project mark and `pip install openbrowser-ai`. It does not borrow the reference's imagery, identity, claims, or contact details. There is no author portrait in page content, social-preview metadata, or image preloads. The existing favicon remains.
 
-The five swatches match the original portfolio. Text, actions, and focus use readable theme-specific variants. Without JavaScript, the page still follows the system theme and retains every record.
+The hero is not a preview gallery. The complete project collection stays below search; OpenBrowser, Context Atlas, and the MTP study receive larger record treatments without replacing the archive. Expanded OpenBrowser and MTP details use equal desktop columns with a 48px gap and stack at 900px and below. Technical paragraphs and ledger/fact lists have a 78ch maximum width. Project images remain genuine source assets.
+
+[PRODUCT.md](PRODUCT.md) records coverage and factual boundaries. [DESIGN.md](DESIGN.md) records the implemented typography, colors, dimensions, responsive rules, components, and motion. The source cascade loads `css/style.css` first and `css/editorial.css` second. Read them together; the editorial layer replaces the old visual geometry.
+
+## Appearance and navigation
+
+Open **Appearance** directly in the header. Choose **System**, **Light**, or **Dark**, then **Red**, **Orange**, **Green**, **Blue**, or **Pink**. Theme and accent are independent. Defaults are System and Orange.
+
+`js/appearance.js` adds the root `js` detection class and applies validated preferences before the stylesheets. Early detection prevents the no-JavaScript in-flow index from flashing while the later interaction script loads. The initial HTML theme-color matches the light paper; the controller updates it for the resolved theme. It stores `{theme, color}` under `portfolio-appearance` when storage is available. Invalid values fall back to defaults. The controls still work when storage is blocked. System mode follows OS changes; explicit themes override them. Preferences synchronize across tabs, and initialization reconciles changes made while the page loads.
+
+`js/script.js` adds `navigation-ready` after binding the navigation and content controls. Until then, CSS keeps the Sections button invisible. Appearance has its own `appearance-ready` signal after its preference handlers connect. With `js` present, its header slot uses `display: block` and `visibility: hidden` during startup, so the header reserves its space. `appearance-ready` changes visibility to visible. Without JavaScript, Appearance stays `display: none` and reserves no slot. These readiness states do not hide the source records.
+
+Appearance is a native disclosure, not a modal. Outside clicks or focus dismiss it. Escape closes it and returns focus to its summary. Sections and Appearance do not stay open together. Sections moves focus to the first link once the drawer is visible; Escape and the backdrop close it and restore button focus. Focus can leave the drawer without a trap.
+
+Section and record links jump immediately. Deep links open containing disclosures and clear project filters when needed to reveal a destination. The fixed header is cleared through document scroll padding. All original anchors remain available.
+
+Without JavaScript, the page follows the system theme, the header and section index enter document flow, all skill panels and project records remain available, and native disclosures still open. Enhanced controls require JavaScript.
+
+Hero entrance movement never starts content at zero opacity. The tile responds to hover and keyboard focus without cursor-tracking logic. The retained contact-heading effect is a small scroll-linked opacity change. There is no pinned scrolling, forced scroll distance, carousel, or continuous animation. Reduced motion omits the GSAP effects and uses a static tile angle. `?noanim` skips GSAP, not CSS hover states or theme behavior.
 
 ## Evidence
 
+These are scoped snapshots, not live counters:
+
 - OpenBrowser: 53,327 PyPI downloads from Pepy on November 10, 2026, 279 GitHub stars, 52 releases, and 7,007 test functions.
 - Model serving: 10,410.60 tok/s at N=512, $0.77 per million tokens at N=512, compared with $132.56 per million tokens at N=1.
-- MTP benchmark: 144/144 runs, 8.9x to 26.8x vLLM versus Transformers, and 2.06x on A10 code prompts.
-- Enterprise delivery: 1,400,883-row BigQuery fact table, 984 files to pre-production in 24 weeks, and January to September control totals within $0.11.
+- MTP benchmark: 144/144 runs, 8.9x to 26.8x vLLM versus Transformers, and 2.06x on A10 code prompts. Engine comparisons and speculative-decoding gains remain distinct.
+- Financial reconciliation: a 1,400,883-row BigQuery fact table and January to September control totals within $0.11.
+- Document platform: 984 files to pre-production in 24 weeks. This is separate from the finance pipeline.
 
-These are scoped snapshots, not live counters. Preserve source units and conditions. Do not invent business outcomes or present projected savings as achieved. Do not expose client identities or confidential terminology.
+Preserve source units, dates, methods, and comparison conditions. Do not turn research accuracy into patient benefit, analyst efficiency into time reduction, tokens into words, or projected savings into realized savings. Do not expose client identities or confidential document terminology.
 
-## Local Preview
+## Preview locally
 
-```bash
-uv run python -m http.server 8000
+Run from the repository root:
+
+```sh
+uv run --no-project python -m http.server 8000 --bind 127.0.0.1
 ```
 
-Run from the repository root, then open `http://127.0.0.1:8000/`. Add `?noanim` to skip GSAP during inspection.
+Open `http://127.0.0.1:8000/`. Add `?noanim` for inspection without GSAP. There is no build step. HTML, both stylesheets, JavaScript, fonts, GSAP, and ScrollTrigger are served locally. Geist's license is in `assets/geist-OFL.txt`; original assets remain available.
 
-There is no build step. HTML, CSS, JavaScript, Satoshi/JetBrains Mono fonts, GSAP, and ScrollTrigger are served locally. Native disclosures and all records remain readable without JavaScript; enhanced controls require it.
+## Check changes
 
-## Checks
+Static checks:
 
-```bash
+```sh
 npx html-validate index.html
 node --check js/script.js
 node --check js/appearance.js
 ```
 
-The browser regression test requires Node.js and a Chromium browser. Test-only dependencies do not change the static production site. With the preview running on port 8000:
+The browser tests require Node.js and Playwright's Chromium. With the preview server running:
 
-```bash
+```sh
 npm ci
 npx playwright install chromium
 npm test
 ```
 
-Set `PORTFOLIO_URL` to use another preview URL and `TEST_OUTPUT_DIR` to change the screenshot/report directory. The default report directory is the ignored `local_docs/appearance-qa/`. Tests cover both themes and all five colors, contrast, saved/invalid/blocked preferences, OS changes, cross-tab synchronization, keyboard navigation, mobile controls, no-JavaScript behavior, search, disclosures, and record counts.
+`npm test` runs `tests/appearance.cjs` and `tests/redesign.cjs`. These test dependencies are not production dependencies. Set `PORTFOLIO_URL` to use another preview URL. `TEST_OUTPUT_DIR` changes the output directory for both suites. Default outputs are ignored directories `local_docs/appearance-qa/` and `local_docs/redesign-qa/`.
 
-When Impeccable is installed, also run its `detect --json index.html css/style.css js/script.js js/appearance.js` command. Manually check instant navigation, focus after the mobile menu opens, anchor clearance without a double gap, active section, deep links, search/reset/empty state, filters, disclosures/show-all, keyboard controls, both themes, reduced motion, and no-JavaScript reading. Check inventory and source-link parity before publishing.
+The suites cover appearance choices and contrast, independent preference persistence, malformed and blocked storage, OS and cross-tab changes, keyboard controls, responsive overflow and hero actions, drawer and popover coordination, deep links, no-JavaScript access, search, disclosures, and record counts. Run results, not this documentation, establish whether a revision passes.
+
+When Impeccable is installed, run its `detect --json index.html css/style.css css/editorial.css js/script.js js/appearance.js` command. Review desktop and phone rendering, active sections, anchor clearance, focus behavior, reduced motion, and both themes with every accent. Verify full record text, link parity, and original asset bytes before publishing.
 
 ## Deploy
 
-Publish the static repository root from `main` through GitHub Pages, retaining `.nojekyll`. Site: https://billy-enrizky.github.io/portfolio/. Review the intended files before publishing; no generated build directory is needed. Verify the deployed page separately from local preview.
+Publish the static repository root through the configured GitHub Pages deployment, retaining `.nojekyll`. Site: https://billy-enrizky.github.io/portfolio/. Confirm the intended deployment settings and files before publishing. No generated build directory is needed. Verify the deployed page separately from local preview.
 
 ## License
 
-Content and personal assets belong to Muhammad Enrizky Brillian. See `LICENSE` for the template license.
+Content and personal assets belong to Muhammad Enrizky Brillian. See `LICENSE` for the template license and `assets/geist-OFL.txt` for Geist's font license.
