@@ -1,2 +1,0 @@
-# Preserve whitespace inside the generated upstream GLSL shader strings.
-js/motion-scene.bundle.js linguist-generated=true -whitespace
