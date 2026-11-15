@@ -18,6 +18,8 @@
 
 .motion-on [data-reveal]{opacity:0;transform:translate3d(0,22px,0);transition:opacity var(--reveal-ms) var(--ease-arrive) var(--delay,0ms),transform var(--reveal-ms) var(--ease-arrive) var(--delay,0ms)}
 .motion-on [data-reveal].is-revealed{opacity:1;transform:none}
+.motion-on [data-reveal].is-settled,.motion-on .mask-line.is-settled>span{transition:none}
+html:not(.motion-on) [data-reveal],html:not(.motion-on) .mask-line>span{transition:none}
 
 #experience{position:relative}
 .career-route{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:visible}

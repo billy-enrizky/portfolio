@@ -8,23 +8,17 @@
   var STAGGER_MS = 70;
   var STAGGER_CAP_MS = 800;
   var SPRITE = { url: "images/motion/openbrowser-turn.webp", cols: 6, rows: 4, frames: 24 };
-  var REVEAL = [".hero-copy > *", ".hero-artwork", ".contact-actions", ".contact-links"];
   var MASKED = [".hero-name-line", ".section-heading h2"];
 
   var reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   var toggles = [];
   var observer;
+  var pending = new Set();
   var spriteRequested = false;
   var frame = 0;
   var scrollQueued = false;
   var batchStart = 0;
   var batchCount = 0;
-
-  function mark(selector) {
-    document.querySelectorAll(selector).forEach(function (el) {
-      if (!el.hasAttribute("data-reveal")) el.setAttribute("data-reveal", "");
-    });
-  }
 
   function mask(el) {
     if (el.querySelector(".mask-line")) return;
@@ -56,26 +50,30 @@
     if (section) nodes = nodes.concat(Array.from(section.querySelectorAll(".section-heading .mask-line, .section-heading [data-reveal]")));
     nodes.forEach(function (n) {
       if (n.matches("[data-reveal], .mask-line")) {
-        n.style.setProperty("--delay", "0ms");
-        n.classList.add("is-revealed");
+        n.classList.add("is-revealed", "is-settled");
       }
     });
   }
 
   function settleAll() {
     document.querySelectorAll("[data-reveal], .mask-line").forEach(function (n) { n.classList.add("is-revealed"); });
+    pending.clear();
   }
 
   function startObserving() {
     if (observer) observer.disconnect();
     if (!("IntersectionObserver" in window)) { settleAll(); return; }
+    pending.clear();
     observer = new IntersectionObserver(function (entries) {
       var visible = entries.filter(function (e) { return e.isIntersecting || e.boundingClientRect.top < 0; });
       visible.sort(function (a, b) { return a.boundingClientRect.top - b.boundingClientRect.top; });
-      visible.forEach(function (e) { reveal(e.target); observer.unobserve(e.target); });
+      visible.forEach(function (e) { reveal(e.target); pending.delete(e.target); observer.unobserve(e.target); });
     }, { rootMargin: "0px 0px -8% 0px", threshold: 0.01 });
+    pending.clear();
     document.querySelectorAll("[data-reveal], .mask-line").forEach(function (el) {
-      if (!el.classList.contains("is-revealed")) observer.observe(el);
+      if (el.classList.contains("is-revealed")) return;
+      pending.add(el);
+      observer.observe(el);
     });
   }
 
@@ -87,9 +85,21 @@
     tile.style.backgroundPosition = (col * 100 / (SPRITE.cols - 1)) + "% " + (row * 100 / (SPRITE.rows - 1)) + "%";
   }
 
+  function revealPassed() {
+    pending.forEach(function (el) {
+      if (el.getBoundingClientRect().bottom < 0) {
+        el.style.setProperty("--delay", "0ms");
+        el.classList.add("is-revealed");
+        pending.delete(el);
+        if (observer) observer.unobserve(el);
+      }
+    });
+  }
+
   function updateScroll() {
     scrollQueued = false;
     if (!root.classList.contains("motion-on")) return;
+    revealPassed();
     var max = document.documentElement.scrollHeight - innerHeight;
     var bar = document.querySelector(".scroll-progress span");
     if (bar && max > 0) bar.style.transform = "scaleX(" + Math.min(1, Math.max(0, scrollY / max)) + ")";
@@ -221,7 +231,6 @@
   }
 
   function init() {
-    mark(REVEAL.join(","));
     MASKED.forEach(function (selector) { document.querySelectorAll(selector).forEach(mask); });
     document.querySelectorAll("[data-motion-toggle]").forEach(bindToggle);
     buildRoute();
