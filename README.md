@@ -41,7 +41,7 @@ Section and record links jump immediately. Deep links open containing disclosure
 
 Without JavaScript, the page follows the system theme, the header and section index enter document flow, all skill panels and project records remain available, and native disclosures still open. Enhanced controls require JavaScript.
 
-Motion is a layer over the complete page. One class, `motion-on` on the root element, gates every effect, and it is set only when the reader has not paused motion, the system does not request reduced motion, and the URL has no `noanim` flag. Without it, every record is visible immediately. A 3-second failsafe removes the class if `js/motion.js` never runs. Effects: masked heading arrivals, short bounded reveals as records enter view (70 ms between siblings, 800 ms cap), a decorative career route that draws as roles are read, a scroll-driven turn of the OpenBrowser tile, and press feedback on controls. Nothing pins scrolling, forces scroll distance, or hides a record the reader has linked to or focused. **Pause motion** in Appearance is saved on the device under `portfolio-motion-v1` and is independent of the saved theme and color.
+Motion is a layer over the complete page. One class, `motion-on` on the root element, gates every effect (the sprite, career route, progress bar and reveals all require it), and it is set only when the reader has not paused motion, the system does not request reduced motion, and the URL has no `noanim` flag. Without it, every record is visible immediately. A 3-second failsafe removes the class if `js/motion.js` never runs. The stored value is `{"mode":"auto"}` or `{"mode":"paused"}`; Play writes `auto`. The control reads Pause motion, Play motion, Motion reduced by system setting, or Motion off for this view, and it follows changes made in another tab. Effects: masked heading arrivals, short bounded reveals as records enter view (70 ms between siblings, 800 ms cap), a decorative career route that draws as roles are read, a scroll-driven turn of the OpenBrowser tile, a page progress bar under the header, press feedback on controls, and a 4px lift on project cards where a fine pointer exists. Nothing pins scrolling, forces scroll distance, or hides a record the reader has linked to or focused. **Pause motion** in Appearance is saved on the device under `portfolio-motion-v1` and is independent of the saved theme and color.
 
 ## Evidence
 
@@ -63,7 +63,7 @@ Run from the repository root:
 uv run --no-project python -m http.server 8000 --bind 127.0.0.1
 ```
 
-Open `http://127.0.0.1:8000/`. Add `?noanim` to inspect the page without motion. There is no build step. HTML, both stylesheets, `css/motion.css`, JavaScript, and fonts are served locally, with no third-party runtime. Geist's license is in `assets/geist-OFL.txt`; original assets remain available.
+Open `http://127.0.0.1:8000/`. Add `?noanim` to inspect the page without motion. There is no build step. HTML, the three stylesheets (`css/style.css`, `css/editorial.css`, `css/motion.css`), JavaScript, and fonts are served locally, with no third-party runtime. Geist's license is in `assets/geist-OFL.txt`; original assets remain available.
 
 ### Hero artwork
 
@@ -87,11 +87,11 @@ npx playwright install chromium
 npm test
 ```
 
-`npm test` runs `tests/appearance.cjs` and `tests/redesign.cjs`. These test dependencies are not production dependencies. Set `PORTFOLIO_URL` to use another preview URL. `TEST_OUTPUT_DIR` changes the output directory for both suites. Default outputs are ignored directories `local_docs/appearance-qa/` and `local_docs/redesign-qa/`.
+`npm test` runs `tests/appearance.cjs`, `tests/redesign.cjs` and `tests/motion.cjs`. These test dependencies are not production dependencies. Set `PORTFOLIO_URL` to use another preview URL. `TEST_OUTPUT_DIR` changes the output directory for all three suites; the motion suite writes screenshots to `local_docs/motion-qa` by default. Default outputs are ignored directories `local_docs/appearance-qa/` and `local_docs/redesign-qa/`.
 
 The suites cover appearance choices and contrast, independent preference persistence, malformed and blocked storage, OS and cross-tab changes, keyboard controls, responsive overflow and hero actions, drawer and popover coordination, deep links, no-JavaScript access, search, disclosures, and record counts. Run results, not this documentation, establish whether a revision passes.
 
-When Impeccable is installed, run its `detect --json index.html css/style.css css/editorial.css js/script.js js/appearance.js` command. Review desktop and phone rendering, active sections, anchor clearance, focus behavior, reduced motion, and both themes with every accent. Verify full record text, link parity, and original asset bytes before publishing.
+When Impeccable is installed, run its `detect --json index.html css/style.css css/editorial.css css/motion.css js/script.js js/appearance.js js/motion-boot.js js/motion.js` command. Review desktop and phone rendering, active sections, anchor clearance, focus behavior, reduced motion, and both themes with every accent. Verify full record text, link parity, and original asset bytes before publishing.
 
 ## Deploy
 
