@@ -4,7 +4,10 @@
   var KEY = "portfolio-motion-v1";
   var root = document.documentElement;
 
+  var session = null;
+
   function storedMode() {
+    if (session) return session;
     var parsed;
     try { parsed = JSON.parse(localStorage.getItem(KEY)); } catch (_) { return "auto"; }
     if (parsed === null || typeof parsed !== "object" || Array.isArray(parsed)) return "auto";
@@ -18,13 +21,16 @@
     return "";
   }
 
-  window.portfolioMotion = { key: KEY, storedMode: storedMode, reason: reason };
+  window.portfolioMotion = { key: KEY, storedMode: storedMode, reason: reason, remember: function (mode) { session = mode; } };
 
   if (!reason()) {
     root.classList.add("motion-on");
     // Nothing may stay hidden if the motion module is blocked or fails.
     window.setTimeout(function () {
-      if (!window.portfolioMotion.ready) root.classList.remove("motion-on");
+      if (!window.portfolioMotion.ready) {
+        window.portfolioMotion.failed = true;
+        root.classList.remove("motion-on");
+      }
     }, 3000);
   }
 })();
