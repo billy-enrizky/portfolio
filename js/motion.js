@@ -7,6 +7,7 @@
   var root = document.documentElement;
   var STAGGER_MS = 70;
   var STAGGER_CAP_MS = 800;
+  var REVEAL_MS = 900;
   var SPRITE = { url: "images/motion/openbrowser-turn.webp", cols: 6, rows: 4, frames: 24 };
   var MASKED = [".hero-name-line", ".section-heading h2"];
 
@@ -38,7 +39,7 @@
     batchCount += 1;
     el.classList.add("is-revealed");
     var cleanup = function () { el.style.removeProperty("--delay"); };
-    window.setTimeout(cleanup, STAGGER_CAP_MS + 900);
+    window.setTimeout(cleanup, STAGGER_CAP_MS + REVEAL_MS);
   }
 
   function settle(el) {
@@ -46,8 +47,6 @@
     var nodes = [];
     for (var node = el; node && node !== document.body; node = node.parentElement) nodes.push(node);
     nodes = nodes.concat(Array.from(el.querySelectorAll("[data-reveal], .mask-line")));
-    var section = el.closest("section");
-    if (section) nodes = nodes.concat(Array.from(section.querySelectorAll(".section-heading .mask-line, .section-heading [data-reveal]")));
     nodes.forEach(function (n) {
       if (n.matches("[data-reveal], .mask-line")) {
         n.classList.add("is-revealed", "is-settled");
@@ -100,6 +99,7 @@
     scrollQueued = false;
     if (!root.classList.contains("motion-on")) return;
     revealPassed();
+    revealBottom();
     var max = document.documentElement.scrollHeight - innerHeight;
     var bar = document.querySelector(".scroll-progress span");
     if (bar && max > 0) bar.style.transform = "scaleX(" + Math.min(1, Math.max(0, scrollY / max)) + ")";
@@ -111,6 +111,18 @@
       if (next !== frame) { frame = next; setFrame(frame); }
     }
     updateRoute();
+  }
+
+  function revealBottom() {
+    if (scrollY + innerHeight < document.documentElement.scrollHeight - 2) return;
+    pending.forEach(function (el) {
+      if (el.getBoundingClientRect().top < innerHeight) {
+        el.style.setProperty("--delay", "0ms");
+        el.classList.add("is-revealed");
+        pending.delete(el);
+        if (observer) observer.unobserve(el);
+      }
+    });
   }
 
   function onScroll() {
@@ -147,16 +159,27 @@
     layoutRoute();
   }
 
+  function offsetWithin(el, ancestor) {
+    var top = 0;
+    for (var node = el; node && node !== ancestor; node = node.offsetParent) top += node.offsetTop;
+    return top;
+  }
+
+  var routeFrame = 0;
+  function scheduleRoute() {
+    if (routeFrame || !root.classList.contains("motion-on")) return;
+    routeFrame = requestAnimationFrame(function () { routeFrame = 0; layoutRoute(); });
+  }
+
   function layoutRoute() {
     if (!route) return;
     var section = document.getElementById("experience");
     var records = Array.from(section.querySelectorAll(".role-record"));
-    var box = section.getBoundingClientRect();
-    if (!records.length || box.height === 0) return;
-    var x = 6;
+    if (!records.length || section.offsetHeight === 0) return;
+    var gutter = parseFloat(getComputedStyle(section.parentElement).paddingLeft) || 20;
+    var x = -gutter / 2;
     var points = records.map(function (r) {
-      var rb = r.getBoundingClientRect();
-      return { y: rb.top - box.top + 40, id: r.id };
+      return { y: offsetWithin(r, section) + 40 };
     });
     var d = "M" + x + " " + points[0].y;
     points.forEach(function (p, i) { if (i) d += " L" + x + " " + p.y; });
@@ -203,9 +226,10 @@
 
   function apply() {
     var reason = boot.reason();
-    var on = !reason;
+    var on = !reason && !boot.failed;
     root.classList.toggle("motion-on", on);
     if (on) {
+      scheduleRoute();
       startObserving();
       loadSprite();
       onScroll();
@@ -217,6 +241,7 @@
   }
 
   function store(mode) {
+    boot.remember(mode);
     try { localStorage.setItem(boot.key, JSON.stringify({ mode: mode })); } catch (_) { /* Keep working for this visit. */ }
   }
 
@@ -237,22 +262,23 @@
 
     document.addEventListener("portfolio:navigate", function (event) {
       var id = event.detail && event.detail.id;
-      settle(id ? document.getElementById(id) : null);
+      if (id && id !== "main") settle(document.getElementById(id));
     });
     document.addEventListener("focusin", function (event) {
       var node = event.target.closest && event.target.closest("[data-reveal]");
       if (node) settle(node);
     });
     window.addEventListener("storage", function (event) {
-      if (event.key === null || event.key === boot.key) apply();
+      if (event.key === null || event.key === boot.key) { boot.remember(null); apply(); }
     });
     reducedQuery.addEventListener("change", apply);
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", function () { layoutRoute(); onScroll(); });
-    document.addEventListener("toggle", function () { layoutRoute(); }, true);
+    window.addEventListener("resize", function () { scheduleRoute(); onScroll(); });
+    document.addEventListener("toggle", scheduleRoute, true);
     window.addEventListener("hashchange", function () {
-      var id = decodeURIComponent(location.hash.slice(1));
-      settle(id ? document.getElementById(id) : null);
+      var id;
+      try { id = decodeURIComponent(location.hash.slice(1)); } catch (_) { return; }
+      if (id && id !== "main") settle(document.getElementById(id));
     });
 
     // A deep link must be readable before anything animates.
