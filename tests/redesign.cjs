@@ -9,7 +9,8 @@ const out=path.resolve(process.env.TEST_OUTPUT_DIR||'local_docs/redesign-qa');fs
  await page.goto(base+'?noanim');await page.evaluate(()=>document.fonts.ready);
  assert.equal(await page.locator('.site-header').count(),1,'The reference-led design needs a persistent full-width header');
  assert.equal(await page.getByRole('heading',{name:'Muhammad Enrizky Brillian',level:1,exact:true}).count(),1);
- assert.equal(await page.locator('.hero-artwork img').count(),1);
+ assert.equal(await page.locator('.hero-artwork, .hero-project-tile, .hero-turn').count(),0,'The hero has no artwork');
+ assert.equal(await page.locator('.profile-hero img').count(),0,'The hero holds no image');
  assert.equal(await page.locator('.site-index').isVisible(),false);
  const sizes=[];
  for(const width of [320,390,700,768,900,901,1024,1440,1920]){

@@ -9,12 +9,11 @@ fs.mkdirSync(out,{recursive:true});
 
 const MOTION_KEY='portfolio-motion-v1';
 const APPEARANCE_KEY='portfolio-appearance';
-const SPRITE='openbrowser-turn.webp';
 const PAUSED='{"mode":"paused"}';
 const DESKTOP={width:1440,height:1000};
 const PHONE={width:390,height:844};
 const WIDTHS=[320,390,768,1024,1440,1920];
-const REVEAL_SELECTORS=['.hero-copy > *','.hero-artwork','.section-heading > p','.role-record','.paper-record','.project-record','.education-entry','.contact-address','.contact-actions','.contact-links'];
+const REVEAL_SELECTORS=['.hero-copy > *','.section-heading > p','.role-record','.paper-record','.project-record','.education-entry','.contact-address','.contact-actions','.contact-links'];
 const MODES={
  on:{motion:true,text:'Pause motion',disabled:false},
  paused:{motion:false,text:'Play motion',disabled:false},
@@ -28,12 +27,6 @@ function watch(page,{ignoreConsole=false}={}){
  if(!ignoreConsole)page.on('console',m=>{if(m.type()==='error')errors.push('console: '+m.text())});
 }
 
-function trackSprite(page){
- const urls=[];
- page.on('request',r=>{if(r.url().includes(SPRITE))urls.push(r.url())});
- return urls;
-}
-
 async function withSession(browser,opts,run){
  const context=await browser.newContext({
   viewport:opts.viewport||DESKTOP,
@@ -44,11 +37,9 @@ async function withSession(browser,opts,run){
  context.setDefaultTimeout(10000);
  if(opts.stored!==undefined)await context.addInitScript(({key,raw})=>{try{localStorage.setItem(key,raw)}catch(e){}},{key:MOTION_KEY,raw:opts.stored});
  if(opts.blocked)await context.addInitScript(()=>Object.defineProperty(window,'localStorage',{get(){throw new DOMException('Storage unavailable','SecurityError')}}));
- if(opts.saveData)await context.addInitScript(()=>Object.defineProperty(navigator,'connection',{value:{saveData:true},configurable:true}));
  context.on('page',page=>watch(page,opts));
  const page=await context.newPage();
- const spriteRequests=trackSprite(page);
- try{await run({context,page,spriteRequests})}finally{await context.close()}
+ try{await run({context,page})}finally{await context.close()}
 }
 
 const settle=page=>page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
@@ -192,32 +183,19 @@ async function staticModes(browser){
   {name:'?noanim with stored pause',mode:'noanim',opts:{stored:PAUSED},suffix:'?noanim'},
  ];
  for(const c of cases){
-  await withSession(browser,c.opts,async({page,spriteRequests})=>{
+  await withSession(browser,c.opts,async({page})=>{
    await gotoOnly(page,c.suffix);
    await assertAllVisible(page,`${c.name} right after load`,{transform:true});
    await waitBound(page);
    await assertMode(page,c.mode,c.name);
-   await page.waitForTimeout(800);
-   assert.deepEqual(spriteRequests,[],`${c.name} must not request the hero sprite`);
-   assert.equal(await page.evaluate(()=>document.documentElement.classList.contains('sprite-ready')),false,`${c.name} must not mark the sprite ready`);
-   assert.equal(await rendered(page,'.hero-turn'),false,`${c.name} hides the sprite layer`);
-   assert.equal(await rendered(page,'.hero-artwork img'),true,`${c.name} keeps the original hero image`);
   });
  }
- await withSession(browser,{saveData:true},async({page,spriteRequests})=>{
-  await loadView(page);
-  await page.waitForTimeout(800);
-  assert.deepEqual(spriteRequests,[],'Save-data must not request the hero sprite');
-  assert.equal(await rendered(page,'.hero-artwork img'),true,'Save-data keeps the original hero image');
- });
 }
 
 async function motionOnBehavior(browser){
- await withSession(browser,{},async({page,spriteRequests})=>{
+ await withSession(browser,{},async({page})=>{
   await loadView(page);
   assert.equal(await motionOn(page),true,'Default view has motion-on');
-  await page.waitForFunction(()=>document.documentElement.classList.contains('sprite-ready'),null,{timeout:15000});
-  assert.ok(spriteRequests.length>=1,'Motion view requests the hero sprite');
   assert.equal(await opacityOf(page,'.contact-links'),'0','A far-down reveal element is hidden before it is approached');
   const heroLines=await page.locator('.hero-name-line').allTextContents();
   assert.deepEqual(heroLines,['Enrizky','Brillian'],'Masked hero name keeps its text');
@@ -356,30 +334,8 @@ async function toggleAndSync(browser){
 async function motionVisuals(browser){
  await withSession(browser,{},async({page})=>{
   await loadView(page);
-  await page.waitForFunction(()=>document.documentElement.classList.contains('sprite-ready'),null,{timeout:15000});
-  const tile=await page.evaluate(()=>{
-   const a=document.querySelector('a.hero-project-tile');
-   return {
-    anchors:document.querySelectorAll('a.hero-project-tile').length,
-    label:a.getAttribute('aria-label'),
-    href:a.getAttribute('href'),
-    turns:a.querySelectorAll('span.hero-turn[aria-hidden="true"]').length,
-    images:a.querySelectorAll('img').length,
-   };
-  });
-  assert.deepEqual(tile,{anchors:1,label:'Explore OpenBrowser',href:'#project-openbrowser',turns:1,images:1},'Hero tile keeps its link and gains one hidden sprite layer');
-  assert.equal(await rendered(page,'.hero-turn'),true,'The sprite layer shows once ready');
-  assert.equal(await rendered(page,'.hero-artwork img'),false,'The original hero image is hidden while the sprite shows');
-  const sprite=await page.locator('.hero-turn').evaluate(el=>getComputedStyle(el).backgroundImage);
-  assert.ok(sprite.includes(SPRITE),'The sprite layer paints the turn sprite');
-  const position=()=>page.locator('.hero-turn').evaluate(el=>getComputedStyle(el).backgroundPosition);
-  const atTop=await position();
-  const midHero=await page.evaluate(()=>Math.round(document.getElementById('summary').offsetHeight*0.5));
-  await page.evaluate(top=>scrollTo({top,behavior:'instant'}),midHero);
-  await settle(page);
-  await page.waitForFunction(initial=>getComputedStyle(document.querySelector('.hero-turn')).backgroundPosition!==initial,atTop);
-  assert.notEqual(await position(),atTop,'Sprite frame follows scroll through the hero');
-
+  const art=await page.evaluate(()=>({art:document.querySelectorAll('.hero-artwork,.hero-project-tile,.hero-turn').length,images:document.querySelectorAll('.profile-hero img').length,ready:document.documentElement.classList.contains('sprite-ready')}));
+  assert.deepEqual(art,{art:0,images:0,ready:false},'The hero has no artwork and never marks a sprite ready');
   await page.evaluate(()=>scrollTo({top:0,behavior:'instant'}));
   await settle(page);
   const progressTop=await scaleX(page,'.scroll-progress > span');
@@ -513,7 +469,7 @@ async function preservation(browser){
 }
 
 async function noScript(browser){
- await withSession(browser,{javaScriptEnabled:false,viewport:PHONE},async({page,spriteRequests})=>{
+ await withSession(browser,{javaScriptEnabled:false,viewport:PHONE},async({page})=>{
   await gotoOnly(page);
   assert.equal(await motionOn(page),false,'No-JS page never carries motion-on');
   await assertAllVisible(page,'No-JS page',{transform:true});
@@ -524,14 +480,11 @@ async function noScript(browser){
   assert.deepEqual(markup.filter(m=>!m.present||m.missing),[],'Static HTML marks every spec reveal selector with data-reveal');
   assert.equal(await page.locator('.project-record').count(),30,'No-JS page keeps all project records');
   assert.equal(await page.locator('.role-record').count(),11,'No-JS page keeps all role records');
-  for(const selector of ['h1','#experience-ibm','.project-record','.contact-address','.hero-artwork img']){
+  for(const selector of ['h1','#experience-ibm','.project-record','.contact-address']){
    assert.equal(await page.locator(selector).first().isVisible(),true,`No-JS page reads ${selector}`);
   }
   assert.equal(await page.locator('.scroll-progress').isVisible(),false,'No-JS page shows no scroll progress bar');
   assert.equal(await page.locator('button[data-motion-toggle]').isVisible(),false,'No-JS page hides the motion toggle');
-  assert.equal(await rendered(page,'.hero-turn'),false,'No-JS page shows no sprite layer');
-  await page.waitForTimeout(500);
-  assert.deepEqual(spriteRequests,[],'No-JS page never requests the hero sprite');
   await assertResourceLinks(page,'No-JS page');
  });
 }
@@ -571,15 +524,11 @@ async function screenshots(browser){
 async function reviewRegressions(browser){
  await withSession(browser,{},async({page})=>{
   await loadView(page);
-  await page.waitForFunction(()=>document.documentElement.classList.contains('sprite-ready'),null,{timeout:15000});
+  await page.waitForFunction(()=>getComputedStyle(document.querySelector('.career-route')).display==='block');
   await openAppearance(page);
   await page.locator('button[data-motion-toggle]').click();
-  const paused=await page.evaluate(()=>({
-   turn:getComputedStyle(document.querySelector('.hero-turn')).display,
-   img:getComputedStyle(document.querySelector('.hero-project-tile img')).display,
-   route:getComputedStyle(document.querySelector('.career-route')).display,
-  }));
-  assert.deepEqual(paused,{turn:'none',img:'block',route:'none'},'Pausing at runtime restores the static tile and hides the career route');
+  const route=await page.evaluate(()=>getComputedStyle(document.querySelector('.career-route')).display);
+  assert.equal(route,'none','Pausing at runtime hides the career route');
  });
 
  await withSession(browser,{},async({page})=>{
@@ -678,6 +627,6 @@ async function reviewRegressions(browser){
   await reviewRegressions(browser);
   await screenshots(browser);
   assert.deepEqual(errors,[],'No page errors or console errors across the run');
-  console.log('PASS: motion preference parsing, reduced/noanim/paused/save-data static fallbacks, reveal and masks, navigation settle, toggle and cross-tab sync, hero sprite and scroll visuals, resource links, record preservation without overflow, no-JS reading, failsafe, and screenshots.');
+  console.log('PASS: motion preference parsing, reduced/noanim/paused static fallbacks, reveal and masks, navigation settle, toggle and cross-tab sync, scroll progress and career route, a hero with no artwork, resource links, record preservation without overflow, no-JS reading, failsafe, and screenshots.');
  }finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exit(1)});
