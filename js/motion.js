@@ -1,0 +1,259 @@
+(function () {
+  "use strict";
+
+  var boot = window.portfolioMotion;
+  if (!boot) return;
+
+  var root = document.documentElement;
+  var STAGGER_MS = 70;
+  var STAGGER_CAP_MS = 800;
+  var SPRITE = { url: "images/motion/openbrowser-turn.webp", cols: 6, rows: 4, frames: 24 };
+  var REVEAL = [".hero-copy > *", ".hero-artwork", ".contact-actions", ".contact-links"];
+  var MASKED = [".hero-name-line", ".section-heading h2"];
+
+  var reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  var toggles = [];
+  var observer;
+  var spriteRequested = false;
+  var frame = 0;
+  var scrollQueued = false;
+  var batchStart = 0;
+  var batchCount = 0;
+
+  function mark(selector) {
+    document.querySelectorAll(selector).forEach(function (el) {
+      if (!el.hasAttribute("data-reveal")) el.setAttribute("data-reveal", "");
+    });
+  }
+
+  function mask(el) {
+    if (el.querySelector(".mask-line")) return;
+    var outer = document.createElement("span");
+    var inner = document.createElement("span");
+    outer.className = "mask-line";
+    while (el.firstChild) inner.appendChild(el.firstChild);
+    outer.appendChild(inner);
+    el.appendChild(outer);
+  }
+
+  function reveal(el) {
+    if (el.classList.contains("is-revealed")) return;
+    var now = performance.now();
+    if (now - batchStart > 120) { batchStart = now; batchCount = 0; }
+    el.style.setProperty("--delay", Math.min(batchCount * STAGGER_MS, STAGGER_CAP_MS) + "ms");
+    batchCount += 1;
+    el.classList.add("is-revealed");
+    var cleanup = function () { el.style.removeProperty("--delay"); };
+    window.setTimeout(cleanup, STAGGER_CAP_MS + 900);
+  }
+
+  function settle(el) {
+    if (!el) return;
+    var nodes = [];
+    for (var node = el; node && node !== document.body; node = node.parentElement) nodes.push(node);
+    nodes = nodes.concat(Array.from(el.querySelectorAll("[data-reveal], .mask-line")));
+    var section = el.closest("section");
+    if (section) nodes = nodes.concat(Array.from(section.querySelectorAll(".section-heading .mask-line, .section-heading [data-reveal]")));
+    nodes.forEach(function (n) {
+      if (n.matches("[data-reveal], .mask-line")) {
+        n.style.setProperty("--delay", "0ms");
+        n.classList.add("is-revealed");
+      }
+    });
+  }
+
+  function settleAll() {
+    document.querySelectorAll("[data-reveal], .mask-line").forEach(function (n) { n.classList.add("is-revealed"); });
+  }
+
+  function startObserving() {
+    if (observer) observer.disconnect();
+    if (!("IntersectionObserver" in window)) { settleAll(); return; }
+    observer = new IntersectionObserver(function (entries) {
+      var visible = entries.filter(function (e) { return e.isIntersecting || e.boundingClientRect.top < 0; });
+      visible.sort(function (a, b) { return a.boundingClientRect.top - b.boundingClientRect.top; });
+      visible.forEach(function (e) { reveal(e.target); observer.unobserve(e.target); });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.01 });
+    document.querySelectorAll("[data-reveal], .mask-line").forEach(function (el) {
+      if (!el.classList.contains("is-revealed")) observer.observe(el);
+    });
+  }
+
+  function setFrame(index) {
+    var tile = document.querySelector(".hero-turn");
+    if (!tile) return;
+    var col = index % SPRITE.cols;
+    var row = Math.floor(index / SPRITE.cols);
+    tile.style.backgroundPosition = (col * 100 / (SPRITE.cols - 1)) + "% " + (row * 100 / (SPRITE.rows - 1)) + "%";
+  }
+
+  function updateScroll() {
+    scrollQueued = false;
+    if (!root.classList.contains("motion-on")) return;
+    var max = document.documentElement.scrollHeight - innerHeight;
+    var bar = document.querySelector(".scroll-progress span");
+    if (bar && max > 0) bar.style.transform = "scaleX(" + Math.min(1, Math.max(0, scrollY / max)) + ")";
+    var hero = document.getElementById("summary");
+    if (hero) {
+      var span = Math.max(1, hero.offsetHeight);
+      var t = Math.min(1, Math.max(0, scrollY / span));
+      var next = Math.round(t * (SPRITE.frames - 1));
+      if (next !== frame) { frame = next; setFrame(frame); }
+    }
+    updateRoute();
+  }
+
+  function onScroll() {
+    if (scrollQueued) return;
+    scrollQueued = true;
+    requestAnimationFrame(updateScroll);
+  }
+
+  function loadSprite() {
+    if (spriteRequested || root.classList.contains("sprite-ready")) return;
+    var conn = navigator.connection;
+    if (conn && conn.saveData) return;
+    spriteRequested = true;
+    var img = new Image();
+    img.onload = function () {
+      setFrame(frame);
+      root.classList.add("sprite-ready");
+    };
+    img.src = SPRITE.url;
+  }
+
+  var route;
+  function buildRoute() {
+    var section = document.getElementById("experience");
+    if (!section || route) return;
+    var ns = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("class", "career-route");
+    svg.setAttribute("aria-hidden", "true");
+    var path = document.createElementNS(ns, "path");
+    svg.appendChild(path);
+    section.insertBefore(svg, section.firstChild);
+    route = { svg: svg, path: path, dots: [] };
+    layoutRoute();
+  }
+
+  function layoutRoute() {
+    if (!route) return;
+    var section = document.getElementById("experience");
+    var records = Array.from(section.querySelectorAll(".role-record"));
+    var box = section.getBoundingClientRect();
+    if (!records.length || box.height === 0) return;
+    var x = 6;
+    var points = records.map(function (r) {
+      var rb = r.getBoundingClientRect();
+      return { y: rb.top - box.top + 40, id: r.id };
+    });
+    var d = "M" + x + " " + points[0].y;
+    points.forEach(function (p, i) { if (i) d += " L" + x + " " + p.y; });
+    route.path.setAttribute("d", d);
+    route.length = route.path.getTotalLength();
+    route.path.style.strokeDasharray = route.length;
+    route.points = points;
+    route.dots.forEach(function (n) { n.remove(); });
+    route.dots = points.map(function (p) {
+      var c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      c.setAttribute("class", "route-dot");
+      c.setAttribute("cx", x);
+      c.setAttribute("cy", p.y);
+      c.setAttribute("r", 5);
+      route.svg.appendChild(c);
+      return c;
+    });
+    updateRoute();
+  }
+
+  function updateRoute() {
+    if (!route || !route.points || !root.classList.contains("motion-on")) return;
+    var section = document.getElementById("experience");
+    var box = section.getBoundingClientRect();
+    var reading = innerHeight * 0.6 - box.top;
+    var last = route.points[route.points.length - 1].y;
+    var first = route.points[0].y;
+    var progress = Math.min(1, Math.max(0, (reading - first) / Math.max(1, last - first)));
+    route.path.style.strokeDashoffset = route.length * (1 - progress);
+    route.points.forEach(function (p, i) {
+      route.dots[i].classList.toggle("on", reading >= p.y);
+    });
+  }
+
+  function syncToggles() {
+    var reason = boot.reason();
+    toggles.forEach(function (btn) {
+      btn.hidden = false;
+      if (reason === "noanim") { btn.textContent = "Motion off for this view"; btn.disabled = true; }
+      else if (reason === "reduced") { btn.textContent = "Motion reduced by system setting"; btn.disabled = true; }
+      else { btn.disabled = false; btn.textContent = reason === "paused" ? "Play motion" : "Pause motion"; }
+    });
+  }
+
+  function apply() {
+    var reason = boot.reason();
+    var on = !reason;
+    root.classList.toggle("motion-on", on);
+    if (on) {
+      startObserving();
+      loadSprite();
+      onScroll();
+    } else {
+      if (observer) observer.disconnect();
+      settleAll();
+    }
+    syncToggles();
+  }
+
+  function store(mode) {
+    try { localStorage.setItem(boot.key, JSON.stringify({ mode: mode })); } catch (_) { /* Keep working for this visit. */ }
+  }
+
+  function bindToggle(btn) {
+    toggles.push(btn);
+    btn.addEventListener("click", function () {
+      if (btn.disabled) return;
+      var paused = boot.reason() === "paused";
+      store(paused ? "auto" : "paused");
+      apply();
+    });
+  }
+
+  function init() {
+    mark(REVEAL.join(","));
+    MASKED.forEach(function (selector) { document.querySelectorAll(selector).forEach(mask); });
+    document.querySelectorAll("[data-motion-toggle]").forEach(bindToggle);
+    buildRoute();
+
+    document.addEventListener("portfolio:navigate", function (event) {
+      var id = event.detail && event.detail.id;
+      settle(id ? document.getElementById(id) : null);
+    });
+    document.addEventListener("focusin", function (event) {
+      var node = event.target.closest && event.target.closest("[data-reveal]");
+      if (node) settle(node);
+    });
+    window.addEventListener("storage", function (event) {
+      if (event.key === null || event.key === boot.key) apply();
+    });
+    reducedQuery.addEventListener("change", apply);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", function () { layoutRoute(); onScroll(); });
+    document.addEventListener("toggle", function () { layoutRoute(); }, true);
+    window.addEventListener("hashchange", function () {
+      var id = decodeURIComponent(location.hash.slice(1));
+      settle(id ? document.getElementById(id) : null);
+    });
+
+    // A deep link must be readable before anything animates.
+    if (location.hash) {
+      try { settle(document.getElementById(decodeURIComponent(location.hash.slice(1)))); } catch (_) { /* Ignore a malformed hash. */ }
+    }
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(layoutRoute);
+    boot.ready = true;
+    apply();
+  }
+
+  init();
+})();
