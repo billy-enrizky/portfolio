@@ -10,14 +10,6 @@
   const sections = Array.from(document.querySelectorAll("main > section[id]"));
   const detailPanels = Array.from(document.querySelectorAll("main details"));
   const detailButton = document.getElementById("details-toggle");
-  let refreshTimer;
-
-  function refreshMotion() {
-    clearTimeout(refreshTimer);
-    refreshTimer = setTimeout(function () {
-      if (window.ScrollTrigger) window.ScrollTrigger.refresh();
-    }, 100);
-  }
 
   function setMenu(open, restoreFocus) {
     if (open) appearanceControl.open = false;
@@ -86,13 +78,11 @@
     const open = !detailPanels.every(function (panel) { return panel.open; });
     detailPanels.forEach(function (panel) { panel.open = open; });
     syncDetailsButton();
-    refreshMotion();
   });
   document.addEventListener("toggle", function (event) {
     if (event.target instanceof HTMLDetailsElement) {
       syncDetailsButton();
-      refreshMotion();
-    }
+      }
   }, true);
 
   const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
@@ -104,7 +94,6 @@
       document.getElementById(item.getAttribute("aria-controls")).hidden = !selected;
     });
     if (focus) tab.focus();
-    refreshMotion();
   }
   tabs.forEach(function (tab, index) {
     tab.addEventListener("click", function () { activateTab(tab, false); });
@@ -143,7 +132,6 @@
     document.getElementById("project-empty").hidden = visible.length > 0;
     clearSearch.disabled = !search.value && category === "All";
     filters.forEach(function (filter) { filter.setAttribute("aria-pressed", String(filter.dataset.category === category)); });
-    refreshMotion();
   }
   search.addEventListener("input", applyFilters);
   search.addEventListener("search", applyFilters);
@@ -161,11 +149,6 @@
     try { id = decodeURIComponent(location.hash.slice(1)); } catch (_) { return; }
     const target = document.getElementById(id);
     if (!target) return;
-    const panel = target.closest('[role="tabpanel"]');
-    if (panel) {
-      const tab = tabs.find(function (item) { return item.getAttribute("aria-controls") === panel.id; });
-      if (tab) activateTab(tab, false);
-    }
     const card = target.closest(".project-record");
     if (card && card.hidden) { search.value = ""; category = "All"; applyFilters(); }
     let parent = target.closest("details");

@@ -2,12 +2,9 @@
   "name": "billy-enrizky-portfolio",
   "private": true,
   "scripts": {
-    "test": "node tests/appearance.cjs && node tests/redesign.cjs && node tests/motion-runtime.cjs && node tests/responsive-edges.cjs && node tests/motion-failures.cjs && node tests/motion-containment.cjs",
-    "build:motion": "esbuild js/motion-scene.js --bundle --format=esm --minify --legal-comments=linked --outfile=js/motion-scene.bundle.js"
+    "test": "node tests/appearance.cjs && node tests/redesign.cjs && node tests/motion.cjs"
   },
   "devDependencies": {
-    "esbuild": "0.28.2",
-    "playwright": "1.65.0",
-    "three": "0.187.0"
+    "playwright": "1.65.0"
   }
 }

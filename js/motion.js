@@ -1,499 +1,294 @@
 (function () {
-  'use strict';
+  "use strict";
 
-  const savedScript = document.currentScript;
-  const lifetime = new AbortController();
-  const root = document.documentElement;
-  const host = document.querySelector('.hero-project-tile');
-  const hero = document.getElementById('summary');
-  const buttons = Array.from(document.querySelectorAll('[data-motion-toggle]'));
-  const appearance = document.querySelector('.appearance-controls');
-  const storageKey = 'portfolio-motion-v1';
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const connection = navigator.connection;
-  const cleanups = [];
-  const scheduledFrames = new Set();
-  const entries = new Map();
-  const settledTargets = new Set();
-  const masks = [];
-  const gsap = window.gsap;
-  let revealObserver;
-  let progressTrigger;
-  let heroObserver;
-  let resizeObserver;
-  let attributeObserver;
-  let bodyObserver;
-  let pointerRect;
-  let navigationGeneration = 0;
-  let visitMode = null;
+  var boot = window.portfolioMotion;
+  if (!boot) return;
 
-  function readMode(value) {
-    try {
-      const saved = JSON.parse(value);
-      if (saved && typeof saved === 'object' && !Array.isArray(saved) &&
-          typeof saved.mode === 'string' && ['auto', 'paused'].includes(saved.mode)) return saved.mode;
-    } catch (_) { /* Storage is optional. */ }
-    return 'auto';
+  var root = document.documentElement;
+  var STAGGER_MS = 70;
+  var STAGGER_CAP_MS = 800;
+  var REVEAL_MS = 900;
+  var SPRITE = { url: "images/motion/openbrowser-turn.webp", cols: 6, rows: 4, frames: 24 };
+  var MASKED = [".hero-name-line", ".section-heading h2"];
+
+  var reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  var toggles = [];
+  var observer;
+  var pending = new Set();
+  var spriteRequested = false;
+  var frame = 0;
+  var scrollQueued = false;
+  var batchStart = 0;
+  var batchCount = 0;
+
+  function mask(el) {
+    if (el.querySelector(".mask-line")) return;
+    var outer = document.createElement("span");
+    var inner = document.createElement("span");
+    outer.className = "mask-line";
+    while (el.firstChild) inner.appendChild(el.firstChild);
+    outer.appendChild(inner);
+    el.appendChild(outer);
   }
 
-  function storedMode(fallback = 'auto') {
-    if (visitMode !== null) return visitMode;
-    try { return readMode(localStorage.getItem(storageKey)); } catch (_) { return fallback; }
+  function reveal(el) {
+    if (el.classList.contains("is-revealed")) return;
+    var now = performance.now();
+    if (now - batchStart > 120) { batchStart = now; batchCount = 0; }
+    el.style.setProperty("--delay", Math.min(batchCount * STAGGER_MS, STAGGER_CAP_MS) + "ms");
+    batchCount += 1;
+    el.classList.add("is-revealed");
+    var cleanup = function () { el.style.removeProperty("--delay"); };
+    window.setTimeout(cleanup, STAGGER_CAP_MS + REVEAL_MS);
   }
 
-  function hashTarget() {
-    try { return document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch (_) { return null; }
+  function settle(el) {
+    if (!el) return;
+    var nodes = [];
+    for (var node = el; node && node !== document.body; node = node.parentElement) nodes.push(node);
+    nodes = nodes.concat(Array.from(el.querySelectorAll("[data-reveal], .mask-line")));
+    nodes.forEach(function (n) {
+      if (n.matches("[data-reveal], .mask-line")) {
+        n.classList.add("is-revealed", "is-settled");
+      }
+    });
   }
 
-  const initialTarget = hashTarget();
-  const state = {
-    mode: storedMode(),
-    reduced: reduced.matches,
-    noanim: new URLSearchParams(location.search).has('noanim'),
-    visible: document.visibilityState !== 'hidden',
-    frozen: false,
-    disposed: false,
-    heroVisible: false,
-    navigationGate: Boolean(initialTarget && !['summary', 'top', 'hero-heading'].includes(initialTarget.id)),
-    overlay: false,
-    saveData: Boolean(connection?.saveData),
-    viewport: { width: 0, height: 0 },
-    progress: 0,
-    scene: { phase: 'idle', generation: 0, promise: null, instance: null, redraw: false }
-  };
+  function settleAll() {
+    document.querySelectorAll("[data-reveal], .mask-line").forEach(function (n) { n.classList.add("is-revealed"); });
+    pending.clear();
+  }
 
-  function policy() {
-    const available = !state.disposed && !state.frozen && state.visible && !state.overlay;
-    const canAnimate = available && state.mode === 'auto' && !state.reduced && !state.noanim;
-    const sceneVisible = state.heroVisible && !state.navigationGate && state.viewport.width > 0 && state.viewport.height > 0;
-    const canLoadScene = canAnimate && sceneVisible && !state.saveData;
-    return {
-      canAnimate,
-      canLoadScene,
-      canLoopScene: canLoadScene && state.scene.phase === 'ready',
-      canDrawStill: available && sceneVisible,
-      label: state.noanim ? 'Motion off' : state.reduced ? 'Motion reduced' : state.mode === 'paused' ? 'Play motion' : 'Pause motion',
-      disabled: state.noanim || state.reduced || state.disposed,
-      motionState: state.disposed ? 'disposed' : state.noanim ? 'disabled' : state.reduced ? 'reduced' : state.mode === 'paused' ? 'paused' : !available ? 'suspended' : 'active'
+  function startObserving() {
+    if (observer) observer.disconnect();
+    if (!("IntersectionObserver" in window)) { settleAll(); return; }
+    pending.clear();
+    observer = new IntersectionObserver(function (entries) {
+      var visible = entries.filter(function (e) { return e.isIntersecting || e.boundingClientRect.top < 0; });
+      visible.sort(function (a, b) { return a.boundingClientRect.top - b.boundingClientRect.top; });
+      visible.forEach(function (e) { reveal(e.target); pending.delete(e.target); observer.unobserve(e.target); });
+    }, { rootMargin: "0px", threshold: 0 });
+    pending.clear();
+    document.querySelectorAll("[data-reveal], .mask-line").forEach(function (el) {
+      if (el.classList.contains("is-revealed")) return;
+      pending.add(el);
+      observer.observe(el);
+    });
+  }
+
+  function setFrame(index) {
+    var tile = document.querySelector(".hero-turn");
+    if (!tile) return;
+    var col = index % SPRITE.cols;
+    var row = Math.floor(index / SPRITE.cols);
+    tile.style.backgroundPosition = (col * 100 / (SPRITE.cols - 1)) + "% " + (row * 100 / (SPRITE.rows - 1)) + "%";
+  }
+
+  function revealPassed() {
+    pending.forEach(function (el) {
+      if (el.getBoundingClientRect().bottom < 0) {
+        el.style.setProperty("--delay", "0ms");
+        el.classList.add("is-revealed");
+        pending.delete(el);
+        if (observer) observer.unobserve(el);
+      }
+    });
+  }
+
+  function updateScroll() {
+    scrollQueued = false;
+    if (!root.classList.contains("motion-on")) return;
+    revealPassed();
+    revealBottom();
+    var max = document.documentElement.scrollHeight - innerHeight;
+    var bar = document.querySelector(".scroll-progress span");
+    if (bar && max > 0) bar.style.transform = "scaleX(" + Math.min(1, Math.max(0, scrollY / max)) + ")";
+    var hero = document.getElementById("summary");
+    if (hero) {
+      var span = Math.max(1, hero.offsetHeight);
+      var t = Math.min(1, Math.max(0, scrollY / span));
+      var next = Math.round(t * (SPRITE.frames - 1));
+      if (next !== frame) { frame = next; setFrame(frame); }
+    }
+    updateRoute();
+  }
+
+  function revealBottom() {
+    if (scrollY + innerHeight < document.documentElement.scrollHeight - 2) return;
+    pending.forEach(function (el) {
+      if (el.getBoundingClientRect().top < innerHeight) {
+        el.style.setProperty("--delay", "0ms");
+        el.classList.add("is-revealed");
+        pending.delete(el);
+        if (observer) observer.unobserve(el);
+      }
+    });
+  }
+
+  function onScroll() {
+    if (scrollQueued) return;
+    scrollQueued = true;
+    requestAnimationFrame(updateScroll);
+  }
+
+  function loadSprite() {
+    if (spriteRequested || root.classList.contains("sprite-ready")) return;
+    var conn = navigator.connection;
+    if (conn && conn.saveData) return;
+    spriteRequested = true;
+    var img = new Image();
+    img.onload = function () {
+      setFrame(frame);
+      root.classList.add("sprite-ready");
     };
+    img.src = SPRITE.url;
   }
 
-  function listen(target, type, handler, options) {
-    if (!target) return;
-    target.addEventListener(type, handler, options);
-    cleanups.push(() => target.removeEventListener(type, handler, options));
+  var route;
+  function buildRoute() {
+    var section = document.getElementById("experience");
+    if (!section || route) return;
+    var ns = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("class", "career-route");
+    svg.setAttribute("aria-hidden", "true");
+    var path = document.createElementNS(ns, "path");
+    svg.appendChild(path);
+    section.insertBefore(svg, section.firstChild);
+    route = { svg: svg, path: path, dots: [] };
+    layoutRoute();
   }
 
-  function nextFrame(callback) {
-    const id = requestAnimationFrame(() => {
-      scheduledFrames.delete(id);
-      if (!state.disposed) callback();
+  function offsetWithin(el, ancestor) {
+    var top = 0;
+    for (var node = el; node && node !== ancestor; node = node.offsetParent) top += node.offsetTop;
+    return top;
+  }
+
+  var routeFrame = 0;
+  function scheduleRoute() {
+    if (routeFrame || !root.classList.contains("motion-on")) return;
+    routeFrame = requestAnimationFrame(function () { routeFrame = 0; layoutRoute(); });
+  }
+
+  function layoutRoute() {
+    if (!route) return;
+    var section = document.getElementById("experience");
+    var records = Array.from(section.querySelectorAll(".role-record"));
+    if (!records.length || section.offsetHeight === 0) return;
+    var gutter = parseFloat(getComputedStyle(section.parentElement).paddingLeft) || 20;
+    var x = -gutter / 2;
+    var points = records.map(function (r) {
+      return { y: offsetWithin(r, section) + 40 };
     });
-    scheduledFrames.add(id);
-  }
-
-  function phase(value, reason) {
-    state.scene.phase = value;
-    if (!host) return;
-    host.dataset.sceneState = value;
-    if (reason) host.dataset.sceneReason = reason;
-    else delete host.dataset.sceneReason;
-    if (value !== 'ready') host.classList.remove('is-3d-ready');
-  }
-
-  function settleEntry(entry) {
-    entry.animation?.kill();
-    entry.animation = null;
-    entry.status = 'settled';
-    entry.element.style.removeProperty('transform');
-    entry.element.style.removeProperty('will-change');
-    if (entry.kind === 'rule') entry.element.style.setProperty('--motion-rule-progress', '1');
-    if (entry.kind === 'name') entry.owner.classList.remove('motion-name-masked');
-    revealObserver?.unobserve(entry.owner);
-  }
-
-  function settle(target) {
-    if (!target) return;
-    settledTargets.add(target);
-    for (const entry of entries.values()) {
-      if (target === document || target === entry.owner || target.contains(entry.owner) || entry.owner.contains(target)) settleEntry(entry);
-    }
-  }
-
-  function destroy() {
-    if (state.disposed) return;
-    state.disposed = true;
-    state.scene.generation += 1;
-    lifetime.abort();
-    state.scene.instance?.dispose();
-    state.scene.instance = null;
-    for (const frame of scheduledFrames) cancelAnimationFrame(frame);
-    scheduledFrames.clear();
-    revealObserver?.disconnect();
-    heroObserver?.disconnect();
-    resizeObserver?.disconnect();
-    attributeObserver?.disconnect();
-    bodyObserver?.disconnect();
-    progressTrigger?.kill();
-    for (const remove of cleanups.splice(0)) remove();
-    settle(document);
-    for (const { owner, inner } of masks) {
-      inner.replaceWith(...inner.childNodes);
-      owner.classList.remove('motion-name-masked');
-    }
-    for (const entry of entries.values()) {
-      if (entry.kind === 'rule') {
-        entry.owner.classList.remove('motion-rule');
-        entry.owner.style.removeProperty('--motion-rule-progress');
-      }
-    }
-    entries.clear();
-    root.classList.remove('motion-ready');
-    root.dataset.motionState = 'disposed';
-    buttons.forEach((button) => { button.disabled = true; });
-    phase('disposed');
-  }
-
-  if (!savedScript?.src || !host?.querySelector('.motion-poster') || !hero || buttons.length !== 2) {
-    destroy();
-    return;
-  }
-
-  const bundleUrl = new URL('motion-scene.bundle.js', savedScript.src);
-  const modelUrl = new URL('../assets/motion/openbrowser-scene.glb', savedScript.src);
-  if (savedScript.dataset.sceneVersion) bundleUrl.searchParams.set('v', savedScript.dataset.sceneVersion);
-  if (savedScript.dataset.modelVersion) modelUrl.searchParams.set('v', savedScript.dataset.modelVersion);
-
-  function readPalette() {
-    const style = getComputedStyle(root);
-    return { accent: style.getPropertyValue('--accent').trim(), theme: root.dataset.theme || 'light' };
-  }
-
-  function measure() {
-    pointerRect = host.getBoundingClientRect();
-    state.viewport = { width: pointerRect.width, height: pointerRect.height };
-  }
-
-  function readHeroVisibility() {
-    const rect = host.getBoundingClientRect();
-    state.heroVisible = rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < innerHeight && rect.right > 0 && rect.left < innerWidth;
-  }
-
-  function readOverlay() {
-    state.overlay = document.body.classList.contains('nav-open') || Boolean(appearance?.open);
-  }
-
-  function fallback(reason) {
-    if (state.disposed || state.scene.phase === 'fallback') return;
-    state.scene.generation += 1;
-    state.scene.instance?.dispose();
-    state.scene.instance = null;
-    state.scene.redraw = false;
-    phase('fallback', ['webgl', 'asset', 'context-lost', 'runtime'].includes(reason) ? reason : 'runtime');
-  }
-
-  function loadScene() {
-    if (state.scene.phase !== 'idle' || state.scene.promise || !policy().canLoadScene) return;
-    const generation = ++state.scene.generation;
-    phase('loading');
-    state.scene.promise = (async () => {
-      let instance;
-      try {
-        const module = await import(bundleUrl.href);
-        if (state.disposed || generation !== state.scene.generation) return;
-        instance = await module.createMotionScene(host, {
-          modelUrl: modelUrl.href,
-          palette: readPalette(),
-          signal: lifetime.signal,
-          onContextLost: (reason) => {
-            if (generation === state.scene.generation) fallback(reason || 'context-lost');
-          }
-        });
-        if (state.disposed || generation !== state.scene.generation) {
-          instance.dispose();
-          return;
-        }
-        state.scene.instance = instance;
-        phase('prepared');
-        state.scene.redraw = true;
-        instance.setPalette(readPalette());
-        instance.setProgress(state.progress);
-        reconcile();
-      } catch (error) {
-        instance?.dispose();
-        if (!state.disposed && generation === state.scene.generation) fallback(error.reason || 'runtime');
-      } finally {
-        state.scene.promise = null;
-      }
-    })();
-  }
-
-  function reconcile() {
-    if (state.disposed) return;
-    const current = policy();
-    root.dataset.motionState = current.motionState;
-    buttons.forEach((button) => {
-      button.textContent = current.label;
-      button.disabled = current.disabled;
-      button.setAttribute('aria-describedby', 'motion-note');
+    var d = "M" + x + " " + points[0].y;
+    points.forEach(function (p, i) { if (i) d += " L" + x + " " + p.y; });
+    route.path.setAttribute("d", d);
+    route.length = route.path.getTotalLength();
+    route.path.style.strokeDasharray = route.length;
+    route.points = points;
+    route.dots.forEach(function (n) { n.remove(); });
+    route.dots = points.map(function (p) {
+      var c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      c.setAttribute("class", "route-dot");
+      c.setAttribute("cx", x);
+      c.setAttribute("cy", p.y);
+      c.setAttribute("r", 5);
+      route.svg.appendChild(c);
+      return c;
     });
-    if (!current.canAnimate) settle(document);
-    const instance = state.scene.instance;
-    if (instance) {
-      if (!current.canLoopScene) instance.stop();
-      if (state.scene.redraw && current.canDrawStill) {
-        state.scene.redraw = false;
-        try {
-          instance.resize();
-          instance.setProgress(state.progress);
-          instance.renderAt(undefined, state.progress);
-          if (state.disposed || state.scene.instance !== instance || state.scene.phase === 'fallback') return;
-          if (state.scene.phase === 'prepared') {
-            host.appendChild(instance.canvas);
-            phase('ready');
-            host.classList.add('is-3d-ready');
-          }
-        } catch (error) {
-          fallback(error.reason || 'runtime');
-          return;
-        }
-      }
-      if (policy().canLoopScene) instance.start();
-    } else if (current.canLoadScene) loadScene();
+    updateRoute();
   }
 
-  function requestRedraw() {
-    if (state.scene.instance) state.scene.redraw = true;
-    reconcile();
-  }
-
-  function refreshLayout() {
-    measure();
-    readHeroVisibility();
-    state.scene.instance?.resize();
-    requestRedraw();
-  }
-
-  function settleNavigation(target) {
-    if (!target || state.disposed) return;
-    settle(target);
-    const record = target.closest('.role-record, .project-record, .paper-record, .education-entry, .credential-group');
-    if (record) settle(record);
-    const version = ++navigationGeneration;
-    state.navigationGate = true;
-    reconcile();
-    nextFrame(() => nextFrame(() => {
-      if (version !== navigationGeneration) return;
-      state.navigationGate = false;
-      readHeroVisibility();
-      reconcile();
-    }));
-  }
-
-  listen(document, 'portfolio:navigate', (event) => {
-    const id = event.detail?.id;
-    if (typeof id === 'string') settleNavigation(document.getElementById(id));
-  });
-  listen(document, 'focusin', (event) => {
-    const target = event.target;
-    if (!(target instanceof Element)) return;
-    settle(target.closest('.role-record, .project-record, .paper-record, .education-entry, .credential-group, .hero-name, .section-heading') || target);
-  });
-  listen(window, 'hashchange', () => settleNavigation(hashTarget()));
-  listen(window, 'popstate', () => settleNavigation(hashTarget()));
-  listen(window, 'storage', (event) => {
-    if (event.key !== storageKey && event.key !== null) return;
-    // A cross-tab motion change supersedes this visit's unpersisted choice.
-    visitMode = null;
-    state.mode = readMode(event.newValue);
-    reconcile();
-  });
-  listen(reduced, 'change', () => {
-    state.reduced = reduced.matches;
-    reconcile();
-  });
-  listen(connection, 'change', () => {
-    state.saveData = Boolean(connection.saveData);
-    reconcile();
-  });
-  listen(document, 'visibilitychange', () => {
-    state.visible = document.visibilityState !== 'hidden';
-    reconcile();
-  });
-  listen(window, 'pagehide', (event) => {
-    if (!event.persisted) destroy();
-    else {
-      state.frozen = true;
-      reconcile();
-    }
-  });
-  listen(window, 'pageshow', () => {
-    state.frozen = false;
-    state.visible = document.visibilityState !== 'hidden';
-    state.mode = storedMode(state.mode);
-    state.reduced = reduced.matches;
-    state.saveData = Boolean(connection?.saveData);
-    readOverlay();
-    measure();
-    readHeroVisibility();
-    reconcile();
-  });
-  buttons.forEach((button) => {
-    listen(button, 'click', () => {
-      if (policy().disabled) return;
-      state.mode = state.mode === 'paused' ? 'auto' : 'paused';
-      visitMode = state.mode;
-      try {
-        localStorage.setItem(storageKey, JSON.stringify({ mode: state.mode }));
-        visitMode = null;
-      } catch (_) { /* Keep this visit's choice. */ }
-      reconcile();
-    });
-  });
-  listen(appearance, 'toggle', () => {
-    readOverlay();
-    reconcile();
-  });
-  bodyObserver = new MutationObserver(() => {
-    readOverlay();
-    reconcile();
-  });
-  bodyObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-  attributeObserver = new MutationObserver(() => {
-    if (state.disposed) return;
-    try { state.scene.instance?.setPalette(readPalette()); } catch (_) { fallback('runtime'); }
-    requestRedraw();
-  });
-  attributeObserver.observe(root, { attributes: true, attributeFilter: ['data-theme', 'data-color'] });
-  if ('ResizeObserver' in window) {
-    resizeObserver = new ResizeObserver(() => {
-      const rect = host.getBoundingClientRect();
-      if (rect.width !== state.viewport.width || rect.height !== state.viewport.height) refreshLayout();
-    });
-    resizeObserver.observe(host);
-  }
-  listen(window, 'resize', refreshLayout);
-  listen(host, 'pointerenter', () => { pointerRect = host.getBoundingClientRect(); });
-  listen(host, 'pointermove', (event) => {
-    if (event.pointerType === 'touch' || !policy().canLoopScene || !pointerRect?.width || !pointerRect.height) return;
-    const x = Math.max(-1, Math.min(1, 2 * (event.clientX - pointerRect.left) / pointerRect.width - 1));
-    const y = Math.max(-1, Math.min(1, 1 - 2 * (event.clientY - pointerRect.top) / pointerRect.height));
-    state.scene.instance.setPointer(x, y);
-  });
-  listen(host, 'pointerleave', () => state.scene.instance?.setPointer(0, 0));
-
-  function addEntry(owner, element, kind) {
-    const entry = { owner, element, kind, status: 'pending', animation: null };
-    entries.set(element, entry);
-    if (Array.from(settledTargets).some((target) => target === document || target.contains(owner) || owner.contains(target))) settleEntry(entry);
-    return entry;
-  }
-
-  function animateEntry(entry, delay = 0) {
-    if (entry.status !== 'pending') return;
-    if (!policy().canAnimate) { settleEntry(entry); return; }
-    entry.status = 'animating';
-    if (entry.kind === 'name') entry.owner.classList.add('motion-name-masked');
-    const from = entry.kind === 'rule' ? { '--motion-rule-progress': 0 } : { y: entry.kind === 'name' ? '135%' : entry.kind === 'heading' ? 18 : 22 };
-    const to = entry.kind === 'rule' ? { '--motion-rule-progress': 1 } : { y: 0 };
-    entry.animation = gsap.fromTo(entry.element, from, {
-      ...to,
-      duration: entry.kind === 'name' ? 0.6 : entry.kind === 'rule' ? 0.6 : 0.42,
-      delay,
-      ease: 'expo.out',
-      onComplete: () => settleEntry(entry)
+  function updateRoute() {
+    if (!route || !route.points || !root.classList.contains("motion-on")) return;
+    var section = document.getElementById("experience");
+    var box = section.getBoundingClientRect();
+    var reading = innerHeight * 0.6 - box.top;
+    var last = route.points[route.points.length - 1].y;
+    var first = route.points[0].y;
+    var progress = Math.min(1, Math.max(0, (reading - first) / Math.max(1, last - first)));
+    route.path.style.strokeDashoffset = route.length * (1 - progress);
+    route.points.forEach(function (p, i) {
+      route.dots[i].classList.toggle("on", reading >= p.y);
     });
   }
 
-  function setupReadingMotion() {
-    if (!gsap || !window.ScrollTrigger || state.disposed) return;
-    try {
-      gsap.registerPlugin(window.ScrollTrigger);
-      document.querySelectorAll('.hero-name-line').forEach((owner) => {
-        const inner = document.createElement('span');
-        inner.className = 'motion-name-content';
-        inner.append(...owner.childNodes);
-        owner.appendChild(inner);
-        masks.push({ owner, inner });
-        addEntry(owner, inner, 'name');
-      });
-      document.querySelectorAll('.section-heading h2').forEach((owner) => addEntry(owner, owner, 'heading'));
-      document.querySelectorAll('.role-record, .paper-record, .project-record, .education-entry, .credential-group').forEach((owner) => addEntry(owner, owner, 'record'));
-      document.querySelectorAll('main > .content-section').forEach((owner) => {
-        owner.classList.add('motion-rule');
-        addEntry(owner, owner, 'rule');
-      });
-      progressTrigger = window.ScrollTrigger.create({
-        trigger: hero,
-        start: 'top top',
-        end: 'bottom top',
-        onUpdate: (trigger) => {
-          state.progress = Math.max(0, Math.min(1, trigger.progress));
-          state.scene.instance?.setProgress(state.progress);
-        }
-      });
-      state.progress = Math.max(0, Math.min(1, progressTrigger.progress));
-      state.scene.instance?.setProgress(state.progress);
-      if ('IntersectionObserver' in window) {
-        revealObserver = new IntersectionObserver((observed) => {
-          if (!policy().canAnimate) return;
-          const visible = observed.filter((item) => item.isIntersecting).map((item) => item.target);
-          visible.sort((a, b) => a === b ? 0 : a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1);
-          let recordIndex = 0;
-          for (const owner of visible) {
-            for (const entry of entries.values()) {
-              if (entry.owner !== owner || entry.status !== 'pending') continue;
-              const delay = entry.kind === 'record' ? Math.min(0.07 * recordIndex++, 0.8) : 0;
-              animateEntry(entry, delay);
-            }
-            revealObserver.unobserve(owner);
-          }
-        }, { threshold: 0, rootMargin: '0px 0px -4% 0px' });
-        for (const entry of entries.values()) if (entry.kind !== 'name' && entry.status === 'pending') revealObserver.observe(entry.owner);
-      } else {
-        for (const entry of entries.values()) if (entry.kind !== 'name') settleEntry(entry);
-      }
-      let nameIndex = 0;
-      for (const entry of entries.values()) if (entry.kind === 'name') animateEntry(entry, nameIndex++ * 0.07);
-      if (!policy().canAnimate) settle(document);
-    } catch (_) {
-      progressTrigger?.kill();
-      revealObserver?.disconnect();
-      settle(document);
-    }
+  function syncToggles() {
+    var reason = boot.reason();
+    toggles.forEach(function (btn) {
+      btn.hidden = false;
+      if (reason === "noanim") { btn.textContent = "Motion off for this view"; btn.disabled = true; }
+      else if (reason === "reduced") { btn.textContent = "Motion reduced by system setting"; btn.disabled = true; }
+      else { btn.disabled = false; btn.textContent = reason === "paused" ? "Play motion" : "Pause motion"; }
+    });
   }
 
-  if (initialTarget) settle(initialTarget);
-  if (document.activeElement && document.activeElement !== document.body) settle(document.activeElement);
-  measure();
-  readHeroVisibility();
-  readOverlay();
-  phase('idle');
-  root.classList.add('motion-ready');
-  if ('IntersectionObserver' in window) {
-    heroObserver = new IntersectionObserver((observed) => {
-      const item = observed[observed.length - 1];
-      state.heroVisible = item.isIntersecting;
-      reconcile();
-    }, { threshold: 0 });
-    heroObserver.observe(host);
-  } else {
-    listen(window, 'scroll', () => { readHeroVisibility(); reconcile(); }, { passive: true });
+  function apply() {
+    var reason = boot.reason();
+    var on = !reason;
+    root.classList.toggle("motion-on", on);
+    if (on) {
+      scheduleRoute();
+      startObserving();
+      loadSprite();
+      onScroll();
+    } else {
+      if (observer) observer.disconnect();
+      settleAll();
+    }
+    syncToggles();
   }
-  reconcile();
-  const fontsReady = document.fonts?.ready || Promise.resolve();
-  Promise.resolve(fontsReady).catch(() => {}).then(() => {
-    if (state.disposed) return;
-    nextFrame(() => nextFrame(() => {
-      state.mode = storedMode(state.mode);
-      state.reduced = reduced.matches;
-      state.navigationGate = false;
-      const target = hashTarget();
-      if (target) settle(target);
-      measure();
-      readHeroVisibility();
-      setupReadingMotion();
-      reconcile();
-    }));
-  });
+
+  function store(mode) {
+    boot.remember(mode);
+    try { localStorage.setItem(boot.key, JSON.stringify({ mode: mode })); } catch (_) { /* Keep working for this visit. */ }
+  }
+
+  function bindToggle(btn) {
+    toggles.push(btn);
+    btn.addEventListener("click", function () {
+      if (btn.disabled) return;
+      var paused = boot.reason() === "paused";
+      store(paused ? "auto" : "paused");
+      apply();
+    });
+  }
+
+  function init() {
+    MASKED.forEach(function (selector) { document.querySelectorAll(selector).forEach(mask); });
+    document.querySelectorAll("[data-motion-toggle]").forEach(bindToggle);
+    buildRoute();
+
+    document.addEventListener("portfolio:navigate", function (event) {
+      var id = event.detail && event.detail.id;
+      if (id && id !== "main") settle(document.getElementById(id));
+    });
+    document.addEventListener("focusin", function (event) {
+      var node = event.target.closest && event.target.closest("[data-reveal]");
+      if (node) settle(node);
+    });
+    window.addEventListener("storage", function (event) {
+      if (event.key === null || event.key === boot.key) { boot.remember(null); apply(); }
+    });
+    reducedQuery.addEventListener("change", apply);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", function () { scheduleRoute(); onScroll(); });
+    document.addEventListener("toggle", scheduleRoute, true);
+    window.addEventListener("hashchange", function () {
+      var id;
+      try { id = decodeURIComponent(location.hash.slice(1)); } catch (_) { return; }
+      if (id && id !== "main") settle(document.getElementById(id));
+    });
+
+    // A deep link must be readable before anything animates.
+    if (location.hash) {
+      try { settle(document.getElementById(decodeURIComponent(location.hash.slice(1)))); } catch (_) { /* Ignore a malformed hash. */ }
+    }
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(layoutRoute);
+    boot.ready = true;
+    apply();
+  }
+
+  init();
 })();
