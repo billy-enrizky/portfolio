@@ -41,7 +41,7 @@ Section and record links jump immediately. Deep links open containing disclosure
 
 Without JavaScript, the page follows the system theme, the header and section index enter document flow, all skill panels and project records remain available, and native disclosures still open. Enhanced controls require JavaScript.
 
-Hero entrance movement never starts content at zero opacity. The tile responds to hover and keyboard focus without cursor-tracking logic. The retained contact-heading effect is a small scroll-linked opacity change. There is no pinned scrolling, forced scroll distance, carousel, or continuous animation. Reduced motion omits the GSAP effects and uses a static tile angle. `?noanim` skips GSAP, not CSS hover states or theme behavior.
+Motion is a layer over the complete page. One class, `motion-on` on the root element, gates every effect, and it is set only when the reader has not paused motion, the system does not request reduced motion, and the URL has no `noanim` flag. Without it, every record is visible immediately. A 3-second failsafe removes the class if `js/motion.js` never runs. Effects: masked heading arrivals, short bounded reveals as records enter view (70 ms between siblings, 800 ms cap), a decorative career route that draws as roles are read, a scroll-driven turn of the OpenBrowser tile, and press feedback on controls. Nothing pins scrolling, forces scroll distance, or hides a record the reader has linked to or focused. **Pause motion** in Appearance is saved on the device under `portfolio-motion-v1` and is independent of the saved theme and color.
 
 ## Evidence
 
@@ -63,7 +63,11 @@ Run from the repository root:
 uv run --no-project python -m http.server 8000 --bind 127.0.0.1
 ```
 
-Open `http://127.0.0.1:8000/`. Add `?noanim` for inspection without GSAP. There is no build step. HTML, both stylesheets, JavaScript, fonts, GSAP, and ScrollTrigger are served locally. Geist's license is in `assets/geist-OFL.txt`; original assets remain available.
+Open `http://127.0.0.1:8000/`. Add `?noanim` to inspect the page without motion. There is no build step. HTML, both stylesheets, `css/motion.css`, JavaScript, and fonts are served locally, with no third-party runtime. Geist's license is in `assets/geist-OFL.txt`; original assets remain available.
+
+### Hero artwork
+
+`images/motion/openbrowser-turn.webp` is a 24-frame, 6 by 4 sprite sheet (2160 by 1440 pixels, 360-pixel cells) rendered in Blender from the project's own OpenBrowser mark on a rounded tile. It is requested only when motion is allowed and the connection is not in data-saver mode. If it fails to load, the original static tile stays.
 
 ## Check changes
 

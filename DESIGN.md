@@ -250,13 +250,13 @@ The reading document is flat and rule-separated. Elevation is limited to the ind
 
 The tile rests at `rotateY(-13deg) rotateZ(-7deg)` and changes to `rotateY(-5deg) rotateZ(-3deg) translateY(-8px)` on hover or visible focus. This is a CSS state transition, not continuous cursor-following or a WebGL scene. The drawer backdrop is `rgba(0,0,0,.3)`. Layer order is backdrop 30, drawer 40, header with its popover 50, and focused skip link 60.
 
-**The Visible By Default Rule.** Keep content visible before motion starts. Hero entrance motion changes transforms, not opacity.
+**The Visible By Default Rule, revised.** Content is visible whenever motion is off, and motion can never keep it hidden. Under `motion-on`, a record starts at opacity 0 with a short rise and is revealed as it nears the viewport. It is never hidden again, and a deep link, hash navigation, or keyboard focus reveals the target and its ancestors immediately, with no delay. A 3-second failsafe removes `motion-on` if the motion module does not run, and the static page has no hidden content.
 
-The GSAP hero sequence moves name lines from y=26px to 0 over 1 second, staggered by 0.08 seconds. The artwork moves from y=26px and rotation=3 degrees to its resting figure transform over 1.25 seconds. Both use `expo.out` and clear their inline transforms afterward. Neither fades in from zero opacity.
+Masked heading lines rise 108 percent over 820 ms with `cubic-bezier(.172,.687,.393,.943)`, inside a clip padded `.12em` above and `.16em` below so descenders stay whole. Reveals take 640 ms (520 ms at 700 px and narrower), 70 ms between siblings, capped at 800 ms.
 
-The existing contact-heading effect remains implemented: words scrub from opacity 0.65 to 1, with a 0.06-second stagger between `top 90%` and `top 58%`. Disclosure, filter, and tab changes refresh ScrollTrigger. These effects do not pin or extend scrolling. They bind only when reduced motion is not requested. `?noanim` skips GSAP, not CSS interactions.
+The contact heading is revealed with the other masked headings. There is no GSAP or ScrollTrigger in the page. Scroll-linked effects run from one passive scroll listener batched through `requestAnimationFrame`: the page progress bar, the career route stroke, and the hero sprite frame. The hero frame is `round(clamp(scrollY / heroHeight, 0, 1) * 23)`. They do not pin or extend scrolling, and they bind only under `motion-on`.
 
-Reduced-motion CSS fixes the tile at `rotate(-5deg)`, removes its transition and `will-change`, and the base stylesheet reduces other transition and animation durations. Native content and controls do not depend on GSAP. Project-image hover still has its inherited 2px lift rules; do not claim a universal removal of every hover transform without checking the full cascade.
+Reduced motion, a stored pause and `noanim` all remove `motion-on`, so the sprite is not requested and the original static tile is shown. Only the system reduced-motion setting also fixes that tile at `rotate(-5deg)` with no transition (`css/editorial.css:160`). With a stored pause or `noanim` on a system that allows motion, the tile keeps its editorial resting tilt and hover transform. The base stylesheet reduces other transition and animation durations. Native content and controls do not depend on JavaScript motion. Project-image hover still has its inherited 2px lift rules; do not claim a universal removal of every hover transform without checking the full cascade. Project cards also lift 4px on hover only where a fine pointer exists.
 
 ## Shapes
 
