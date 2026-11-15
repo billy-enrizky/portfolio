@@ -2,3 +2,6 @@
 .impeccable/
 node_modules/
 local_docs/
+.cursor/
+presentation/
+.worktrees/
