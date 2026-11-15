@@ -25,7 +25,7 @@ A full-width fixed header contains the name, desktop GitHub and CV links, an ind
 
 The hero is not a preview gallery. The complete project collection stays below search; OpenBrowser, Context Atlas, and the MTP study receive larger record treatments without replacing the archive. Expanded OpenBrowser and MTP details use equal desktop columns with a 48px gap and stack at 900px and below. Technical paragraphs and ledger/fact lists have a 78ch maximum width. Project images remain genuine source assets.
 
-[PRODUCT.md](PRODUCT.md) records coverage and factual boundaries. [DESIGN.md](DESIGN.md) records the implemented typography, colors, dimensions, responsive rules, components, and motion. The source cascade loads `css/style.css` first and `css/editorial.css` second. Read them together; the editorial layer replaces the old visual geometry.
+The source cascade loads `css/style.css` first and `css/editorial.css` second. Read them together; the editorial layer replaces the old visual geometry.
 
 ## Appearance and navigation
 
