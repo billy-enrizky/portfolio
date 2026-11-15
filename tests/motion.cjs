@@ -3,7 +3,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 
-const base=process.env.PORTFOLIO_URL||'http://127.0.0.1:8123/';
+const base=process.env.PORTFOLIO_URL||'http://127.0.0.1:8000/';
 const out=path.resolve(process.env.TEST_OUTPUT_DIR||'local_docs/motion-qa');
 fs.mkdirSync(out,{recursive:true});
 
@@ -564,6 +564,89 @@ async function screenshots(browser){
  }
 }
 
+async function reviewRegressions(browser){
+ await withSession(browser,{},async({page})=>{
+  await loadView(page);
+  await page.waitForFunction(()=>document.documentElement.classList.contains('sprite-ready'),null,{timeout:15000});
+  await openAppearance(page);
+  await page.locator('button[data-motion-toggle]').click();
+  const paused=await page.evaluate(()=>({
+   turn:getComputedStyle(document.querySelector('.hero-turn')).display,
+   img:getComputedStyle(document.querySelector('.hero-project-tile img')).display,
+   route:getComputedStyle(document.querySelector('.career-route')).display,
+  }));
+  assert.deepEqual(paused,{turn:'none',img:'block',route:'none'},'Pausing at runtime restores the static tile and hides the career route');
+ });
+
+ await withSession(browser,{blocked:true},async({page})=>{
+  await loadView(page);
+  await openAppearance(page);
+  await page.locator('button[data-motion-toggle]').click();
+  assert.equal(await motionOn(page),false,'Pause works for this visit when storage is blocked');
+  assert.equal((await toggleState(page)).text,'Play motion','Blocked storage still flips the label');
+  await page.locator('button[data-motion-toggle]').click();
+  assert.equal(await motionOn(page),true,'Play works again when storage is blocked');
+ });
+
+ for(const height of [1400,3200]){
+  await withSession(browser,{},async({page})=>{
+   await page.setViewportSize({width:1280,height});
+   await loadView(page);
+   await page.evaluate(()=>scrollTo({top:document.documentElement.scrollHeight,behavior:'instant'}));
+   await page.waitForTimeout(1500);
+   const hidden=await page.evaluate(()=>[...document.querySelectorAll('.contact-address,.contact-actions,.contact-links')].filter(e=>{const r=e.getBoundingClientRect();return r.top<innerHeight&&r.bottom>0&&getComputedStyle(e).opacity!=='1'}).map(e=>e.className));
+   assert.deepEqual(hidden,[],`Contact block is visible once on screen at the page end on a ${height}px viewport`);
+  });
+ }
+
+ await withSession(browser,{},async({page})=>{
+  await loadView(page);
+  const before=await page.evaluate(()=>document.querySelectorAll('.is-revealed').length);
+  await page.evaluate(()=>{history.pushState(null,'','#main');dispatchEvent(new HashChangeEvent('hashchange'))});
+  await page.waitForTimeout(200);
+  const after=await page.evaluate(()=>document.querySelectorAll('.is-revealed').length);
+  assert.equal(after,before,'Navigating to #main does not reveal the whole page');
+  const errorsBefore=errors.length;
+  await page.evaluate(()=>{location.hash='#%E0%A4%A'});
+  await page.waitForTimeout(300);
+  assert.equal(errors.length,errorsBefore,'A malformed hash raises no error');
+ });
+
+ await withSession(browser,{},async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
+  await loadView(page);
+  await page.evaluate(()=>document.querySelector('#experience-sanofi').scrollIntoView({block:'center',behavior:'instant'}));
+  await page.waitForTimeout(1200);
+  const overlap=await page.evaluate(()=>{
+   const dots=[...document.querySelectorAll('.route-dot')].map(d=>d.getBoundingClientRect());
+   const text=[...document.querySelectorAll('#experience .role-record h3 a,#experience .record-heading p')].map(e=>e.getBoundingClientRect()).filter(r=>r.width>0&&r.bottom>0&&r.top<innerHeight);
+   const line=document.querySelector('.career-route path').getBoundingClientRect();
+   return {dots:dots.length,hits:text.filter(r=>dots.some(d=>d.right>r.left&&d.left<r.right&&d.bottom>r.top&&d.top<r.bottom)||(line.right>r.left&&line.left<r.right)).length};
+  });
+  assert.ok(overlap.dots>0,'The career route has a dot for each role');
+  assert.equal(overlap.hits,0,'The career route stays in the page margin and never overlaps a role title, company or date');
+ });
+
+ await withSession(browser,{ignoreConsole:true},async({context,page})=>{
+  await context.route('**/js/motion.js*',route=>route.abort());
+  await gotoOnly(page);
+  await page.waitForTimeout(500);
+  await openAppearance(page);
+  const legend=await page.evaluate(()=>{const l=[...document.querySelectorAll('.appearance-panel legend')].find(x=>x.textContent.trim()==='Motion');return l?l.getBoundingClientRect().height:0});
+  assert.equal(legend,0,'No empty Motion group shows when the motion script is blocked');
+ });
+
+ await withSession(browser,{},async({page})=>{
+  await loadView(page);
+  const hover=await page.evaluate(()=>matchMedia('(hover:hover) and (pointer:fine)').matches);
+  assert.equal(hover,true,'The test browser has a fine hover pointer, so the card hover rule is active');
+  await page.locator('#projects .project-record').first().evaluate(e=>e.scrollIntoView({block:'center',behavior:'instant'}));
+  await page.waitForTimeout(1200);
+  const props=await page.locator('#projects .project-record.is-revealed').first().evaluate(e=>getComputedStyle(e).transitionProperty);
+  assert.ok(props.split(',').map(x=>x.trim()).includes('opacity'),'A revealed project card still fades opacity, so the stagger shows on hover-capable pointers: '+props);
+ });
+}
+
 (async()=>{
  const browser=await chromium.launch({headless:true});
  try{
@@ -577,6 +660,7 @@ async function screenshots(browser){
   await preservation(browser);
   await noScript(browser);
   await failsafe(browser);
+  await reviewRegressions(browser);
   await screenshots(browser);
   assert.deepEqual(errors,[],'No page errors or console errors across the run');
   console.log('PASS: motion preference parsing, reduced/noanim/paused/save-data static fallbacks, reveal and masks, navigation settle, toggle and cross-tab sync, hero sprite and scroll visuals, resource links, record preservation without overflow, no-JS reading, failsafe, and screenshots.');
