@@ -2,7 +2,6 @@
   "use strict";
   document.documentElement.classList.add("js");
 
-  const noAnimation = new URLSearchParams(window.location.search).has("noanim");
   const menuButton = document.querySelector(".nav-toggle");
   const sidebar = document.getElementById("site-index");
   const backdrop = document.querySelector(".nav-backdrop");
@@ -11,14 +10,6 @@
   const sections = Array.from(document.querySelectorAll("main > section[id]"));
   const detailPanels = Array.from(document.querySelectorAll("main details"));
   const detailButton = document.getElementById("details-toggle");
-  let refreshTimer;
-
-  function refreshMotion() {
-    clearTimeout(refreshTimer);
-    refreshTimer = setTimeout(function () {
-      if (window.ScrollTrigger) window.ScrollTrigger.refresh();
-    }, 100);
-  }
 
   function setMenu(open, restoreFocus) {
     if (open) appearanceControl.open = false;
@@ -87,13 +78,11 @@
     const open = !detailPanels.every(function (panel) { return panel.open; });
     detailPanels.forEach(function (panel) { panel.open = open; });
     syncDetailsButton();
-    refreshMotion();
   });
   document.addEventListener("toggle", function (event) {
     if (event.target instanceof HTMLDetailsElement) {
       syncDetailsButton();
-      refreshMotion();
-    }
+      }
   }, true);
 
   const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
@@ -105,7 +94,6 @@
       document.getElementById(item.getAttribute("aria-controls")).hidden = !selected;
     });
     if (focus) tab.focus();
-    refreshMotion();
   }
   tabs.forEach(function (tab, index) {
     tab.addEventListener("click", function () { activateTab(tab, false); });
@@ -144,7 +132,6 @@
     document.getElementById("project-empty").hidden = visible.length > 0;
     clearSearch.disabled = !search.value && category === "All";
     filters.forEach(function (filter) { filter.setAttribute("aria-pressed", String(filter.dataset.category === category)); });
-    refreshMotion();
   }
   search.addEventListener("input", applyFilters);
   search.addEventListener("search", applyFilters);
@@ -168,6 +155,7 @@
     while (parent) { parent.open = true; parent = parent.parentElement.closest("details"); }
     const section = target.closest("main > section[id]");
     if (section) setCurrent(section.id);
+    document.dispatchEvent(new CustomEvent("portfolio:navigate", { detail: { id: id } }));
     requestAnimationFrame(function () {
       target.scrollIntoView({ block: "start", behavior: "instant" });
       if (focus) {
@@ -198,33 +186,4 @@
 
   document.documentElement.classList.add("navigation-ready");
 
-  // Motion supports orientation and hierarchy. It adds no pinned scrolling or hidden content.
-  if (!noAnimation && window.gsap && window.ScrollTrigger) {
-    window.gsap.registerPlugin(window.ScrollTrigger);
-    const motion = window.gsap.matchMedia();
-    motion.add("(prefers-reduced-motion: no-preference)", function () {
-    window.gsap.fromTo(".hero-name-line", { y: 26 }, {
-      y: 0, duration: 1, stagger: 0.08, ease: "expo.out", clearProps: "transform"
-    });
-    window.gsap.fromTo(".hero-artwork", { y: 26, rotation: 3 }, {
-      y: 0, rotation: 0, duration: 1.25, ease: "expo.out", clearProps: "transform"
-    });
-    const heading = document.querySelector(".contact-reveal");
-    const originalHeading = heading.textContent;
-    const words = originalHeading.trim().split(/\s+/);
-    heading.textContent = "";
-    words.forEach(function (word, index) {
-      const span = document.createElement("span");
-      span.textContent = word;
-      span.style.display = "inline-block";
-      heading.appendChild(span);
-      if (index < words.length - 1) heading.appendChild(document.createTextNode(" "));
-    });
-    window.gsap.fromTo(heading.querySelectorAll("span"), { opacity: 0.65 }, {
-      opacity: 1, stagger: 0.06, ease: "none",
-      scrollTrigger: { trigger: heading, start: "top 90%", end: "top 58%", scrub: true }
-    });
-    return function () { heading.textContent = originalHeading; };
-    });
-  }
 })();
