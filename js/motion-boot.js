@@ -27,10 +27,7 @@
     root.classList.add("motion-on");
     // Nothing may stay hidden if the motion module is blocked or fails.
     window.setTimeout(function () {
-      if (!window.portfolioMotion.ready) {
-        window.portfolioMotion.failed = true;
-        root.classList.remove("motion-on");
-      }
+      if (!window.portfolioMotion.ready) root.classList.remove("motion-on");
     }, 3000);
   }
 })();

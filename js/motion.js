@@ -67,7 +67,7 @@
       var visible = entries.filter(function (e) { return e.isIntersecting || e.boundingClientRect.top < 0; });
       visible.sort(function (a, b) { return a.boundingClientRect.top - b.boundingClientRect.top; });
       visible.forEach(function (e) { reveal(e.target); pending.delete(e.target); observer.unobserve(e.target); });
-    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.01 });
+    }, { rootMargin: "0px", threshold: 0 });
     pending.clear();
     document.querySelectorAll("[data-reveal], .mask-line").forEach(function (el) {
       if (el.classList.contains("is-revealed")) return;
@@ -226,7 +226,7 @@
 
   function apply() {
     var reason = boot.reason();
-    var on = !reason && !boot.failed;
+    var on = !reason;
     root.classList.toggle("motion-on", on);
     if (on) {
       scheduleRoute();
