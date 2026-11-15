@@ -67,7 +67,7 @@ Open `http://127.0.0.1:8000/`. Add `?noanim` to inspect the page without motion.
 
 ### Hero artwork
 
-`images/motion/openbrowser-turn.webp` is a 24-frame, 6 by 4 sprite sheet (2160 by 1440 pixels, 360-pixel cells) rendered in Blender from the project's own OpenBrowser mark on a rounded tile. It is requested only when motion is allowed and the connection is not in data-saver mode. If it fails to load, the original static tile stays.
+`images/motion/openbrowser-turn.webp` is a 24-frame, 6 by 4 sprite sheet (2160 by 1440 pixels, 360-pixel cells) of the project's own OpenBrowser mark on a rounded tile. `tools/pack-hero-turn.py` crops the mark and packs the frames, and `tools/render-hero-turn.py` renders them in Blender. Both take their paths on the command line. Re-running them produces the same look but not the same bytes: a rebuild measured up to 27 levels of difference per color channel against the committed sheet, because the Blender render is not bit-for-bit repeatable. The committed file is the reviewed asset. It is requested only when motion is allowed and the connection is not in data-saver mode. If it fails to load, the original static tile stays.
 
 ## Check changes
 
@@ -87,7 +87,7 @@ npx playwright install chromium
 npm test
 ```
 
-`npm test` runs `tests/appearance.cjs`, `tests/redesign.cjs` and `tests/motion.cjs`. These test dependencies are not production dependencies. Set `PORTFOLIO_URL` to use another preview URL. `TEST_OUTPUT_DIR` changes the output directory for all three suites; the motion suite writes screenshots to `local_docs/motion-qa` by default. Default outputs are ignored directories `local_docs/appearance-qa/` and `local_docs/redesign-qa/`.
+`npm test` runs `tests/appearance.cjs`, `tests/redesign.cjs` and `tests/motion.cjs`. These test dependencies are not production dependencies. Set `PORTFOLIO_URL` to use another preview URL. `TEST_OUTPUT_DIR` changes the output directory for all three suites; the motion suite writes screenshots to `local_docs/motion-qa` by default. Default outputs are ignored directories `local_docs/appearance-qa/`, `local_docs/redesign-qa/` and `local_docs/motion-qa/`.
 
 The suites cover appearance choices and contrast, independent preference persistence, malformed and blocked storage, OS and cross-tab changes, keyboard controls, responsive overflow and hero actions, drawer and popover coordination, deep links, no-JavaScript access, search, disclosures, and record counts. Run results, not this documentation, establish whether a revision passes.
 
