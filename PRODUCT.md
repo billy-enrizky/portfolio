@@ -32,6 +32,7 @@ I build the systems between AI research and production: agent runtimes, browser 
 ## Reading and Navigation
 
 - Keep one long page in this order: Summary, Skills, Experience, Education, Research, My work, Credentials, Contact.
+- Offer an Appearance disclosure in the persistent navigation. Provide System, Light, and Dark themes and independent Red, Orange, Green, Blue, and Pink accents. Remember validated preferences on the device when storage is available. Keep System and Orange as defaults, provide readable variants in each theme, and preserve automatic system styling without JavaScript.
 - Keep the section index available at every depth: fixed on desktop, with a fixed **Sections** control on mobile. Indicate the current section.
 - Section links jump directly to their destination instead of animating through the long page. On mobile, focus moves to the first section link after the menu's opening transition finishes.
 - Let readers jump directly to a role. Combine project highlights, systems work, and the original project catalog into one searchable work collection, without combining unrelated projects.
@@ -64,4 +65,4 @@ No invented architecture connecting unrelated projects, skill percentages, or cl
 
 Readers can find every role and project from the earlier portfolio, alongside newer work. Methods and outcomes remain correctly attributed. Mobile and keyboard users receive the full record.
 
-Readers can enter at a section or record link, search the complete work collection, and reveal the full evidence without losing access to navigation. The inventory and source links remain intact in both system themes and with reduced motion.
+Readers can enter at a section or record link, search the complete work collection, and reveal the full evidence without losing access to navigation. The inventory and source links remain intact in both light and dark themes, with every selectable accent and with reduced motion.

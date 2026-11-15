@@ -8,14 +8,14 @@ colors:
   muted: "#5d6568"
   rule: "#d6d8d1"
   accent: "#b83a1f"
-  accent-soft: "#b83a1f12"
+  accent-soft: "#efe5de"
   dark-paper: "#111315"
   dark-surface: "#1b1f20"
   dark-ink: "#f2f1ea"
   dark-muted: "#b2b9b7"
   dark-rule: "#383e3c"
   dark-accent: "#f08a67"
-  dark-accent-soft: "#f08a6717"
+  dark-accent-soft: "#271f1d"
 typography:
   display:
     fontFamily: "Satoshi, 'Helvetica Neue', Arial, sans-serif"
@@ -66,13 +66,13 @@ spacing:
   section: "54px"
 components:
   button-primary:
-    backgroundColor: "{colors.ink}"
+    backgroundColor: "{colors.accent}"
     textColor: "{colors.paper}"
     typography: "{typography.button}"
     rounded: "{rounded.control}"
     padding: "11px 16px"
   button-primary-hover:
-    backgroundColor: "{colors.accent}"
+    backgroundColor: "{colors.ink}"
     textColor: "{colors.paper}"
   button-secondary:
     backgroundColor: "transparent"
@@ -115,36 +115,52 @@ components:
 
 **Creative North Star: "The Evidence Ledger"**
 
-Every major element states a claim, proves a claim, or helps inspect the proof. The established paper-and-ink palette, Satoshi typography, single rust accent, and hairline rules remain the identity. A typography-only introduction and actual project images bring the work into view without invented product scenes.
+Every major element states a claim, proves a claim, or helps inspect the proof. The established paper-and-ink palette, Satoshi typography, one selected accent, and hairline rules remain the identity. A typography-only introduction and actual project images bring the work into view without invented product scenes.
 
 The complete record stays long. A persistent index and native controls make it easy to enter at any depth. Plain-language purpose and supported outcomes lead; full technical evidence stays available in disclosures. Motion supports orientation and hierarchy without pinning or adding forced scroll distance.
 
 **Key Characteristics:**
-- Calm paper-and-ink surfaces with one rust accent.
+- Calm paper-and-ink surfaces with one selected accent; rust orange is the default.
 - Flat, rule-separated records rather than elevated card shells.
 - Persistent navigation and complete, progressively disclosed evidence.
 - Real project imagery, direct search, and restrained text motion.
 
-Observed sources: [stylesheet](css/style.css), [page](index.html), and [behavior](js/script.js). The frontmatter records implemented tokens, not a replacement identity. Light values are the default; `prefers-color-scheme: dark` swaps all seven semantic color properties to their `dark-` counterparts. Breakpoints, motion, and component snippets are sidecar extensions rather than unsupported frontmatter groups.
+Observed sources: [stylesheet](css/style.css), [page](index.html), [appearance preferences](js/appearance.js), and [navigation behavior](js/script.js). The frontmatter records the default orange palette. System is the default theme preference. Explicit light/dark choices override the OS, and each selected accent has readable light/dark variants. Without JavaScript, `prefers-color-scheme` still selects the neutral theme. Breakpoints, motion, and component snippets are sidecar extensions rather than unsupported frontmatter groups.
 
 ## Colors
 
-Warm paper, near-black ink, steel supporting text, and a restrained rust accent organize evidence in both system themes.
+Warm paper, near-black ink, steel supporting text, and one selected accent organize evidence in both themes.
 
 ### Primary
-- **Rust**, `accent`: links, disclosure summaries, dates, the current section, selection, and focus outlines. The primary button is ink-filled at rest and rust-filled on hover.
-- **Rust wash**, `accent-soft`: the current navigation row's translucent background, not an additional accent hue.
+- **Accent**, `accent`: links, disclosure summaries, dates, the current section, selection, focus outlines, and the primary button. Primary buttons use ink on hover. Text and background colors change immediately, rather than animating through low-contrast intermediate colors.
+- **Accent wash**, `accent-soft`: an explicit opaque tint behind the current navigation row, not an additional accent hue.
 
 ### Neutral
 - **Paper**, `paper`: page and persistent navigation background.
 - **Surface**, `surface`: fields, image backplates, code blocks, and quiet hover surfaces.
-- **Ink**, `ink`: headings, primary text, selected controls, and primary button fill.
+- **Ink**, `ink`: headings, primary text, selected controls, and primary-button hover.
 - **Steel**, `muted`: supporting copy, descriptions, and metadata.
 - **Rule**, `rule`: hairline separators and control borders.
 
-The dark palette preserves these roles across the entire page. There are no independently themed sections, synthetic tonal ramps, or manual theme switch.
+The dark palette preserves these roles across the entire page. The Appearance disclosure in the persistent navigation exposes independent theme and accent choices. The whole page always shares one theme and one accent.
 
-**The One Accent Rule.** Use the existing rust role for emphasis and interaction; do not introduce category-specific palettes.
+**The One Accent Rule.** Use the selected accent consistently for emphasis and interaction. Do not introduce category-specific palettes.
+
+### Appearance choices
+
+Native radio groups provide System, Light, and Dark themes and the original five color families. The default remains System with Orange. Swatches retain the original portfolio colors; links, actions, and focus use theme-specific variants that pass contrast checks. A selected swatch has an outline as well as its native checked state. Theme and color labels remain accessible to screen readers.
+
+| Choice | Original swatch | Light foreground | Dark foreground |
+| --- | --- | --- | --- |
+| Red | `#ec1839` | `#c41635` | `#ff8297` |
+| Orange | `#fa5b0f` | `#b83a1f` | `#f08a67` |
+| Green | `#37b182` | `#16754d` | `#60d5a7` |
+| Blue | `#1854b4` | `#1854b4` | `#8eb5ff` |
+| Pink | `#f021b2` | `#b31283` | `#f88bd5` |
+
+`js/appearance.js` initializes before the stylesheet to apply saved preferences before the first styled paint. It validates the `portfolio-appearance` local-storage record, follows OS changes only in System mode, and synchronizes choices across tabs. Blocked storage does not disable the controls. The disclosure does not persist its open state. Escape closes it and returns focus to its summary without closing the mobile navigation.
+
+The appearance controls are hidden until their handlers are connected. Without JavaScript, the portfolio follows the system theme and all records remain readable. **Show all details** still targets only main-content disclosures, not the Appearance control.
 
 ## Typography
 
@@ -224,7 +240,7 @@ Reduced motion excludes or reverts the GSAP animations through the system prefer
 ## Do's and Don'ts
 
 ### Do:
-- **Do** preserve the established paper, ink, steel, rust, and Satoshi identity across both system themes.
+- **Do** preserve paper, ink, steel, Satoshi, and the selected accent consistently across both themes.
 - **Do** keep persistent section access, direct record links, and the complete long-form record.
 - **Do** put plain purpose and supported outcomes before full technical evidence.
 - **Do** keep the hero typography-only, retain the existing favicon, and use actual images within project records.
