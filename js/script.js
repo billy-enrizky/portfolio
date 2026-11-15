@@ -2,7 +2,6 @@
   "use strict";
   document.documentElement.classList.add("js");
 
-  const noAnimation = new URLSearchParams(window.location.search).has("noanim");
   const menuButton = document.querySelector(".nav-toggle");
   const sidebar = document.getElementById("site-index");
   const backdrop = document.querySelector(".nav-backdrop");
@@ -162,12 +161,18 @@
     try { id = decodeURIComponent(location.hash.slice(1)); } catch (_) { return; }
     const target = document.getElementById(id);
     if (!target) return;
+    const panel = target.closest('[role="tabpanel"]');
+    if (panel) {
+      const tab = tabs.find(function (item) { return item.getAttribute("aria-controls") === panel.id; });
+      if (tab) activateTab(tab, false);
+    }
     const card = target.closest(".project-record");
     if (card && card.hidden) { search.value = ""; category = "All"; applyFilters(); }
     let parent = target.closest("details");
     while (parent) { parent.open = true; parent = parent.parentElement.closest("details"); }
     const section = target.closest("main > section[id]");
     if (section) setCurrent(section.id);
+    document.dispatchEvent(new CustomEvent("portfolio:navigate", { detail: { id: id } }));
     requestAnimationFrame(function () {
       target.scrollIntoView({ block: "start", behavior: "instant" });
       if (focus) {
@@ -198,33 +203,4 @@
 
   document.documentElement.classList.add("navigation-ready");
 
-  // Motion supports orientation and hierarchy. It adds no pinned scrolling or hidden content.
-  if (!noAnimation && window.gsap && window.ScrollTrigger) {
-    window.gsap.registerPlugin(window.ScrollTrigger);
-    const motion = window.gsap.matchMedia();
-    motion.add("(prefers-reduced-motion: no-preference)", function () {
-    window.gsap.fromTo(".hero-name-line", { y: 26 }, {
-      y: 0, duration: 1, stagger: 0.08, ease: "expo.out", clearProps: "transform"
-    });
-    window.gsap.fromTo(".hero-artwork", { y: 26, rotation: 3 }, {
-      y: 0, rotation: 0, duration: 1.25, ease: "expo.out", clearProps: "transform"
-    });
-    const heading = document.querySelector(".contact-reveal");
-    const originalHeading = heading.textContent;
-    const words = originalHeading.trim().split(/\s+/);
-    heading.textContent = "";
-    words.forEach(function (word, index) {
-      const span = document.createElement("span");
-      span.textContent = word;
-      span.style.display = "inline-block";
-      heading.appendChild(span);
-      if (index < words.length - 1) heading.appendChild(document.createTextNode(" "));
-    });
-    window.gsap.fromTo(heading.querySelectorAll("span"), { opacity: 0.65 }, {
-      opacity: 1, stagger: 0.06, ease: "none",
-      scrollTrigger: { trigger: heading, start: "top 90%", end: "top 58%", scrub: true }
-    });
-    return function () { heading.textContent = originalHeading; };
-    });
-  }
 })();
