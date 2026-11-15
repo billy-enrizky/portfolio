@@ -2,7 +2,7 @@
   "name": "billy-enrizky-portfolio",
   "private": true,
   "scripts": {
-    "test": "node tests/appearance.cjs && node tests/redesign.cjs"
+    "test": "node tests/appearance.cjs && node tests/redesign.cjs && node tests/motion.cjs"
   },
   "devDependencies": {
     "playwright": "1.65.0"
