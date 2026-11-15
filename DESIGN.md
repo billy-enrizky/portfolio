@@ -37,8 +37,6 @@ colors:
   pink-dark: '#f88bd5'
   pink-soft-light: '#efe2e6'
   pink-soft-dark: '#281f28'
-  tile-surface: '#fafafa'
-  tile-edge: '#fff'
 typography:
   display:
     fontFamily: Geist, 'Helvetica Neue', Arial, sans-serif
@@ -194,7 +192,6 @@ The selected accent colors links, disclosure summaries, dates, selection, focus 
 - Surface is the field, code, secondary-action, image-backplate, and popover background.
 - Ink is primary text, selected controls, the Sections pill, and primary-action hover.
 - Muted is supporting copy and metadata. Rule is the hairline separator and quiet control border.
-- The OpenBrowser hero tile retains its literal light tile surface and white edge in either theme. Its grayscale image treatment does not follow the accent.
 
 System and Orange remain the default preferences. Explicit themes override the OS. The early appearance script adds the root `js` detection class before stylesheets, validates stored strings, tolerates unavailable storage, reconciles delayed initialization, and synchronizes tabs. Initial HTML theme-color matches the light-paper token; runtime theme-color follows the resolved paper color. Without JavaScript, the neutral theme follows `prefers-color-scheme`; the appearance chooser remains hidden. These are implementation behaviors, not evidence that every color pairing has passed a browser contrast audit.
 
@@ -229,7 +226,6 @@ The main document has a maximum width of 1680px, centered with no left-index off
 | Sections | A right drawer below the header, `min(420px,100%)` wide, with 30px vertical padding and a left rule. | At 900px it is `min(380px,100%)` with 24px padding. It remains a drawer on desktop as well as mobile. |
 | Appearance | A separate header disclosure; its panel is fixed below the header at `calc(var(--header-height) - 2px)`, right-aligned to the gutter. Width is `min(300px,calc(100vw - 36px))`; padding is 22px. | Placement is independent of the Sections drawer at every width. |
 | Hero | Columns `minmax(0,1.65fr) minmax(280px,.85fr)`, gap `24px 5vw`, with identity and copy above one full-width artwork row. Padding is `32px 0 72px`. | At 1100px column gap is 32px. At 700px the order is identity, artwork, copy; row gap is 20px and padding is `24px 0 40px`. The hero has no fixed viewport height. |
-| Artwork | A centered figure with 1200px perspective. The tile is 290px square with 62px corners. | At 1100px it is 260px square with 56px corners. At 700px it is 184px square with 40px corners, inside a 250px-high figure. Caption top gap becomes 16px instead of 28px. |
 | Sections | Vertical padding is `clamp(60px,6.5vw,108px)`, with a top hairline. Heading rows have equal columns, 56px gap, and 48px bottom margin. | At 1100px the heading gap is 36px. At 700px section padding is 55px and the heading stacks with 32px bottom margin. |
 | Role and paper rows | Columns `minmax(0,.85fr) minmax(0,1.15fr)`, gap 7vw, padding 38px vertically. Heading and metadata stay left; outcomes and disclosures stay right. The first-of-type base rule keeps the first row's top padding and border at zero. | At 1100px column gap is 42px. At 700px records become block layout with 28px vertical padding, subject to that first-row reset; outcomes begin 22px after the heading. |
 | Work collection | Two columns, gap `52px 42px`, row flow rather than dense packing. OpenBrowser, Context Atlas, and the MTP study span both columns. The last visible odd project can also span both columns. | At 1100px the gap is `40px 30px`. At 700px records stack with a 36px gap. Search and filters remain before every project record. |
@@ -246,23 +242,23 @@ Without JavaScript, neither readiness signal is added, the header is static, Sec
 
 ## Elevation & Depth
 
-The reading document is flat and rule-separated. Elevation is limited to the independent Appearance panel and the single hero project tile. This is not a shadow-free system and not a grid of elevated cards. The exact two-part tile shadows, mobile shadow, and popover shadow are recorded in the sidecar.
+The reading document is flat and rule-separated. Elevation is limited to the independent Appearance panel. This is not a shadow-free system and not a grid of elevated cards. The popover shadow is recorded in the sidecar.
 
-The tile rests at `rotateY(-13deg) rotateZ(-7deg)` and changes to `rotateY(-5deg) rotateZ(-3deg) translateY(-8px)` on hover or visible focus. This is a CSS state transition, not continuous cursor-following or a WebGL scene. The drawer backdrop is `rgba(0,0,0,.3)`. Layer order is backdrop 30, drawer 40, header with its popover 50, and focused skip link 60.
+The drawer backdrop is `rgba(0,0,0,.3)`. Layer order is backdrop 30, drawer 40, header with its popover 50, and focused skip link 60.
 
 **The Visible By Default Rule, revised.** Content is visible whenever motion is off, and motion can never keep it hidden. Under `motion-on`, a record starts at opacity 0 with a short rise and is revealed as it nears the viewport. It is never hidden again, and a deep link, hash navigation, or keyboard focus reveals the target and its ancestors immediately, with no delay. A 3-second failsafe removes `motion-on` if the motion module does not run, and the static page has no hidden content.
 
 Masked heading lines rise 108 percent over 820 ms with `cubic-bezier(.172,.687,.393,.943)`, inside a clip padded `.12em` above and `.16em` below so descenders stay whole. Reveals take 640 ms (520 ms at 700 px and narrower), 70 ms between elements revealed in the same 120 ms batch, in document order, capped at 800 ms. A navigation or focus target skips the transition and shows at once.
 
-The contact heading is revealed with the other masked headings. There is no GSAP or ScrollTrigger in the page. Scroll-linked effects run from one passive scroll listener batched through `requestAnimationFrame`: the page progress bar, the career route stroke, and the hero sprite frame. The hero frame is `round(clamp(scrollY / heroHeight, 0, 1) * 23)`. They do not pin or extend scrolling. The listeners are attached once at start; the work is skipped unless `motion-on` is set. The career route is drawn in the page margin left of the role titles, not over them.
+The contact heading is revealed with the other masked headings. There is no GSAP or ScrollTrigger in the page. Scroll-linked effects run from one passive scroll listener batched through `requestAnimationFrame`: the page progress bar and the career route stroke. They do not pin or extend scrolling. The listeners are attached once at start; the work is skipped unless `motion-on` is set. The career route is drawn in the page margin left of the role titles, not over them.
 
-Reduced motion, a stored pause and `noanim` all remove `motion-on`, so the sprite is not requested and the original static tile is shown. Only the system reduced-motion setting also fixes that tile at `rotate(-5deg)` with no transition (`css/editorial.css:160`). With a stored pause or `noanim` on a system that allows motion, the tile keeps its editorial resting tilt and hover transform. The base stylesheet reduces other transition and animation durations. Native content and controls do not depend on JavaScript motion. Project-image hover still has its inherited 2px lift rules; do not claim a universal removal of every hover transform without checking the full cascade. Project cards also lift 4px on hover only where a fine pointer exists.
+Reduced motion, a stored pause and `noanim` all remove `motion-on`, so every record shows at once. The base stylesheet reduces other transition and animation durations. Native content and controls do not depend on JavaScript motion. Project-image hover still has its inherited 2px lift rules; do not claim a universal removal of every hover transform without checking the full cascade. Project cards also lift 4px on hover only where a fine pointer exists.
 
 ## Shapes
 
 Actions and category/skill controls are pills. Fields use the field radius, and the separate Appearance panel uses the popover radius. Project image frames use the image radius; inline project marks have their own smaller corners. Records themselves are unfilled, top-ruled blocks, not rounded card shells.
 
-The hero tile has its component-specific responsive corners and a 1px white edge. Its image occupies 85% of the tile in both dimensions, with `object-fit: cover` and `grayscale(1) contrast(1.35)`. Ordinary project images use containment. Do not generalize the hero's crop or image treatment to the archive.
+Project images use containment.
 
 ## Components
 
