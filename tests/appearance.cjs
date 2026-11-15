@@ -29,7 +29,7 @@ function contrast(a,b) { const x=luminance(a),y=luminance(b);return (Math.max(x,
   assert.equal(await page.locator('input[name="appearance-color"]').count(),5);
   await page.locator('.appearance-controls summary').click();
   assert.equal(await page.getByRole('radio',{name:'System',exact:true}).isChecked(),true);
-  assert.deepEqual(await current(),{theme:'light',color:'orange',bg:'rgb(244, 244, 239)'});
+  assert.deepEqual(await current(),{theme:'light',color:'orange',bg:'rgb(241, 241, 241)'});
   await theme('Dark');assert.equal((await current()).theme,'dark');
   await page.getByRole('radio',{name:'Blue',exact:true}).check();
   await page.reload();await page.locator('.appearance-controls summary').click();
@@ -69,7 +69,7 @@ function contrast(a,b) { const x=luminance(a),y=luminance(b);return (Math.max(x,
   await page.evaluate(k=>localStorage.setItem(k,'not json'),KEY);await page.reload();
   assert.equal((await current()).color,'orange');
   await page.evaluate(k=>localStorage.setItem(k,JSON.stringify({theme:'unexpected',color:'<style>'})),KEY);await page.reload();
-  assert.deepEqual(await current(),{theme:'light',color:'orange',bg:'rgb(244, 244, 239)'});
+  assert.deepEqual(await current(),{theme:'light',color:'orange',bg:'rgb(241, 241, 241)'});
   for(const value of [{theme:'dark',color:['blue']},{theme:'dark',color:{toString:null}},{theme:null,color:null}]) {
    await page.evaluate(({k,value})=>localStorage.setItem(k,JSON.stringify(value)),{k:KEY,value});await page.reload();
    assert.equal((await current()).color,'orange','Stored color must be a known string, not a coercible value');
@@ -85,10 +85,12 @@ function contrast(a,b) { const x=luminance(a),y=luminance(b);return (Math.max(x,
    const delayed=await slowContext.newPage();delayed.on('pageerror',e=>errors.push(e.message));
    let release, requested;const scriptRequested=new Promise(resolve=>{requested=resolve});
    await delayed.route('**/js/script.js*',async route=>{requested();await new Promise(resolve=>{release=resolve});await route.continue()});
-   const loading=delayed.goto(URL+'?noanim');await scriptRequested;
+   const loading=delayed.goto(URL+'?noanim').then(()=>null,error=>error);await scriptRequested;
+   const earlyLayout=await delayed.locator('html').evaluate(el=>el.classList.contains('js'));
    if(scenario==='system-change') await delayed.emulateMedia({colorScheme:'light'});
    else {await driver.locator('.appearance-controls summary').click();await driver.getByRole('radio',{name:'Dark',exact:true}).check();await driver.getByRole('radio',{name:'Pink',exact:true}).check()}
-   release();await loading;
+   release();const navigationError=await loading;if(navigationError)throw navigationError;
+   assert.equal(earlyLayout,true,'The enhanced layout must initialize before deferred application scripts');
    assert.equal(await delayed.locator('html').getAttribute('data-theme'),scenario==='system-change'?'light':'dark','Changes before DOM readiness must be reconciled');
    assert.equal(await delayed.locator('html').getAttribute('data-color'),scenario==='system-change'?'orange':'pink');
    await slowContext.close();
@@ -107,12 +109,13 @@ function contrast(a,b) { const x=luminance(a),y=luminance(b);return (Math.max(x,
   await page.setViewportSize({width:390,height:844});
   await page.getByRole('button',{name:'Sections',exact:true}).click();
   await page.waitForFunction(()=>document.activeElement===document.querySelector('.nav-links a'));
+  await page.locator('.appearance-controls summary').click();
   await theme('Light');await page.getByRole('radio',{name:'Green',exact:true}).check();
   await page.screenshot({path:OUT+'/mobile-appearance-light.png',animations:'disabled'});
   await theme('Dark');await page.screenshot({path:OUT+'/mobile-appearance-dark.png',animations:'disabled'});
   await page.getByRole('radio',{name:'Pink',exact:true}).focus();await page.keyboard.press('Escape');
-  assert.equal(await page.locator('.nav-toggle').getAttribute('aria-expanded'),'true');
-  await page.keyboard.press('Escape');assert.equal(await page.locator('.nav-toggle').getAttribute('aria-expanded'),'false');
+  assert.equal(await page.locator('.nav-toggle').getAttribute('aria-expanded'),'false');
+  await page.getByRole('button',{name:'Sections',exact:true}).click();await page.keyboard.press('Escape');assert.equal(await page.locator('.nav-toggle').getAttribute('aria-expanded'),'false');
   await page.locator('#project-search').fill('context atlas');assert.equal(await page.locator('.project-record:not([hidden])').count(),1);
   await page.locator('#project-search').fill('unmatched-query-928731');assert.equal(await page.locator('#project-empty').isVisible(),true);
   await page.getByRole('button',{name:'Clear search',exact:true}).click();assert.equal(await page.locator('.project-record:not([hidden])').count(),30);
@@ -127,7 +130,7 @@ function contrast(a,b) { const x=luminance(a),y=luminance(b);return (Math.max(x,
   assert.equal(await bp.locator('html').getAttribute('data-theme'),'light');await blocked.close();
   const nojs=await browser.newContext({javaScriptEnabled:false,colorScheme:'dark',viewport:{width:390,height:844}});
   const np=await nojs.newPage();await np.goto(URL);assert.equal(await np.locator('.appearance-controls').isVisible(),false);assert.equal(await np.locator('.project-record').count(),30);
-  assert.equal(await np.locator('body').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(17, 19, 21)');await np.locator('#experience-ibm summary').click();assert.equal(await np.locator('#experience-ibm details').getAttribute('open'),'');await nojs.close();
+  assert.equal(await np.locator('body').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(16, 16, 16)');await np.locator('#experience-ibm summary').click();assert.equal(await np.locator('#experience-ibm details').getAttribute('open'),'');await nojs.close();
   results.push('Storage-blocked and no-JavaScript fallbacks work; all existing records and core interactions remain');
   assert.deepEqual(errors,[]);
   fs.writeFileSync(OUT+'/browser-results.json',JSON.stringify(results,null,2));

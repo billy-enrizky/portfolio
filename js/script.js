@@ -6,7 +6,7 @@
   const menuButton = document.querySelector(".nav-toggle");
   const sidebar = document.getElementById("site-index");
   const backdrop = document.querySelector(".nav-backdrop");
-  const menuMedia = window.matchMedia("(max-width: 900px)");
+  const appearanceControl = document.querySelector(".appearance-controls");
   const navLinks = Array.from(document.querySelectorAll(".nav-links a"));
   const sections = Array.from(document.querySelectorAll("main > section[id]"));
   const detailPanels = Array.from(document.querySelectorAll("main details"));
@@ -21,6 +21,7 @@
   }
 
   function setMenu(open, restoreFocus) {
+    if (open) appearanceControl.open = false;
     document.body.classList.toggle("nav-open", open);
     menuButton.setAttribute("aria-expanded", String(open));
     menuButton.textContent = open ? "Close" : "Sections";
@@ -36,7 +37,7 @@
         if (!document.body.classList.contains("nav-open")) return;
         const first = navLinks[0];
         const visible = getComputedStyle(first).visibility === "visible";
-        if (visible && sidebar.getBoundingClientRect().left >= 0) {
+        if (visible && sidebar.getBoundingClientRect().left >= -1 && sidebar.getBoundingClientRect().right <= innerWidth + 1) {
           first.focus({ preventScroll: true });
           if (document.activeElement === first) return;
         }
@@ -50,10 +51,12 @@
     if (event.key === "Escape" && document.body.classList.contains("nav-open")) setMenu(false, true);
   });
   document.addEventListener("focusin", function (event) {
-    if (menuMedia.matches && document.body.classList.contains("nav-open") &&
+    if (document.body.classList.contains("nav-open") &&
         !sidebar.contains(event.target) && event.target !== menuButton && event.target !== backdrop) setMenu(false, false);
   });
-  menuMedia.addEventListener("change", function () { setMenu(false, false); });
+  appearanceControl.addEventListener("toggle", function () {
+    if (appearanceControl.open && document.body.classList.contains("nav-open")) setMenu(false, false);
+  });
 
   function setCurrent(id) {
     navLinks.forEach(function (link) {
@@ -193,11 +196,19 @@
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { showHash(false); });
   else showHash(false);
 
+  document.documentElement.classList.add("navigation-ready");
+
   // Motion supports orientation and hierarchy. It adds no pinned scrolling or hidden content.
   if (!noAnimation && window.gsap && window.ScrollTrigger) {
     window.gsap.registerPlugin(window.ScrollTrigger);
     const motion = window.gsap.matchMedia();
     motion.add("(prefers-reduced-motion: no-preference)", function () {
+    window.gsap.fromTo(".hero-name-line", { y: 26 }, {
+      y: 0, duration: 1, stagger: 0.08, ease: "expo.out", clearProps: "transform"
+    });
+    window.gsap.fromTo(".hero-artwork", { y: 26, rotation: 3 }, {
+      y: 0, rotation: 0, duration: 1.25, ease: "expo.out", clearProps: "transform"
+    });
     const heading = document.querySelector(".contact-reveal");
     const originalHeading = heading.textContent;
     const words = originalHeading.trim().split(/\s+/);
