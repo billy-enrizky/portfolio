@@ -1,0 +1,10 @@
+{
+  "name": "billy-enrizky-portfolio",
+  "private": true,
+  "scripts": {
+    "test": "node tests/appearance.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.65.0"
+  }
+}
