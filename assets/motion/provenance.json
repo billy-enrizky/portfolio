@@ -1,0 +1,95 @@
+{
+  "asset": {
+    "path": "assets/motion/openbrowser-scene.glb",
+    "bytes": 276060,
+    "sha256": "940c63da6a4f51ef7eec0e10a50a16f447330aabf40eef7d5aeeab50893fad8d"
+  },
+  "source_logo": {
+    "path": "images/portfolio/openbrowser_logo.png",
+    "bytes": 13401,
+    "sha256": "f67a1311e49e5213733c02d6ed6d0a39d76169a9a46d97bb29a3b8e4485628ba",
+    "bytes_unchanged_after_build": true
+  },
+  "source_contribution": {
+    "geometry_and_materials": "Claude session authored the original Blender primitive/bevel geometry, mesh text labels, named groups, materials and export settings in make_glb.py.",
+    "logo": "The portfolio owner's existing OpenBrowser mark is the only image input.",
+    "portable_builder": "Adapted make_glb.py and crop_logo.py into one repository-relative script with pinned preprocessing, logging and a separate ignored intermediate. Geometry, material values, hierarchy and exporter options are retained.",
+    "adapted_sources": [
+      {
+        "name": "make_glb.py",
+        "bytes": 3265,
+        "sha256": "cb4db15e68068f0aa1743475e72a6b2b6efbd2e993f8ca30c262b77c46dd4479"
+      },
+      {
+        "name": "crop_logo.py",
+        "bytes": 592,
+        "sha256": "2ec7675da300b7d7edcb8d91c4ebea3a6a4d5c558605131cfaae22d7cc2511b8"
+      }
+    ]
+  },
+  "builder": {
+    "path": "tools/rebuild-openbrowser-model.py",
+    "bytes": 6913,
+    "sha256": "25ba2cf2e72e73ff728a5a978290fd6247535832176d6b4d3e6714b814913f52",
+    "default_command": "blender --background --factory-startup --python-exit-code 1 --python tools/rebuild-openbrowser-model.py",
+    "tested_command": "blender --background --factory-startup --python-exit-code 1 --python tools/rebuild-openbrowser-model.py -- --output \"$REPRODUCTION_GLB\"",
+    "tested_output_selection": "REPRODUCTION_GLB was set to a private validation file outside production assets. The accepted production GLB was not overwritten.",
+    "blender_version": "5.2.3 LTS",
+    "blender_build_hash": "e13b728c6880",
+    "exporter": "Khronos glTF Blender I/O v5.2.41",
+    "preprocessing": {
+      "command": "uv run --no-project --script tools/rebuild-openbrowser-model.py --prepare-logo",
+      "python": "3.12.12",
+      "pillow": "13.0.0",
+      "zlib_runtime": "1.2.12",
+      "crop": "Alpha > 8 bounds, transparent square padding, 1024 x 1024 LANCZOS resize.",
+      "measured_alpha_bounds_left_top_right_bottom": [
+        98,
+        28,
+        402,
+        332
+      ],
+      "intermediate": "local_docs/motion-build/rebuild-openbrowser/logo_square.png",
+      "bytes": 132797,
+      "sha256": "4d52c591a351dbec750b49309555cdb5706829269cbcae0c74f37c87d1745fbf",
+      "byte_identical_to_original_crop": true
+    }
+  },
+  "reproduction": {
+    "bytes": 276060,
+    "sha256": "940c63da6a4f51ef7eec0e10a50a16f447330aabf40eef7d5aeeab50893fad8d",
+    "byte_identical_to_accepted_asset": true
+  },
+  "contract_equivalence": {
+    "original_audit": "audit_glb.py passed on the private reproduction.",
+    "metadata_and_binary_chunks_equal": true,
+    "geometry_materials_hierarchy_and_texture_equal": true,
+    "required_groups": [
+      "CoreTile",
+      "PythonNode",
+      "CDPNode",
+      "MCPNode"
+    ],
+    "required_materials": [
+      "Ceramic",
+      "Ink",
+      "Accent",
+      "Logo"
+    ],
+    "node_count": 12,
+    "mesh_count": 8,
+    "embedded_images": [
+      {
+        "name": "logo_square",
+        "mime_type": "image/png",
+        "embedded_buffer_view": true,
+        "bytes": 132797,
+        "sha256": "4d52c591a351dbec750b49309555cdb5706829269cbcae0c74f37c87d1745fbf"
+      }
+    ],
+    "external_buffer_or_image_uris": false,
+    "cameras_lights_animations_skins_or_extras_anywhere": false,
+    "private_paths_in_glb_metadata": false,
+    "scope": "Byte identity was measured locally with the toolchain above. Other Blender, exporter or preprocessing versions were not tested."
+  }
+}
