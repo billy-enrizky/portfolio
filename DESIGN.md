@@ -252,9 +252,9 @@ The tile rests at `rotateY(-13deg) rotateZ(-7deg)` and changes to `rotateY(-5deg
 
 **The Visible By Default Rule, revised.** Content is visible whenever motion is off, and motion can never keep it hidden. Under `motion-on`, a record starts at opacity 0 with a short rise and is revealed as it nears the viewport. It is never hidden again, and a deep link, hash navigation, or keyboard focus reveals the target and its ancestors immediately, with no delay. A 3-second failsafe removes `motion-on` if the motion module does not run, and the static page has no hidden content.
 
-Masked heading lines rise 108 percent over 820 ms with `cubic-bezier(.172,.687,.393,.943)`, inside a clip padded `.12em` above and `.16em` below so descenders stay whole. Reveals take 640 ms (520 ms at 700 px and narrower), 70 ms between siblings, capped at 800 ms.
+Masked heading lines rise 108 percent over 820 ms with `cubic-bezier(.172,.687,.393,.943)`, inside a clip padded `.12em` above and `.16em` below so descenders stay whole. Reveals take 640 ms (520 ms at 700 px and narrower), 70 ms between elements revealed in the same 120 ms batch, in document order, capped at 800 ms. A navigation or focus target skips the transition and shows at once.
 
-The contact heading is revealed with the other masked headings. There is no GSAP or ScrollTrigger in the page. Scroll-linked effects run from one passive scroll listener batched through `requestAnimationFrame`: the page progress bar, the career route stroke, and the hero sprite frame. The hero frame is `round(clamp(scrollY / heroHeight, 0, 1) * 23)`. They do not pin or extend scrolling, and they bind only under `motion-on`.
+The contact heading is revealed with the other masked headings. There is no GSAP or ScrollTrigger in the page. Scroll-linked effects run from one passive scroll listener batched through `requestAnimationFrame`: the page progress bar, the career route stroke, and the hero sprite frame. The hero frame is `round(clamp(scrollY / heroHeight, 0, 1) * 23)`. They do not pin or extend scrolling. The listeners are attached once at start; the work is skipped unless `motion-on` is set. The career route is drawn in the page margin left of the role titles, not over them.
 
 Reduced motion, a stored pause and `noanim` all remove `motion-on`, so the sprite is not requested and the original static tile is shown. Only the system reduced-motion setting also fixes that tile at `rotate(-5deg)` with no transition (`css/editorial.css:160`). With a stored pause or `noanim` on a system that allows motion, the tile keeps its editorial resting tilt and hover transform. The base stylesheet reduces other transition and animation durations. Native content and controls do not depend on JavaScript motion. Project-image hover still has its inherited 2px lift rules; do not claim a universal removal of every hover transform without checking the full cascade. Project cards also lift 4px on hover only where a fine pointer exists.
 
@@ -272,7 +272,7 @@ Primary actions use the selected accent with paper text. Hover switches to ink w
 
 Standard action pills have a 48px minimum height and the frontmatter's button padding. At 700px they use a 44px minimum and `11px 18px` padding. Hero buttons retain the more-specific `11px 16px` compact override below 1100px. Action text remains 14px on phones. Sections and Appearance controls use 42px minimum heights at 700px, not a universal 44px floor.
 
-Buttons translate down 1px while active. Ordinary button transforms transition over 0.2 seconds. The global focus outline is 3px in the selected accent with 5px offset. Native appearance inputs draw their own span/swatch focus indicators with their authored offsets.
+Buttons translate down 1px while active. Under `motion-on` that press becomes `scale(.96)` over 180 ms. Ordinary button transforms transition over 0.2 seconds. Under `motion-on` the current section link in the Sections drawer is indented 20px over 240 ms; `aria-current=location` still marks it without motion. The global focus outline is 3px in the selected accent with 5px offset. Native appearance inputs draw their own span/swatch focus indicators with their authored offsets.
 
 ### Chips
 
@@ -315,5 +315,5 @@ Use native disclosures for role detail, coursework, research methods, project im
 - **Don't** add a portrait, borrowed reference artwork, fabricated product scenes, or a preview carousel.
 - **Don't** remove evidence or merge unrelated projects to shorten the page.
 - **Don't** add category palettes, repeated elevated card shells, or invented tonal ramps.
-- **Don't** animate hero opacity from zero, pin scrolling, or add cursor-tracking behavior that the implementation does not have.
+- **Don't** leave any content hidden when motion is off, pin scrolling, or add cursor-tracking behavior that the implementation does not have.
 - **Don't** present this source-derived specification as browser or accessibility certification.
