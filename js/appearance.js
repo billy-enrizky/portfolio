@@ -5,6 +5,7 @@
   const themes = ["system", "light", "dark"];
   const colors = { red: "Red", orange: "Orange", green: "Green", blue: "Blue", pink: "Pink" };
   const root = document.documentElement;
+  root.classList.add("js");
   const systemTheme = window.matchMedia("(prefers-color-scheme: dark)");
 
   function readPreferences(value) {
@@ -24,7 +25,7 @@
     const theme = preferences.theme === "system" ? (systemTheme.matches ? "dark" : "light") : preferences.theme;
     root.dataset.theme = theme;
     root.dataset.color = preferences.color;
-    document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#111315" : "#f4f4ef";
+    document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#101010" : "#f1f1f1";
   }
 
   // This script precedes the stylesheet so the first paint uses the saved appearance.
@@ -53,6 +54,13 @@
       applyAppearance();
       syncControls();
       try { localStorage.setItem(storageKey, JSON.stringify(preferences)); } catch (_) { /* Keep working for this visit. */ }
+    });
+
+    document.addEventListener("click", function (event) {
+      if (controls.open && !controls.contains(event.target)) controls.open = false;
+    });
+    document.addEventListener("focusin", function (event) {
+      if (controls.open && !controls.contains(event.target)) controls.open = false;
     });
 
     controls.addEventListener("keydown", function (event) {
