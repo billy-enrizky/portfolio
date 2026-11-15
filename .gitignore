@@ -5,3 +5,5 @@ local_docs/
 .cursor/
 presentation/
 .worktrees/
+PRODUCT.md
+DESIGN.md
