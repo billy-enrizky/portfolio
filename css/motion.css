@@ -28,11 +28,6 @@ html:not(.motion-on) [data-reveal],html:not(.motion-on) .mask-line>span{transiti
 .career-route .route-dot{fill:var(--accent);opacity:.28;transition:opacity 240ms var(--ease-arrive)}
 .career-route .route-dot.on{opacity:1}
 
-.hero-turn{display:none}
-.motion-on.sprite-ready .hero-turn{display:block;width:100%;height:100%;background:url('../images/motion/openbrowser-turn.webp') 0 0/600% 400% no-repeat;filter:drop-shadow(0 26px 22px rgba(0,0,0,.28))}
-.motion-on.sprite-ready .hero-project-tile{background:transparent;border-color:transparent;box-shadow:none;transform:none;width:290px;height:290px}
-.motion-on.sprite-ready .hero-project-tile img{display:none}
-.motion-on.sprite-ready .hero-project-tile:focus-visible{outline:2px solid var(--ink);outline-offset:6px;border-radius:44px}
 
 .motion-on .button,.motion-on .nav-toggle,.motion-on .work-controls>button,.motion-on .skills-tabs [role=tab]{transition:transform 180ms var(--ease-arrive),background-color 160ms,border-color 160ms,color 160ms}
 .motion-on .button:active,.motion-on .nav-toggle:active,.motion-on .work-controls>button:active,.motion-on .skills-tabs [role=tab]:active{transform:scale(.96)}
@@ -47,7 +42,6 @@ html:not(.motion-on) [data-reveal],html:not(.motion-on) .mask-line>span{transiti
 @media(max-width:700px){
  :root{--reveal-ms:520ms}
  .motion-on [data-reveal]{transform:translate3d(0,14px,0)}
- .motion-on.sprite-ready .hero-project-tile{width:184px;height:184px}
  .motion-on .career-route{display:none}
 }
 

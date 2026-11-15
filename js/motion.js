@@ -8,15 +8,12 @@
   var STAGGER_MS = 70;
   var STAGGER_CAP_MS = 800;
   var REVEAL_MS = 900;
-  var SPRITE = { url: "images/motion/openbrowser-turn.webp", cols: 6, rows: 4, frames: 24 };
   var MASKED = [".hero-name-line", ".section-heading h2"];
 
   var reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   var toggles = [];
   var observer;
   var pending = new Set();
-  var spriteRequested = false;
-  var frame = 0;
   var scrollQueued = false;
   var batchStart = 0;
   var batchCount = 0;
@@ -76,14 +73,6 @@
     });
   }
 
-  function setFrame(index) {
-    var tile = document.querySelector(".hero-turn");
-    if (!tile) return;
-    var col = index % SPRITE.cols;
-    var row = Math.floor(index / SPRITE.cols);
-    tile.style.backgroundPosition = (col * 100 / (SPRITE.cols - 1)) + "% " + (row * 100 / (SPRITE.rows - 1)) + "%";
-  }
-
   function revealPassed() {
     pending.forEach(function (el) {
       if (el.getBoundingClientRect().bottom < 0) {
@@ -103,13 +92,6 @@
     var max = document.documentElement.scrollHeight - innerHeight;
     var bar = document.querySelector(".scroll-progress span");
     if (bar && max > 0) bar.style.transform = "scaleX(" + Math.min(1, Math.max(0, scrollY / max)) + ")";
-    var hero = document.getElementById("summary");
-    if (hero) {
-      var span = Math.max(1, hero.offsetHeight);
-      var t = Math.min(1, Math.max(0, scrollY / span));
-      var next = Math.round(t * (SPRITE.frames - 1));
-      if (next !== frame) { frame = next; setFrame(frame); }
-    }
     updateRoute();
   }
 
@@ -129,19 +111,6 @@
     if (scrollQueued) return;
     scrollQueued = true;
     requestAnimationFrame(updateScroll);
-  }
-
-  function loadSprite() {
-    if (spriteRequested || root.classList.contains("sprite-ready")) return;
-    var conn = navigator.connection;
-    if (conn && conn.saveData) return;
-    spriteRequested = true;
-    var img = new Image();
-    img.onload = function () {
-      setFrame(frame);
-      root.classList.add("sprite-ready");
-    };
-    img.src = SPRITE.url;
   }
 
   var route;
@@ -231,7 +200,6 @@
     if (on) {
       scheduleRoute();
       startObserving();
-      loadSprite();
       onScroll();
     } else {
       if (observer) observer.disconnect();
