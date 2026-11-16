@@ -542,6 +542,18 @@ async function reviewRegressions(browser){
   }
  });
 
+ for(const [label,viewport] of [['desktop',{width:1440,height:900}],['phone',{width:390,height:844}]]){
+  const geometry={};
+  for(const mode of ['paused','motion']){
+   await withSession(browser,{stored:mode==='paused'?PAUSED:undefined,viewport},async({page})=>{
+    await loadView(page);
+    await page.waitForTimeout(1500);
+    geometry[mode]=await page.evaluate(()=>{const r=e=>{const b=e.getBoundingClientRect();return [Math.round(b.top*10)/10,Math.round(b.height*10)/10]};return {name:r(document.querySelector('h1.hero-name')),line:r(document.querySelector('.hero-name-line')),skills:r(document.querySelector('#skills')),heading:r(document.querySelector('#skills-heading'))}});
+   });
+  }
+  assert.deepEqual(geometry.motion,geometry.paused,`Masked headings add no height and move nothing on ${label}, so loading causes no layout shift`);
+ }
+
  await withSession(browser,{blocked:true},async({page})=>{
   await loadView(page);
   await openAppearance(page);
