@@ -13,7 +13,7 @@ fieldset:has(>.motion-toggle[hidden]){display:none}
 .motion-on .scroll-progress{display:block}
 .scroll-progress span{display:block;height:100%;background:var(--accent);transform-origin:0 50%;transform:scaleX(0)}
 
-.motion-on .mask-line{display:block;overflow:hidden;padding:.12em .06em .16em;margin:-.12em -.06em -.16em}
+.motion-on .mask-line{display:block;overflow:clip;overflow-clip-margin:.16em}
 .motion-on .mask-line>span{display:block;transform:translate3d(0,108%,0);transition:transform 820ms var(--ease-arrive) var(--delay,0ms)}
 .motion-on .mask-line.is-revealed>span{transform:none}
 
