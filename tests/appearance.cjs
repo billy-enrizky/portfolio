@@ -122,7 +122,7 @@ function contrast(a,b) { const x=luminance(a),y=luminance(b);return (Math.max(x,
   await page.getByRole('button',{name:'Sections',exact:true}).click();
   await page.getByRole('button',{name:'Show all details',exact:true}).click();assert.equal(await page.locator('main details:not([open])').count(),0);
   await page.getByRole('button',{name:'Hide extra details',exact:true}).click();
-  assert.equal(await page.locator('.role-record').count(),11);assert.equal(await page.locator('.paper-record').count(),2);assert.equal(await page.locator('.credential-group li').count(),27);
+  assert.equal(await page.locator('.role-record').count(),11);assert.equal(await page.locator('.paper-record').count(),2);assert.equal(await page.locator('#credentials .credential-group').count(),8);assert.equal(await page.locator('#credentials .credential-group li').count(),47);
   const blocked=await browser.newContext({viewport:{width:390,height:844},colorScheme:'dark',reducedMotion:'reduce'});
   await blocked.addInitScript(()=>Object.defineProperty(window,'localStorage',{get(){throw new DOMException('Storage unavailable','SecurityError');}}));
   const bp=await blocked.newPage();bp.on('pageerror',e=>errors.push(e.message));await bp.goto(URL+'?noanim');

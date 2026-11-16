@@ -10,9 +10,9 @@ I build the systems between AI research and production: agent runtimes, browser 
 
 The page follows Summary, Skills, Experience, Education, Research, My work, Credentials, Contact.
 
-- 11 role records, 30 project records, 2 course papers, and 27 credential and learning entries. The collection retains all 24 original projects alongside newer projects and systems work. Finance data engineering stays separate from AI infrastructure.
+- 11 role records, 30 project records, 2 course papers, and 47 credential and learning entries. The collection retains all 24 original projects alongside newer projects and systems work. Finance data engineering stays separate from AI infrastructure.
 - Education includes University of Toronto, with CGPA 3.87/4.00, Georgia Tech, coursework, awards, co-op distinction, graduate admissions, and 3 campus service roles. Admissions are not additional earned degrees.
-- STAD68 is a final course paper, 2026. STAD80 is a course paper, 2026. Neither is a conference publication. Certifications, partner credentials, applied skills, training badges, and coursework retain their original classifications and formal names.
+- STAD68 is a final course paper, 2026. STAD80 is a course paper, 2026. Neither is a conference publication. Credential types, formal names, issue dates, and visible expiry dates match the source records.
 - Original record text, anchors, source links, images, and public CV bytes remain intact. Plain-language purpose and supported outcomes precede the full technical evidence in native disclosures.
 
 **View my work** leads to the complete **Find a project** collection. Search matches every entered word against a project's full text, including its disclosure. Category filters, result counts, an empty state, and Clear search support the full collection. Clear search resets both query and category. A role selector, keyboard skill tabs, and **Show all details** provide other entry points.
