@@ -459,7 +459,8 @@ async function preservation(browser){
    assert.equal(await page.locator('.role-record').count(),11,`${view.name}: role records`);
    assert.equal(await page.locator('.project-record').count(),30,`${view.name}: project records`);
    assert.equal(await page.locator('.paper-record').count(),2,`${view.name}: paper records`);
-   assert.equal(await page.locator('.credential-group li').count(),27,`${view.name}: credential items`);
+   assert.equal(await page.locator('#credentials .credential-group').count(),8,`${view.name}: credential groups`);
+   assert.equal(await page.locator('#credentials .credential-group li').count(),47,`${view.name}: credential items`);
    assert.equal(await page.locator('main img[src*="portrait"]').count(),0,`${view.name}: no author portrait in page content`);
    await assertNoOverflow(page,`${view.name}, collapsed`);
    await expandAllDetails(page);
@@ -577,6 +578,7 @@ async function reviewRegressions(browser){
 
  await withSession(browser,{},async({page})=>{
   await loadView(page);
+  await page.waitForFunction(()=>[...document.querySelectorAll('[data-reveal], .mask-line')].every(el=>{const r=el.getBoundingClientRect();return r.bottom<=0||r.top>=innerHeight||el.classList.contains('is-revealed')}),null,{timeout:5000});
   const before=await page.evaluate(()=>document.querySelectorAll('.is-revealed').length);
   await page.evaluate(()=>{history.pushState(null,'','#main');dispatchEvent(new HashChangeEvent('hashchange'))});
   await page.waitForTimeout(200);
