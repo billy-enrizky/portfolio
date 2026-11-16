@@ -8,7 +8,7 @@ I build the systems between AI research and production: agent runtimes, browser 
 
 ## Complete record
 
-The page follows Summary, Skills, Experience, Education, Research, My work, Credentials, Contact.
+The page follows Summary, Skills, Experience, Education, Credentials, Research, My work, Contact.
 
 - 11 role records, 30 project records, 2 course papers, and 47 credential and learning entries. The collection retains all 24 original projects alongside newer projects and systems work. Finance data engineering stays separate from AI infrastructure.
 - Education includes University of Toronto, with CGPA 3.87/4.00, Georgia Tech, coursework, awards, co-op distinction, graduate admissions, and 3 campus service roles. Admissions are not additional earned degrees.

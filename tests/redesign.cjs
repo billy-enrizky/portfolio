@@ -7,6 +7,8 @@ const out=path.resolve(process.env.TEST_OUTPUT_DIR||'local_docs/redesign-qa');fs
 (async()=>{const browser=await chromium.launch({headless:true});const errors=[];try{
  const page=await browser.newPage({viewport:{width:1440,height:1000},colorScheme:'light',reducedMotion:'reduce'});page.on('pageerror',e=>errors.push(e.message));
  await page.goto(base+'?noanim');await page.evaluate(()=>document.fonts.ready);
+ const sectionOrder=await page.locator('main > section').evaluateAll(sections=>sections.map(section=>section.id));const educationIndex=sectionOrder.indexOf('education'),credentialsIndex=sectionOrder.indexOf('credentials'),researchIndex=sectionOrder.indexOf('research');assert.equal(credentialsIndex,educationIndex+1,'Credentials follows Education');assert.equal(researchIndex,credentialsIndex+1,'Research follows Credentials');
+ const navigationOrder=await page.locator('.nav-links a').evaluateAll(links=>links.map(link=>link.hash.slice(1)));const navEducationIndex=navigationOrder.indexOf('education'),navCredentialsIndex=navigationOrder.indexOf('credentials'),navResearchIndex=navigationOrder.indexOf('research');assert.equal(navCredentialsIndex,navEducationIndex+1,'Credentials follows Education in navigation');assert.equal(navResearchIndex,navCredentialsIndex+1,'Research follows Credentials in navigation');
  assert.equal(await page.locator('.site-header').count(),1,'The reference-led design needs a persistent full-width header');
  assert.equal(await page.getByRole('heading',{name:'Muhammad Enrizky Brillian',level:1,exact:true}).count(),1);
  assert.equal(await page.locator('.hero-artwork, .hero-project-tile, .hero-turn').count(),0,'The hero has no artwork');
