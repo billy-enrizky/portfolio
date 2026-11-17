@@ -15,16 +15,11 @@
 .hero-sky .cloud{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5;stroke-linejoin:round}
 .hero-sky .bird{fill:none;stroke:var(--ink);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .hero-sky .bird.accent{stroke:var(--accent)}
-.profile-hero .hero-name{font-size:clamp(7rem,15.6vw,17rem);letter-spacing:-.055em;line-height:.82}
 .profile-hero .hero-name-line:last-of-type{padding-left:.42em}
 .motion-on .hero-sky .drift{animation:drift 14s ease-in-out infinite alternate}
 .motion-on .hero-sky .drift.slow{animation-duration:21s;animation-delay:-6s}
 .motion-on .hero-sky .drift.quick{animation-duration:11s;animation-delay:-3s}
 @keyframes drift{from{transform:translate(-14px,0)}to{transform:translate(16px,-4px)}}
-@media(hover:hover) and (pointer:fine){
-  .motion-on .profile-hero .hero-name-line{transition:transform 620ms var(--ease-arrive)}
-  .motion-on .profile-hero .hero-name-line:hover{transform:rotate(-2deg)}
-}
 
 /* Section headings draw an accent rule as they reveal. Without motion the rule is simply shown. */
 .section-heading h2{position:relative;display:inline-block}
@@ -68,7 +63,6 @@
   #projects .project-record>h3 a{overflow-wrap:anywhere}
   .profile-hero{padding-top:calc(clamp(88px,22vw,120px) + 18px)}
   .hero-sky{height:clamp(88px,22vw,120px)}
-  .profile-hero .hero-name{font-size:clamp(3.4rem,17.2vw,5.6rem)}
   .profile-hero .hero-name-line:last-of-type{padding-left:0}
   #projects .project-grid{gap:60px 0}
   #projects .project-record::before{width:96px}
