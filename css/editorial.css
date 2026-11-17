@@ -112,7 +112,6 @@ select,input[type=search]{border-radius:12px;min-height:50px;padding:12px 16px;f
 .contact-address{display:block;width:fit-content;font-size:clamp(1.85rem,6.7vw,7.25rem);font-weight:500;line-height:1.08;letter-spacing:-.04em;color:var(--ink);text-decoration:none;overflow-wrap:anywhere;margin:50px 0 34px}
 .contact-address:hover{color:var(--accent)}
 .contact-actions{gap:12px}
-.contact-links{gap:22px;font-size:15px;margin-top:30px}
 .site-footer{font-size:14px;padding:30px 0 36px}
 .noscript-note{margin-left:0;max-width:1680px;margin-inline:auto}
 

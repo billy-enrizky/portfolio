@@ -11,7 +11,6 @@
   var MASKED = [".hero-name-line", ".section-heading h2"];
 
   var reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-  var toggles = [];
   var observer;
   var pending = new Set();
   var scrollQueued = false;
@@ -183,19 +182,8 @@
     });
   }
 
-  function syncToggles() {
-    var reason = boot.reason();
-    toggles.forEach(function (btn) {
-      btn.hidden = false;
-      if (reason === "noanim") { btn.textContent = "Motion off for this view"; btn.disabled = true; }
-      else if (reason === "reduced") { btn.textContent = "Motion reduced by system setting"; btn.disabled = true; }
-      else { btn.disabled = false; btn.textContent = reason === "paused" ? "Play motion" : "Pause motion"; }
-    });
-  }
-
   function apply() {
-    var reason = boot.reason();
-    var on = !reason;
+    var on = !boot.reason();
     root.classList.toggle("motion-on", on);
     if (on) {
       scheduleRoute();
@@ -205,27 +193,10 @@
       if (observer) observer.disconnect();
       settleAll();
     }
-    syncToggles();
-  }
-
-  function store(mode) {
-    boot.remember(mode);
-    try { localStorage.setItem(boot.key, JSON.stringify({ mode: mode })); } catch (_) { /* Keep working for this visit. */ }
-  }
-
-  function bindToggle(btn) {
-    toggles.push(btn);
-    btn.addEventListener("click", function () {
-      if (btn.disabled) return;
-      var paused = boot.reason() === "paused";
-      store(paused ? "auto" : "paused");
-      apply();
-    });
   }
 
   function init() {
     MASKED.forEach(function (selector) { document.querySelectorAll(selector).forEach(mask); });
-    document.querySelectorAll("[data-motion-toggle]").forEach(bindToggle);
     buildRoute();
 
     document.addEventListener("portfolio:navigate", function (event) {
@@ -236,13 +207,11 @@
       var node = event.target.closest && event.target.closest("[data-reveal]");
       if (node) settle(node);
     });
-    window.addEventListener("storage", function (event) {
-      if (event.key === null || event.key === boot.key) { boot.remember(null); apply(); }
-    });
     reducedQuery.addEventListener("change", apply);
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", function () { scheduleRoute(); onScroll(); });
     document.addEventListener("toggle", scheduleRoute, true);
+    document.addEventListener("portfolio:fold", scheduleRoute);
     window.addEventListener("hashchange", function () {
       var id;
       try { id = decodeURIComponent(location.hash.slice(1)); } catch (_) { return; }

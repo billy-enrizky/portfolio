@@ -18,7 +18,10 @@
   .section-toggle:hover{color:var(--accent);border-color:var(--accent)}
 }
 .section-toggle:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
-.section-body[hidden]{display:none}
+/* Sections ship collapsed once JavaScript is running, and the early appearance script sets html.js before first
+   paint so nothing flashes. Without that class the page is complete and every section is open. */
+html.js .section-body{display:none}
+html.js .section-body.is-open{display:block}
 /* Without JavaScript nothing can fold, so the control is not shown at all: the page is simply complete. */
 html:not(.js) .section-toggle{display:none}
 
@@ -37,4 +40,5 @@ html:not(.js) .section-toggle{display:none}
 
 @media print{
   .section-toggle{display:none}
+  html.js .section-body{display:block}
 }
