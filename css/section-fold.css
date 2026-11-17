@@ -7,6 +7,8 @@
    header on wide screens and on its own line above the heading on phones. */
 
 .section-heading{position:relative}
+/* Balance the intro's lines so a short last line never strands one or two words. */
+.section-heading>p{text-wrap:balance}
 .section-toggle{position:absolute;top:6px;right:0;display:inline-flex;align-items:center;gap:9px;min-height:44px;padding:0 16px 0 14px;border:1px solid var(--rule);border-radius:999px;background:var(--surface);color:var(--ink);font:inherit;font-size:13px;font-weight:500;letter-spacing:-.01em;line-height:1;cursor:pointer;white-space:nowrap}
 .section-toggle::before{content:"";width:8px;height:8px;flex:0 0 auto;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(-135deg)}
 .section-toggle[aria-expanded=false]::before{transform:rotate(45deg)}
@@ -28,7 +30,7 @@ html:not(.js) .section-toggle{display:none}
 @media(min-width:901px){
   /* The pill is a third column of the header, so it never sits on the intro text and the intro keeps its measure. */
   .section-heading{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto}
-  .section-toggle{position:static;justify-self:end;align-self:start}
+  .section-toggle{position:static;grid-column:3;justify-self:end;align-self:start}
 }
 @media(max-width:900px){
   .section-heading{padding-top:56px}
