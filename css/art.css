@@ -1,0 +1,55 @@
+/* Art layer. Original work: framed prints with tape, a kraft sheet with torn edges and a graph-paper skills sheet.
+   Every rule restyles existing markup. The item objects are aria-hidden inline SVG and hold no
+   text or links. Colour comes only from the page tokens, so the five accents and the light,
+   dark and system themes keep their contrast. Motion is gated by .motion-on, so reduced motion,
+   Pause motion, ?noanim and no JavaScript render the complete static page. */
+
+/* Kraft ground for the projects sheet. A fine grain comes from layered gradients, not an image. */
+#projects{--kraft:#c9a880;--kraft-ink:#101010;color:var(--kraft-ink);background-color:var(--kraft);background-image:radial-gradient(circle at 20% 10%,rgba(255,255,255,.18) 0,transparent 40%),radial-gradient(circle at 80% 70%,rgba(0,0,0,.05) 0,transparent 45%),repeating-linear-gradient(90deg,rgba(0,0,0,.02) 0 1px,transparent 1px 4px);position:relative;isolation:isolate}
+
+/* Dark theme keeps a dark kraft ground, so the band text meets 13.99:1 with the paper colour. */
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) #projects{--kraft:#2a2118;--kraft-ink:#f1f1f1}}
+:root[data-theme=dark] #projects{--kraft:#2a2118;--kraft-ink:#f1f1f1}
+
+/* Torn top and bottom edges, drawn with a zigzag mask. */
+#projects::before,#projects::after{content:"";position:absolute;left:0;right:0;height:18px;background:var(--paper);pointer-events:none;z-index:1}
+#projects::before{top:0;-webkit-mask:linear-gradient(135deg,transparent 50%,#000 50%) 0 0/18px 18px repeat-x;mask:linear-gradient(135deg,transparent 50%,#000 50%) 0 0/18px 18px repeat-x}
+#projects::after{bottom:0;-webkit-mask:linear-gradient(-45deg,transparent 50%,#000 50%) 0 0/18px 18px repeat-x;mask:linear-gradient(-45deg,transparent 50%,#000 50%) 0 0/18px 18px repeat-x}
+
+/* Framed print: white border, soft shadow, a slight tilt and a tape strip. */
+#projects .project-record{position:relative;background:var(--surface);padding:14px 14px 22px;border:0;border-radius:2px;box-shadow:0 1px 0 rgba(0,0,0,.04),0 22px 26px -20px rgba(16,16,16,.55);transition:box-shadow 360ms var(--ease-arrive)}
+.motion-on #projects .project-record{transition:opacity var(--reveal-ms) var(--ease-arrive) var(--delay,0ms),transform var(--reveal-ms) var(--ease-arrive) var(--delay,0ms),rotate 360ms var(--ease-arrive),box-shadow 360ms var(--ease-arrive)}
+#projects .project-record.is-settled{transition:none}
+.motion-on #projects .project-record{rotate:-.6deg}
+.motion-on #projects .project-record:nth-child(odd){rotate:.5deg}
+.motion-on #projects .project-record:nth-child(3n){rotate:-1deg}
+#projects .project-record::before{content:"";position:absolute;top:-14px;left:50%;width:112px;height:30px;translate:-50% 0;rotate:-2deg;background:rgba(241,236,222,.82);border:1px solid rgba(120,100,70,.18);box-shadow:0 1px 2px rgba(16,16,16,.12);z-index:2}
+#projects .project-record:nth-child(even)::before{rotate:3deg;width:96px}
+@media(hover:hover) and (pointer:fine){
+  #projects .project-record:hover{rotate:0deg;box-shadow:0 1px 0 rgba(0,0,0,.04),0 34px 36px -22px rgba(16,16,16,.6)}
+}
+
+/* Item object: a small original drawing, one per record, at the top of the print. */
+#projects .item-object{display:block;width:100%;max-width:220px;height:auto;margin:0 auto 18px;padding:18px;background:var(--surface);border:1px solid var(--rule);border-radius:4px;box-sizing:border-box;color:var(--ink);overflow:visible}
+
+/* The big OpenBrowser, Context Atlas and MTP records keep their size; only the print device changes. */
+#projects #project-openbrowser,#projects #project-context-atlas,#projects #project-mtp{padding:20px 22px 26px}
+#projects #project-openbrowser .item-object,#projects #project-context-atlas .item-object,#projects #project-mtp .item-object{max-width:200px}
+
+/* Muted and small text on the kraft ground needs a darker tone than the page muted grey. */
+#projects .result-count{color:var(--kraft-ink)}
+#projects .work-controls>button:not([aria-pressed=true]){color:var(--kraft-ink);border-color:var(--kraft-ink)}
+#projects .project-filters button[aria-pressed=false]{color:var(--kraft-ink);border-color:var(--kraft-ink)}
+
+/* Graph-paper sheet for the skills section. */
+#skills{background-color:var(--paper);background-image:linear-gradient(to right,color-mix(in srgb,var(--rule) 45%,transparent) 1px,transparent 1px),linear-gradient(to bottom,color-mix(in srgb,var(--rule) 45%,transparent) 1px,transparent 1px);background-size:28px 28px}
+
+@media(max-width:700px){
+  #projects .project-record{padding:12px 12px 18px}
+  #projects .item-object{max-width:180px}
+}
+
+@media print{
+  #projects::before,#projects::after,#projects .project-record::before{display:none}
+  #projects .project-record{box-shadow:none}
+}
