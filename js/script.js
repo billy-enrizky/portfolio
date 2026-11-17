@@ -14,9 +14,18 @@
 
   function setSection(button, open) {
     const body = document.getElementById(button.getAttribute("aria-controls"));
+    const label = open ? "Collapse section" : "Expand section";
+    const section = button.closest("section");
+    const heading = section && section.querySelector("h2");
     button.setAttribute("aria-expanded", String(open));
+    const text = button.querySelector(".section-toggle-label");
+    if (text) text.textContent = label;
+    if (heading) button.setAttribute("aria-label", label + ": " + heading.textContent.trim());
     if (body) body.hidden = !open;
   }
+  foldButtons.forEach(function (button) {
+    setSection(button, button.getAttribute("aria-expanded") !== "false");
+  });
   foldButtons.forEach(function (button) {
     button.addEventListener("click", function () {
       setSection(button, button.getAttribute("aria-expanded") !== "true");
