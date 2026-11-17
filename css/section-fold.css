@@ -1,0 +1,26 @@
+/* Section folding. Every content section carries one toggle in its header and one wrapper around the content
+   below it. The wrapper starts open, so the page reads the same with JavaScript off; only the script collapses a
+   section, and it also reopens the section a deep link points into. The button is icon-only: its accessible name
+   comes from aria-label and its state from aria-expanded. */
+
+.section-heading{position:relative}
+.section-toggle{position:absolute;top:2px;right:0;display:inline-grid;place-items:center;width:40px;height:40px;padding:0;border:1px solid var(--rule);border-radius:999px;background:var(--surface);color:var(--muted);cursor:pointer}
+.section-toggle::before{content:"";width:8px;height:8px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(-135deg) translate(-1px,-1px)}
+.section-toggle[aria-expanded=false]::before{transform:rotate(45deg) translate(-1px,-1px)}
+.motion-on .section-toggle::before{transition:transform 200ms var(--ease-arrive),border-color 160ms}
+@media(hover:hover) and (pointer:fine){
+  .section-toggle:hover{color:var(--accent);border-color:var(--accent)}
+}
+.section-toggle:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.section-body[hidden]{display:none}
+/* Without JavaScript nothing can fold, so the control is not shown at all: the page is simply complete. */
+html:not(.js) .section-toggle{display:none}
+
+@media(max-width:700px){
+  .section-toggle{top:0;width:36px;height:36px}
+  .section-heading h2{padding-right:48px}
+}
+
+@media print{
+  .section-toggle{display:none}
+}

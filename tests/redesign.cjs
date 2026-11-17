@@ -39,6 +39,11 @@ const out=path.resolve(process.env.TEST_OUTPUT_DIR||'local_docs/redesign-qa');fs
  await page.locator('#project-search').fill('context atlas');assert.equal(await page.locator('.project-record:not([hidden])').count(),1);
  await page.evaluate(()=>{history.pushState(null,'','#project-openbrowser');dispatchEvent(new HashChangeEvent('hashchange'));});
  await page.waitForFunction(()=>!document.getElementById('project-openbrowser').hidden);
+ const fold=page.locator('#experience .section-toggle');assert.equal(await fold.getAttribute('aria-expanded'),'true');assert.equal(await page.locator('#experience-body').isVisible(),true);
+ await fold.click();assert.equal(await fold.getAttribute('aria-expanded'),'false','The section toggle collapses its own section');assert.equal(await page.locator('#experience-body').isVisible(),false);
+ await page.evaluate(()=>{location.hash='#experience-ibm';dispatchEvent(new HashChangeEvent('hashchange'));});
+ await page.waitForFunction(()=>document.getElementById('experience-body').offsetParent!==null);assert.equal(await fold.getAttribute('aria-expanded'),'true','A deep link reopens its section');
+ await fold.focus();await page.keyboard.press('Enter');assert.equal(await fold.getAttribute('aria-expanded'),'false','Enter collapses the section');await page.keyboard.press('Enter');assert.equal(await fold.getAttribute('aria-expanded'),'true');
  const nojs=await browser.newPage({viewport:{width:390,height:844},javaScriptEnabled:false,colorScheme:'dark'});await nojs.goto(base);
  assert.equal(await nojs.locator('.site-index').isVisible(),true);assert.equal(await nojs.locator('.project-record').count(),30);await nojs.locator('#experience-ibm > details.record-disclosure > summary').click();assert.equal(await nojs.locator('#experience-ibm > details.record-disclosure').getAttribute('open'),'');await nojs.locator('#experience-ibm details.detail-block > summary').click();assert.equal(await nojs.locator('#experience-ibm details.detail-block').getAttribute('open'),'');
  assert.deepEqual(errors,[]);fs.writeFileSync(path.join(out,'redesign-results.json'),JSON.stringify({sizes,consoleErrors:errors},null,2));
