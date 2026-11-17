@@ -1,46 +1,46 @@
 /* Section folding. Every content section carries one toggle in its header and one wrapper around the content
-   below it. The wrapper starts open, so the page reads the same with JavaScript off; only the script collapses a
-   section, and it also reopens the section a deep link points into.
+   below it. Sections ship collapsed once the script runs; without JavaScript the page is complete and open.
 
-   The control is a labelled pill, not a bare chevron: the words name the action and the chevron shows the state.
-   It is 44px tall so it is a comfortable pointer and touch target, and it sits in the empty top-right of the
-   header on wide screens and on its own line above the heading on phones. */
+   The toggle is a labelled button in the site's own button size: 48px tall on wide screens and 44px on phones, so
+   the pointer and touch target are comfortable at every width. Its chevron points down while the section is folded
+   and up while it is open, placed after the label as in a disclosure. The label names the action. */
 
 .section-heading{position:relative}
 /* Balance the intro's lines so a short last line never strands one or two words. */
 .section-heading>p{text-wrap:balance}
-.section-toggle{position:absolute;top:6px;right:0;display:inline-flex;align-items:center;gap:9px;min-height:44px;padding:0 16px 0 14px;border:1px solid var(--rule);border-radius:999px;background:var(--surface);color:var(--ink);font:inherit;font-size:13px;font-weight:500;letter-spacing:-.01em;line-height:1;cursor:pointer;white-space:nowrap}
-.section-toggle::before{content:"";width:8px;height:8px;flex:0 0 auto;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(-135deg)}
-.section-toggle[aria-expanded=false]::before{transform:rotate(45deg)}
-.section-toggle[aria-expanded=false]{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 55%,var(--rule))}
-.motion-on .section-toggle::before{transition:transform 180ms var(--ease-arrive)}
-.motion-on .section-toggle{transition:color 160ms,border-color 160ms,transform 160ms var(--ease-arrive)}
+.section-toggle{position:absolute;top:6px;right:0;display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:12px 16px 12px 20px;border:1px solid var(--accent);border-radius:999px;background:var(--surface);color:var(--accent);font:inherit;font-size:14px;font-weight:500;letter-spacing:-.01em;line-height:1.2;cursor:pointer;white-space:nowrap}
+/* The chevron is two borders on a square, so it stays crisp at any zoom. Its translate centres the drawn shape on the label. */
+.section-toggle::before{content:"";order:2;width:9px;height:9px;flex:0 0 auto;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-3px) rotate(45deg)}
+.section-toggle[aria-expanded="true"]{color:var(--ink);border-color:var(--muted)}
+.section-toggle[aria-expanded="true"]::before{transform:translateY(3px) rotate(-135deg)}
+.motion-on .section-toggle{transition:color 160ms,border-color 160ms,background-color 160ms,transform 160ms var(--ease-arrive)}
+.motion-on .section-toggle::before{transition:transform 200ms var(--ease-arrive)}
 .motion-on .section-toggle:active{transform:scale(.97)}
 @media(hover:hover) and (pointer:fine){
-  .section-toggle:hover{color:var(--accent);border-color:var(--accent)}
+  .section-toggle:hover{background:var(--accent-soft)}
 }
 .section-toggle:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
-/* Sections ship collapsed once JavaScript is running, and the early appearance script sets html.js before first
-   paint so nothing flashes. Without that class the page is complete and every section is open. */
+/* Without the js class nothing can fold, so the control is hidden and every section stays open. */
 html.js .section-body{display:none}
 html.js .section-body.is-open{display:block}
-/* Without JavaScript nothing can fold, so the control is not shown at all: the page is simply complete. */
 html:not(.js) .section-toggle{display:none}
 
 @media(min-width:901px){
-  /* The pill is a third column of the header, so it never sits on the intro text and the intro keeps its measure. */
+  /* The toggle is a third column of the header and sits on the heading's bottom edge, level with the intro. */
   .section-heading{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto}
-  .section-toggle{position:static;grid-column:3;justify-self:end;align-self:start}
+  .section-toggle{position:static;grid-column:3;justify-self:end;align-self:end}
 }
 @media(max-width:900px){
-  .section-heading{padding-top:56px}
+  html.js .section-heading{padding-top:64px}
   .section-toggle{top:0}
 }
 @media(max-width:700px){
-  .section-toggle{min-height:40px;padding:0 14px 0 12px;font-size:12px}
+  html.js .section-heading{padding-top:56px}
+  .section-toggle{min-height:44px;padding:11px 14px 11px 16px}
 }
 
 @media print{
   .section-toggle{display:none}
+  html.js .section-heading{padding-top:0}
   html.js .section-body{display:block}
 }
