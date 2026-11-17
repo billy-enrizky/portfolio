@@ -47,7 +47,7 @@ Motion is a layer over the complete page. One class, `motion-on` on the root ele
 
 These are scoped snapshots, not live counters:
 
-- OpenBrowser: 53,327 PyPI downloads from Pepy on November 10, 2026, 279 GitHub stars, 52 releases, and 7,007 test functions.
+- OpenBrowser: 54,368 PyPI downloads from Pepy as of November 16, 2026, 279 GitHub stars as of November 16, 2026, 52 releases, and 7,007 test functions.
 - Model serving: 10,410.60 tok/s at N=512, $0.77 per million tokens at N=512, compared with $132.56 per million tokens at N=1.
 - MTP benchmark: 144/144 runs, 8.9x to 26.8x vLLM versus Transformers, and 2.06x on A10 code prompts. Engine comparisons and speculative-decoding gains remain distinct.
 - Financial reconciliation: a 1,400,883-row BigQuery fact table and January to September control totals within $0.11.
