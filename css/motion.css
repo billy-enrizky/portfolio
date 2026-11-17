@@ -1,13 +1,8 @@
-/* Motion layer. Every rule except the pause button is gated by .motion-on, which js/motion.js
-   sets only when motion is allowed. Reduced motion, Pause motion, ?noanim and no JavaScript
-   all render the complete static page. */
+/* Motion layer. Every rule is gated by .motion-on, which js/motion.js sets only when motion is allowed.
+   Reduced motion, ?noanim and no JavaScript all render the complete static page. */
 
 :root{--ease-arrive:cubic-bezier(.172,.687,.393,.943);--reveal-ms:640ms}
 
-.motion-toggle{display:none}
-.js .motion-toggle{display:inline-flex;align-items:center;justify-content:center}
-.motion-toggle:disabled{opacity:.6;cursor:not-allowed}
-fieldset:has(>.motion-toggle[hidden]){display:none}
 
 .scroll-progress{display:none;position:fixed;inset:var(--header-height) 0 auto;height:3px;z-index:19;pointer-events:none}
 .motion-on .scroll-progress{display:block}

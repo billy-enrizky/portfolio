@@ -153,8 +153,7 @@ input::placeholder{color:var(--muted);opacity:1}
 .credential-group .ledger-list span{display:block;margin-top:4px;color:var(--muted);font-size:13px}
 #contact .section-heading{max-width:720px}
 #contact .section-heading h2{font-size:clamp(2rem,3.5vw,3rem);max-width:20ch}
-.contact-actions,.contact-links{display:flex;gap:14px;flex-wrap:wrap;margin-top:24px}
-.contact-links{font-size:14px}
+.contact-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:24px}
 .site-footer{padding:24px 0 32px;border-top:1px solid var(--rule);color:var(--muted);font-size:13px}
 .noscript-note{padding:18px 24px;margin-left:var(--index-width);font-size:14px;color:var(--muted)}
 html:not(.js) #details-toggle,html:not(.js) .work-controls,html:not(.js) .project-filters,html:not(.js) .result-count{display:none}

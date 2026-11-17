@@ -7,18 +7,15 @@ const base=process.env.PORTFOLIO_URL||'http://127.0.0.1:8000/';
 const out=path.resolve(process.env.TEST_OUTPUT_DIR||'local_docs/motion-qa');
 fs.mkdirSync(out,{recursive:true});
 
-const MOTION_KEY='portfolio-motion-v1';
 const APPEARANCE_KEY='portfolio-appearance';
-const PAUSED='{"mode":"paused"}';
 const DESKTOP={width:1440,height:1000};
 const PHONE={width:390,height:844};
 const WIDTHS=[320,390,768,1024,1440,1920];
-const REVEAL_SELECTORS=['.hero-copy > *','.section-heading > p','.role-record','.paper-record','.project-record','.education-entry','.contact-address','.contact-actions','.contact-links'];
+const REVEAL_SELECTORS=['.hero-copy > *','.section-heading > p','.role-record','.paper-record','.project-record','.education-entry','.contact-address','.contact-actions'];
 const MODES={
- on:{motion:true,text:'Pause motion',disabled:false},
- paused:{motion:false,text:'Play motion',disabled:false},
- reduced:{motion:false,text:'Motion reduced by system setting',disabled:true},
- noanim:{motion:false,text:'Motion off for this view',disabled:true},
+ on:{motion:true},
+ reduced:{motion:false},
+ noanim:{motion:false},
 };
 const errors=[];
 
@@ -35,7 +32,6 @@ async function withSession(browser,opts,run){
   javaScriptEnabled:opts.javaScriptEnabled!==false,
  });
  context.setDefaultTimeout(10000);
- if(opts.stored!==undefined)await context.addInitScript(({key,raw})=>{try{localStorage.setItem(key,raw)}catch(e){}},{key:MOTION_KEY,raw:opts.stored});
  if(opts.blocked)await context.addInitScript(()=>Object.defineProperty(window,'localStorage',{get(){throw new DOMException('Storage unavailable','SecurityError')}}));
  context.on('page',page=>watch(page,opts));
  const page=await context.newPage();
@@ -49,20 +45,18 @@ const storedRaw=(page,key)=>page.evaluate(k=>localStorage.getItem(k),key);
 const opacityOf=(page,selector)=>page.locator(selector).first().evaluate(el=>getComputedStyle(el).opacity);
 
 function waitBound(page){
- return page.waitForFunction(()=>{const t=document.querySelector('button[data-motion-toggle]');return Boolean(t)&&!t.hidden});
+ return page.waitForFunction(()=>Boolean(window.portfolioMotion&&window.portfolioMotion.ready));
+}
+
+function expandSections(page){
+ return page.evaluate(()=>document.querySelectorAll('.section-toggle[aria-expanded=false]').forEach(button=>button.click()));
 }
 
 async function loadView(page,suffix=''){
  await gotoOnly(page,suffix);
  await page.evaluate(()=>document.fonts.ready);
  await waitBound(page);
-}
-
-function toggleState(page){
- return page.evaluate(()=>{
-  const t=document.querySelector('button[data-motion-toggle]');
-  return {text:t.textContent.trim(),disabled:t.disabled,hidden:t.hidden,inPanel:Boolean(t.closest('.appearance-panel'))};
- });
+ await expandSections(page);
 }
 
 async function revealReport(page,{transform}){
@@ -86,7 +80,6 @@ async function assertAllVisible(page,label,{transform=false}={}){
 async function assertMode(page,mode,label){
  const want=MODES[mode];
  assert.equal(await motionOn(page),want.motion,`${label}: html motion-on presence`);
- assert.deepEqual(await toggleState(page),{text:want.text,disabled:want.disabled,hidden:false,inPanel:true},`${label}: motion toggle text and state`);
  if(!want.motion)await assertAllVisible(page,`${label}: static page`,{transform:true});
 }
 
@@ -146,28 +139,7 @@ async function assertNoOverflow(page,label){
 }
 
 async function preferenceParsing(browser){
- const cases=[
-  {name:'no stored value',stored:undefined,mode:'on'},
-  {name:'stored auto',stored:'{"mode":"auto"}',mode:'on'},
-  {name:'stored paused',stored:PAUSED,mode:'paused'},
-  {name:'malformed JSON',stored:'{not json',mode:'on'},
-  {name:'JSON null',stored:'null',mode:'on'},
-  {name:'JSON array',stored:'[]',mode:'on'},
-  {name:'JSON string "paused"',stored:'"paused"',mode:'on'},
-  {name:'unknown mode',stored:'{"mode":"x"}',mode:'on'},
-  {name:'wrong-case mode',stored:'{"mode":"Paused"}',mode:'on'},
-  {name:'array mode that coerces to paused',stored:'{"mode":["paused"]}',mode:'on'},
-  {name:'object mode',stored:'{"mode":{}}',mode:'on'},
-  {name:'empty object',stored:'{}',mode:'on'},
-  {name:'paused with extra keys',stored:'{"mode":"paused","theme":"dark","extra":[1]}',mode:'paused'},
-  {name:'auto with a pause-like extra key',stored:'{"mode":"auto","paused":true}',mode:'on'},
- ];
- for(const c of cases){
-  await withSession(browser,{stored:c.stored},async({page})=>{
-   await loadView(page);
-   await assertMode(page,c.mode,`Stored ${c.name}`);
-  });
- }
+ // Motion has no stored preference any more: it always plays. A blocked storage getter must not stop it.
  await withSession(browser,{blocked:true},async({page})=>{
   await loadView(page);
   await assertMode(page,'on','Blocked storage');
@@ -178,9 +150,6 @@ async function staticModes(browser){
  const cases=[
   {name:'Reduced motion',mode:'reduced',opts:{reducedMotion:'reduce'},suffix:''},
   {name:'?noanim',mode:'noanim',opts:{},suffix:'?noanim'},
-  {name:'Stored pause',mode:'paused',opts:{stored:PAUSED},suffix:''},
-  {name:'Reduced motion with stored pause',mode:'reduced',opts:{reducedMotion:'reduce',stored:PAUSED},suffix:''},
-  {name:'?noanim with stored pause',mode:'noanim',opts:{stored:PAUSED},suffix:'?noanim'},
  ];
  for(const c of cases){
   await withSession(browser,c.opts,async({page})=>{
@@ -196,7 +165,7 @@ async function motionOnBehavior(browser){
  await withSession(browser,{},async({page})=>{
   await loadView(page);
   assert.equal(await motionOn(page),true,'Default view has motion-on');
-  assert.equal(await opacityOf(page,'.contact-links'),'0','A far-down reveal element is hidden before it is approached');
+  assert.equal(await opacityOf(page,'.contact-actions'),'0','A far-down reveal element is hidden before it is approached');
   const heroLines=await page.locator('.hero-name-line').allTextContents();
   assert.deepEqual(heroLines,['Enrizky','Brillian'],'Masked hero name keeps its text');
   const headings=await page.evaluate(()=>[...document.querySelectorAll('.section-heading h2')].map(h=>({
@@ -206,16 +175,16 @@ async function motionOnBehavior(browser){
   })));
   assert.ok(headings.length>0&&headings.every(h=>h.masks===1&&h.inner===1&&h.same),'Every section h2 wraps its unchanged text in span.mask-line > span');
   assert.equal(await page.locator('#contact-heading .mask-line.is-revealed').count(),0,'A far heading mask is not revealed before approach');
-  await jumpTo(page,'.contact-links');
-  await page.waitForFunction(()=>getComputedStyle(document.querySelector('.contact-links')).opacity==='1');
-  assert.equal(await opacityOf(page,'.contact-links'),'1','The far element is visible once scrolled to');
+  await jumpTo(page,'.contact-actions');
+  await page.waitForFunction(()=>getComputedStyle(document.querySelector('.contact-actions')).opacity==='1');
+  assert.equal(await opacityOf(page,'.contact-actions'),'1','The far element is visible once scrolled to');
   await page.waitForFunction(()=>getComputedStyle(document.querySelector('.role-record')).opacity==='1');
   assert.equal(await opacityOf(page,'.role-record'),'1','Elements above the viewport count as revealed');
   await page.waitForFunction(()=>document.querySelector('#contact-heading .mask-line.is-revealed'));
   await page.evaluate(()=>scrollTo({top:0,behavior:'instant'}));
   await settle(page);
   await page.waitForTimeout(400);
-  assert.equal(await opacityOf(page,'.contact-links'),'1','A revealed element stays visible after scrolling away');
+  assert.equal(await opacityOf(page,'.contact-actions'),'1','A revealed element stays visible after scrolling away');
   assert.equal(await page.locator('#contact-heading .mask-line.is-revealed').count(),1,'A revealed mask stays revealed after scrolling away');
  });
 }
@@ -239,7 +208,7 @@ async function navigationSettle(browser){
    await gotoOnly(page,'#'+id);
    assert.equal(await motionOn(page),true,`Deep link #${id} runs with motion on`);
    await assertTargetTree(page,id,`Deep link #${id}`);
-   assert.equal(await opacityOf(page,'.contact-links'),'0',`Deep link #${id} leaves unrelated far content unrevealed`);
+   assert.equal(await opacityOf(page,'.contact-actions'),'0',`Deep link #${id} leaves unrelated far content unrevealed`);
   });
  }
  await withSession(browser,{},async({page})=>{
@@ -280,54 +249,6 @@ async function navigationSettle(browser){
    });
    assert.deepEqual(landed,{inView:true,opacity:'1'},`Keyboard focus step ${i} lands on content that is on screen and visible`);
   }
- });
-}
-
-async function toggleAndSync(browser){
- await withSession(browser,{},async({context,page})=>{
-  await loadView(page);
-  await assertMode(page,'on','Fresh view');
-  const appearanceBefore=await storedRaw(page,APPEARANCE_KEY);
-  await openAppearance(page);
-  await page.locator('button[data-motion-toggle]').click();
-  assert.equal(await motionOn(page),false,'Pause motion removes motion-on immediately');
-  assert.equal((await toggleState(page)).text,'Play motion','Toggle offers Play motion after pausing');
-  assert.deepEqual(JSON.parse(await storedRaw(page,MOTION_KEY)),{mode:'paused'},'Pause is stored at portfolio-motion-v1');
-  assert.equal(await storedRaw(page,APPEARANCE_KEY),appearanceBefore,'Pausing motion leaves the appearance key untouched');
-  await assertAllVisible(page,'Paused view',{transform:true});
-  const motionAfterPause=await storedRaw(page,MOTION_KEY);
-  await page.getByRole('radio',{name:'Dark',exact:true}).check();
-  await page.getByRole('radio',{name:'Blue',exact:true}).check();
-  assert.deepEqual(JSON.parse(await storedRaw(page,APPEARANCE_KEY)),{theme:'dark',color:'blue'},'Appearance choices are stored at portfolio-appearance');
-  assert.equal(await storedRaw(page,MOTION_KEY),motionAfterPause,'Changing appearance leaves the motion key untouched');
-  assert.equal(await motionOn(page),false,'Changing appearance does not resume motion');
-  await page.reload();
-  await waitBound(page);
-  await assertMode(page,'paused','After reload');
-  const appearanceAfterReload=await storedRaw(page,APPEARANCE_KEY);
-  await openAppearance(page);
-  await page.locator('button[data-motion-toggle]').click();
-  assert.equal(await motionOn(page),true,'Play motion restores motion-on immediately');
-  assert.equal((await toggleState(page)).text,'Pause motion','Toggle offers Pause motion after resuming');
-  assert.equal(JSON.parse(await storedRaw(page,MOTION_KEY)).mode,'auto','Resuming stores mode auto');
-  assert.equal(await storedRaw(page,APPEARANCE_KEY),appearanceAfterReload,'Resuming motion leaves the appearance key untouched');
-
-  const other=await context.newPage();
-  await other.goto(base);
-  await other.evaluate(({k,v})=>localStorage.setItem(k,v),{k:MOTION_KEY,v:PAUSED});
-  await page.waitForFunction(()=>!document.documentElement.classList.contains('motion-on'));
-  assert.equal((await toggleState(page)).text,'Play motion','A pause stored in another tab applies live');
-  await other.evaluate(k=>localStorage.setItem(k,JSON.stringify({theme:'light',color:'red'})),APPEARANCE_KEY);
-  await page.waitForTimeout(300);
-  assert.equal(await motionOn(page),false,'An appearance change in another tab does not resume motion');
-  await other.evaluate(k=>localStorage.removeItem(k),MOTION_KEY);
-  await page.waitForFunction(()=>document.documentElement.classList.contains('motion-on'));
-  assert.equal((await toggleState(page)).text,'Pause motion','Removing the key in another tab resumes motion live');
-  await other.evaluate(({k,v})=>localStorage.setItem(k,v),{k:MOTION_KEY,v:PAUSED});
-  await page.waitForFunction(()=>!document.documentElement.classList.contains('motion-on'));
-  await other.evaluate(()=>localStorage.clear());
-  await page.waitForFunction(()=>document.documentElement.classList.contains('motion-on'));
-  assert.equal(await motionOn(page),true,'Clearing storage in another tab resumes motion live');
  });
 }
 
@@ -393,19 +314,6 @@ async function motionVisuals(browser){
   await page.mouse.up();
   assert.equal(pressedTab.toFixed(2),'0.96','Skill tabs scale to 0.96 while pressed');
  });
- await withSession(browser,{stored:PAUSED},async({page})=>{
-  await loadView(page);
-  await page.evaluate(()=>scrollTo({top:document.documentElement.scrollHeight/2,behavior:'instant'}));
-  await settle(page);
-  const progress=await page.evaluate(()=>{
-   const bar=document.querySelector('.scroll-progress');
-   const span=bar.querySelector(':scope > span');
-   const cs=getComputedStyle(span);
-   const a=cs.scale&&cs.scale!=='none'?parseFloat(cs.scale):new DOMMatrix(cs.transform).a;
-   return getComputedStyle(bar).display==='none'||a===0;
-  });
-  assert.equal(progress,true,'Scroll progress stays off while motion is paused');
- });
 }
 
 async function inspectResource(page,{wrapper,link,article,text,href}){
@@ -456,22 +364,19 @@ async function resourceLinks(browser){
 }
 
 async function preservation(browser){
- const views=[{name:'motion on',stored:undefined},{name:'motion paused',stored:PAUSED}];
- for(const view of views){
-  await withSession(browser,{stored:view.stored},async({page})=>{
-   await loadView(page);
-   assert.equal(await motionOn(page),view.stored===undefined,`${view.name}: motion-on state`);
-   assert.equal(await page.locator('.role-record').count(),11,`${view.name}: role records`);
-   assert.equal(await page.locator('.project-record').count(),30,`${view.name}: project records`);
-   assert.equal(await page.locator('.paper-record').count(),2,`${view.name}: paper records`);
-   assert.equal(await page.locator('#credentials .credential-group').count(),8,`${view.name}: credential groups`);
-   assert.equal(await page.locator('#credentials .credential-group li').count(),47,`${view.name}: credential items`);
-   assert.equal(await page.locator('main img[src*="portrait"]').count(),0,`${view.name}: no author portrait in page content`);
-   await assertNoOverflow(page,`${view.name}, collapsed`);
-   await expandAllDetails(page);
-   await assertNoOverflow(page,`${view.name}, all details expanded`);
-  });
- }
+ await withSession(browser,{},async({page})=>{
+  await loadView(page);
+  assert.equal(await motionOn(page),true,'Motion view: motion-on state');
+  assert.equal(await page.locator('.role-record').count(),11,'Motion view: role records');
+  assert.equal(await page.locator('.project-record').count(),30,'Motion view: project records');
+  assert.equal(await page.locator('.paper-record').count(),2,'Motion view: paper records');
+  assert.equal(await page.locator('#credentials .credential-group').count(),8,'Motion view: credential groups');
+  assert.equal(await page.locator('#credentials .credential-group li').count(),47,'Motion view: credential items');
+  assert.equal(await page.locator('main img[src*="portrait"]').count(),0,'Motion view: no author portrait in page content');
+  await assertNoOverflow(page,'Motion view, sections open');
+  await expandAllDetails(page);
+  await assertNoOverflow(page,'Motion view, all details expanded');
+ });
 }
 
 async function noScript(browser){
@@ -490,7 +395,6 @@ async function noScript(browser){
    assert.equal(await page.locator(selector).first().isVisible(),true,`No-JS page reads ${selector}`);
   }
   assert.equal(await page.locator('.scroll-progress').isVisible(),false,'No-JS page shows no scroll progress bar');
-  assert.equal(await page.locator('button[data-motion-toggle]').isVisible(),false,'No-JS page hides the motion toggle');
   await assertResourceLinks(page,'No-JS page');
  });
 }
@@ -508,35 +412,23 @@ async function failsafe(browser){
 
 async function screenshots(browser){
  const views=[{name:'phone',viewport:PHONE},{name:'desktop',viewport:DESKTOP}];
- const modes=[{name:'motion-on',stored:undefined},{name:'paused',stored:PAUSED}];
  for(const view of views){
-  for(const mode of modes){
-   await withSession(browser,{viewport:view.viewport,stored:mode.stored},async({page})=>{
-    await loadView(page);
-    assert.equal(await motionOn(page),mode.stored===undefined,`${view.name} ${mode.name}: motion state before capture`);
-    await revealAll(page);
-    await assertAllVisible(page,`${view.name} ${mode.name} after revealing`);
-    for(const [stop,selector] of [['hero',null],['projects','#projects']]){
-     if(selector){await jumpTo(page,selector);await settle(page)}
-     const file=path.join(out,`${view.name}-${mode.name}-${stop}.png`);
-     await page.screenshot({path:file,animations:'disabled'});
-     assert.ok(fs.statSync(file).size>0,`Screenshot written: ${file}`);
-    }
-   });
-  }
+  await withSession(browser,{viewport:view.viewport},async({page})=>{
+   await loadView(page);
+   assert.equal(await motionOn(page),true,`${view.name}: motion state before capture`);
+   await revealAll(page);
+   await assertAllVisible(page,`${view.name} after revealing`);
+   for(const [stop,selector] of [['hero',null],['projects','#projects']]){
+    if(selector){await jumpTo(page,selector);await settle(page)}
+    const file=path.join(out,`${view.name}-motion-on-${stop}.png`);
+    await page.screenshot({path:file,animations:'disabled'});
+    assert.ok(fs.statSync(file).size>0,`Screenshot written: ${file}`);
+   }
+  });
  }
 }
 
 async function reviewRegressions(browser){
- await withSession(browser,{},async({page})=>{
-  await loadView(page);
-  await page.waitForFunction(()=>getComputedStyle(document.querySelector('.career-route')).display==='block');
-  await openAppearance(page);
-  await page.locator('button[data-motion-toggle]').click();
-  const route=await page.evaluate(()=>getComputedStyle(document.querySelector('.career-route')).display);
-  assert.equal(route,'none','Pausing at runtime hides the career route');
- });
-
  await withSession(browser,{},async({page})=>{
   await page.setViewportSize({width:1440,height:900});
   await loadView(page);
@@ -548,35 +440,13 @@ async function reviewRegressions(browser){
   }
  });
 
- for(const [label,viewport] of [['desktop',{width:1440,height:900}],['phone',{width:390,height:844}]]){
-  const geometry={};
-  for(const mode of ['paused','motion']){
-   await withSession(browser,{stored:mode==='paused'?PAUSED:undefined,viewport},async({page})=>{
-    await loadView(page);
-    await page.waitForTimeout(1500);
-    geometry[mode]=await page.evaluate(()=>{const r=e=>{const b=e.getBoundingClientRect();return [Math.round(b.top*10)/10,Math.round(b.height*10)/10]};return {name:r(document.querySelector('h1.hero-name')),line:r(document.querySelector('.hero-name-line')),skills:r(document.querySelector('#skills')),heading:r(document.querySelector('#skills-heading'))}});
-   });
-  }
-  assert.deepEqual(geometry.motion,geometry.paused,`Masked headings add no height and move nothing on ${label}, so loading causes no layout shift`);
- }
-
- await withSession(browser,{blocked:true},async({page})=>{
-  await loadView(page);
-  await openAppearance(page);
-  await page.locator('button[data-motion-toggle]').click();
-  assert.equal(await motionOn(page),false,'Pause works for this visit when storage is blocked');
-  assert.equal((await toggleState(page)).text,'Play motion','Blocked storage still flips the label');
-  await page.locator('button[data-motion-toggle]').click();
-  assert.equal(await motionOn(page),true,'Play works again when storage is blocked');
- });
-
  for(const height of [1400,3200]){
   await withSession(browser,{},async({page})=>{
    await page.setViewportSize({width:1280,height});
    await loadView(page);
    await page.evaluate(()=>scrollTo({top:document.documentElement.scrollHeight,behavior:'instant'}));
    await page.waitForTimeout(1500);
-   const hidden=await page.evaluate(()=>[...document.querySelectorAll('.contact-address,.contact-actions,.contact-links')].filter(e=>{const r=e.getBoundingClientRect();return r.top<innerHeight&&r.bottom>0&&getComputedStyle(e).opacity!=='1'}).map(e=>e.className));
+   const hidden=await page.evaluate(()=>[...document.querySelectorAll('.contact-address,.contact-actions')].filter(e=>{const r=e.getBoundingClientRect();return r.top<innerHeight&&r.bottom>0&&getComputedStyle(e).opacity!=='1'}).map(e=>e.className));
    assert.deepEqual(hidden,[],`Contact block is visible once on screen at the page end on a ${height}px viewport`);
   });
  }
@@ -637,7 +507,6 @@ async function reviewRegressions(browser){
   await staticModes(browser);
   await motionOnBehavior(browser);
   await navigationSettle(browser);
-  await toggleAndSync(browser);
   await motionVisuals(browser);
   await resourceLinks(browser);
   await preservation(browser);
@@ -646,6 +515,6 @@ async function reviewRegressions(browser){
   await reviewRegressions(browser);
   await screenshots(browser);
   assert.deepEqual(errors,[],'No page errors or console errors across the run');
-  console.log('PASS: motion preference parsing, reduced/noanim/paused static fallbacks, reveal and masks, navigation settle, toggle and cross-tab sync, scroll progress and career route, a hero with no artwork, resource links, record preservation without overflow, no-JS reading, failsafe, and screenshots.');
+  console.log('PASS: motion preference parsing, reduced/noanim static fallbacks, reveal and masks, navigation settle, scroll progress and career route, a hero with no artwork, resource links, record preservation without overflow, no-JS reading, failsafe, and screenshots.');
  }finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exit(1)});
