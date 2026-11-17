@@ -1,12 +1,14 @@
-/* Tools catalogue. Each category is a row: its name, then its tools as chips. Every chip carries one mark
-   (a licensed brand logo, a Commons logo, or a Lucide line icon) and its name. The comma after each name stays
-   visible, as written: the visible wording is protected, so no CSS hides it. */
+/* Tools catalogue, on its own section after the skills board. Each category is a row: its name, then its tools
+   as chips. Every chip carries one mark (a licensed brand logo, a Commons logo, or a Lucide line icon) and its
+   name. The comma after each name stays visible, as written: the visible wording is protected, so no CSS hides
+   it. */
 
-#skills>.detail-block .tools-list{display:grid;grid-template-columns:minmax(0,1fr);gap:0;padding:0 0 12px}
-#skills>.detail-block .tools-list>div{display:grid;grid-template-columns:minmax(0,200px) minmax(0,1fr);gap:0 28px;align-items:start;padding:16px 0;border-top:1px solid var(--rule)}
-#skills>.detail-block .tools-list>div:first-child{border-top:0}
-#skills>.detail-block .tools-list dt{margin:0;padding-top:6px;font-size:14px;font-weight:600;line-height:1.35;color:var(--ink)}
-#skills>.detail-block .tools-list dd{margin:0}
+#tools .section-heading h2{max-width:22ch}
+#tools .tools-list{display:grid;grid-template-columns:minmax(0,1fr);gap:0;padding:0 0 12px}
+#tools .tools-list>div{display:grid;grid-template-columns:minmax(0,200px) minmax(0,1fr);gap:0 28px;align-items:start;padding:16px 0;border-top:1px solid var(--rule)}
+#tools .tools-list>div:first-child{border-top:0}
+#tools .tools-list dt{margin:0;padding-top:6px;font-size:14px;font-weight:600;line-height:1.35;color:var(--ink)}
+#tools .tools-list dd{margin:0}
 
 .tool-chips{display:flex;flex-wrap:wrap;gap:8px}
 .tool-chip{display:inline-flex;align-items:center;gap:8px;min-height:34px;padding:5px 13px 5px 7px;border:1px solid var(--rule);border-radius:999px;background:var(--surface);font-size:14px;line-height:1.3;color:var(--ink);white-space:nowrap}
@@ -15,8 +17,8 @@
 .tool-name{white-space:normal}
 
 @media(max-width:700px){
-  #skills>.detail-block .tools-list>div{grid-template-columns:minmax(0,1fr);gap:8px 0;padding:14px 0}
-  #skills>.detail-block .tools-list dt{padding-top:0}
+  #tools .tools-list>div{grid-template-columns:minmax(0,1fr);gap:8px 0;padding:14px 0}
+  #tools .tools-list dt{padding-top:0}
   .tool-chip{min-height:32px;font-size:13px;padding:4px 11px 4px 6px}
 }
 
