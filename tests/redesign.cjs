@@ -40,7 +40,7 @@ const out=path.resolve(process.env.TEST_OUTPUT_DIR||'local_docs/redesign-qa');fs
  await page.evaluate(()=>{history.pushState(null,'','#project-openbrowser');dispatchEvent(new HashChangeEvent('hashchange'));});
  await page.waitForFunction(()=>!document.getElementById('project-openbrowser').hidden);
  const nojs=await browser.newPage({viewport:{width:390,height:844},javaScriptEnabled:false,colorScheme:'dark'});await nojs.goto(base);
- assert.equal(await nojs.locator('.site-index').isVisible(),true);assert.equal(await nojs.locator('.project-record').count(),30);await nojs.locator('#experience-ibm summary').click();assert.equal(await nojs.locator('#experience-ibm details').getAttribute('open'),'');
+ assert.equal(await nojs.locator('.site-index').isVisible(),true);assert.equal(await nojs.locator('.project-record').count(),30);await nojs.locator('#experience-ibm > details.record-disclosure > summary').click();assert.equal(await nojs.locator('#experience-ibm > details.record-disclosure').getAttribute('open'),'');await nojs.locator('#experience-ibm details.detail-block > summary').click();assert.equal(await nojs.locator('#experience-ibm details.detail-block').getAttribute('open'),'');
  assert.deepEqual(errors,[]);fs.writeFileSync(path.join(out,'redesign-results.json'),JSON.stringify({sizes,consoleErrors:errors},null,2));
  console.log('PASS: reference-led header/hero, responsive first viewport, drawers, appearance coordination, deep links, no-JS, and all portfolio records.');
 }finally{await browser.close()}})().catch(e=>{console.error(e);process.exit(1)});

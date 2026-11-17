@@ -261,7 +261,7 @@ async function navigationSettle(browser){
  await withSession(browser,{},async({page})=>{
   await loadView(page);
   await page.evaluate(()=>{
-   const links=[...document.querySelectorAll('.project-record a[href]')].filter(a=>!a.closest('details'));
+   const links=[...document.querySelectorAll('.project-record a[href]')].filter(a=>!a.closest('.record-body')&&!a.closest('details.detail-block'));
    window.__farLink=links[links.length-1];
   });
   assert.equal(await page.evaluate(()=>getComputedStyle(window.__farLink.closest('[data-reveal]')).opacity),'0','The last project is unrevealed before focus');
@@ -412,22 +412,27 @@ async function inspectResource(page,{wrapper,link,article,text,href}){
  const found=await page.evaluate(({wrapper,link,article})=>{
   const w=document.querySelectorAll('#'+wrapper);
   const el=w[0];
-  const outcome=el&&el.parentElement.querySelector(':scope > p.project-outcome');
+  const body=el&&el.parentElement;
+  const disclosure=body&&body.parentElement;
+  const record=disclosure&&disclosure.parentElement;
+  const outcome=body&&body.querySelector(':scope > p.project-outcome');
   return {
    count:w.length,
    linkCount:document.querySelectorAll('a#'+link).length,
    tag:el&&el.tagName,
    hasClass:Boolean(el)&&el.classList.contains('project-resource-actions'),
-   parentId:el&&el.parentElement.id,
-   directChildOfArticle:Boolean(el)&&el.parentElement.id===article&&el.parentElement.tagName==='ARTICLE',
+   bodyClass:body?body.className:null,
+   disclosureClass:disclosure?disclosure.className:null,
+   recordId:record?record.id:null,
+   recordTag:record?record.tagName:null,
    afterOutcome:Boolean(outcome)&&Boolean(outcome.compareDocumentPosition(el)&Node.DOCUMENT_POSITION_FOLLOWING),
-   outsideDetails:Boolean(el)&&!el.closest('details'),
+   outsideDetails:Boolean(el)&&!el.closest('details.detail-block'),
    children:el?[...el.children].map(c=>({tag:c.tagName,id:c.id,href:c.getAttribute('href'),text:c.textContent.trim()})):[],
    ownText:el&&el.textContent.trim(),
   };
  },{wrapper,link,article});
  assert.deepEqual(found,{
-  count:1,linkCount:1,tag:'P',hasClass:true,parentId:article,directChildOfArticle:true,afterOutcome:true,outsideDetails:true,
+  count:1,linkCount:1,tag:'P',hasClass:true,bodyClass:'record-body',disclosureClass:'record-disclosure is-framed',recordId:article,recordTag:'ARTICLE',afterOutcome:true,outsideDetails:true,
   children:[{tag:'A',id:link,href,text}],ownText:text,
  },`Resource paragraph #${wrapper} is exact`);
 }
@@ -437,7 +442,7 @@ async function assertResourceLinks(page,label){
  await inspectResource(page,{wrapper:'openbrowser-resources',link:'openbrowser-comparison-link',article:'project-openbrowser',text:'Compare CLI and MCP',href:'https://docs.openbrowser.me/comparison'});
  assert.equal(await page.locator('p.project-resource-actions').count(),2,`${label}: exactly two resource paragraphs exist`);
  const original=await page.evaluate(()=>({
-  inDetails:document.querySelectorAll('#project-openbrowser details a[href="https://docs.openbrowser.me/comparison"]').length,
+  inDetails:document.querySelectorAll('#project-openbrowser details.detail-block a[href="https://docs.openbrowser.me/comparison"]').length,
   byText:[...document.querySelectorAll('a')].filter(a=>a.textContent.trim()==='Read the comparison').length,
  }));
  assert.deepEqual(original,{inDetails:1,byText:1},`${label}: the original Read the comparison link survives inside the OpenBrowser details`);
@@ -597,7 +602,7 @@ async function reviewRegressions(browser){
   await page.waitForTimeout(1200);
   const overlap=await page.evaluate(()=>{
    const dots=[...document.querySelectorAll('.route-dot')].map(d=>d.getBoundingClientRect());
-   const text=[...document.querySelectorAll('#experience .role-record h3 a,#experience .record-heading p')].map(e=>e.getBoundingClientRect()).filter(r=>r.width>0&&r.bottom>0&&r.top<innerHeight);
+   const text=[...document.querySelectorAll('#experience .role-record summary>h3 a,#experience .role-record summary>.record-meta,#experience .role-record summary>.ledger-date')].map(e=>e.getBoundingClientRect()).filter(r=>r.width>0&&r.bottom>0&&r.top<innerHeight);
    const line=document.querySelector('.career-route path').getBoundingClientRect();
    return {dots:dots.length,hits:text.filter(r=>dots.some(d=>d.right>r.left&&d.left<r.right&&d.bottom>r.top&&d.top<r.bottom)||(line.right>r.left&&line.left<r.right)).length};
   });
