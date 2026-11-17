@@ -28,8 +28,8 @@ function contrast(a,b) { const x=luminance(a),y=luminance(b);return (Math.max(x,
   assert.equal(await page.locator('input[name="appearance-theme"]').count(),3);
   assert.equal(await page.locator('input[name="appearance-color"]').count(),5);
   await page.locator('.appearance-controls summary').click();
-  assert.equal(await page.getByRole('radio',{name:'System',exact:true}).isChecked(),true);
-  assert.deepEqual(await current(),{theme:'light',color:'orange',bg:'rgb(241, 241, 241)'});
+  assert.equal(await page.getByRole('radio',{name:'Light',exact:true}).isChecked(),true,'The default theme is explicit light');
+  assert.deepEqual(await current(),{theme:'light',color:'blue',bg:'rgb(241, 241, 241)'});
   await theme('Dark');assert.equal((await current()).theme,'dark');
   await page.getByRole('radio',{name:'Blue',exact:true}).check();
   await page.reload();await page.locator('.appearance-controls summary').click();
@@ -62,17 +62,17 @@ function contrast(a,b) { const x=luminance(a),y=luminance(b);return (Math.max(x,
   await page.getByRole('radio',{name:'Light',exact:true}).focus();await page.keyboard.press('ArrowRight');
   assert.equal(await page.getByRole('radio',{name:'Dark',exact:true}).isChecked(),true);
   await page.getByRole('radio',{name:'Red',exact:true}).focus();await page.keyboard.press('ArrowRight');
-  assert.equal(await page.getByRole('radio',{name:'Orange',exact:true}).isChecked(),true);
+  assert.equal(await page.getByRole('radio',{name:'Orange',exact:true}).isChecked(),true,'ArrowRight moves Red to Orange');
   await page.keyboard.press('Escape');assert.equal(await page.locator('.appearance-controls').getAttribute('open'),null);
   assert.equal(await page.locator('.appearance-controls summary').evaluate(el=>el===document.activeElement),true);
   results.push('Native radio arrow keys and Escape/focus work');
   await page.evaluate(k=>localStorage.setItem(k,'not json'),KEY);await page.reload();
-  assert.equal((await current()).color,'orange');
+  assert.equal((await current()).color,'blue');
   await page.evaluate(k=>localStorage.setItem(k,JSON.stringify({theme:'unexpected',color:'<style>'})),KEY);await page.reload();
-  assert.deepEqual(await current(),{theme:'light',color:'orange',bg:'rgb(241, 241, 241)'});
+  assert.deepEqual(await current(),{theme:'light',color:'blue',bg:'rgb(241, 241, 241)'});
   for(const value of [{theme:'dark',color:['blue']},{theme:'dark',color:{toString:null}},{theme:null,color:null}]) {
    await page.evaluate(({k,value})=>localStorage.setItem(k,JSON.stringify(value)),{k:KEY,value});await page.reload();
-   assert.equal((await current()).color,'orange','Stored color must be a known string, not a coercible value');
+   assert.equal((await current()).color,'blue','Stored color must be a known string, not a coercible value');
    assert.equal(await page.locator('input[name="appearance-color"]:checked').count(),1);
    assert.equal(await page.locator('input[name="appearance-theme"]:checked').count(),1);
   }
@@ -92,7 +92,7 @@ function contrast(a,b) { const x=luminance(a),y=luminance(b);return (Math.max(x,
    release();const navigationError=await loading;if(navigationError)throw navigationError;
    assert.equal(earlyLayout,true,'The enhanced layout must initialize before deferred application scripts');
    assert.equal(await delayed.locator('html').getAttribute('data-theme'),scenario==='system-change'?'light':'dark','Changes before DOM readiness must be reconciled');
-   assert.equal(await delayed.locator('html').getAttribute('data-color'),scenario==='system-change'?'orange':'pink');
+   assert.equal(await delayed.locator('html').getAttribute('data-color'),scenario==='system-change'?'blue':'pink');
    await slowContext.close();
   }
   results.push('OS and cross-tab preference changes during delayed initialization are reconciled');
@@ -116,6 +116,7 @@ function contrast(a,b) { const x=luminance(a),y=luminance(b);return (Math.max(x,
   await page.getByRole('radio',{name:'Pink',exact:true}).focus();await page.keyboard.press('Escape');
   assert.equal(await page.locator('.nav-toggle').getAttribute('aria-expanded'),'false');
   await page.getByRole('button',{name:'Sections',exact:true}).click();await page.keyboard.press('Escape');assert.equal(await page.locator('.nav-toggle').getAttribute('aria-expanded'),'false');
+  await page.evaluate(()=>document.querySelectorAll('.section-toggle[aria-expanded=false]').forEach(button=>button.click()));
   await page.locator('#project-search').fill('context atlas');assert.equal(await page.locator('.project-record:not([hidden])').count(),1);
   await page.locator('#project-search').fill('unmatched-query-928731');assert.equal(await page.locator('#project-empty').isVisible(),true);
   await page.getByRole('button',{name:'Clear search',exact:true}).click();assert.equal(await page.locator('.project-record:not([hidden])').count(),30);

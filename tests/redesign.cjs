@@ -7,6 +7,8 @@ const out=path.resolve(process.env.TEST_OUTPUT_DIR||'local_docs/redesign-qa');fs
 (async()=>{const browser=await chromium.launch({headless:true});const errors=[];try{
  const page=await browser.newPage({viewport:{width:1440,height:1000},colorScheme:'light',reducedMotion:'reduce'});page.on('pageerror',e=>errors.push(e.message));
  await page.goto(base+'?noanim');await page.evaluate(()=>document.fonts.ready);
+ assert.equal(await page.locator('.section-toggle[aria-expanded=false]').count(),8,'All eight sections start collapsed');
+ assert.equal(await page.locator('.section-body:visible').count(),0,'No section body is open before a reader opens one');
  const sectionOrder=await page.locator('main > section').evaluateAll(sections=>sections.map(section=>section.id));const educationIndex=sectionOrder.indexOf('education'),credentialsIndex=sectionOrder.indexOf('credentials'),researchIndex=sectionOrder.indexOf('research');assert.equal(credentialsIndex,educationIndex+1,'Credentials follows Education');assert.equal(researchIndex,credentialsIndex+1,'Research follows Credentials');
  const navigationOrder=await page.locator('.nav-links a').evaluateAll(links=>links.map(link=>link.hash.slice(1)));const navEducationIndex=navigationOrder.indexOf('education'),navCredentialsIndex=navigationOrder.indexOf('credentials'),navResearchIndex=navigationOrder.indexOf('research');assert.equal(navCredentialsIndex,navEducationIndex+1,'Credentials follows Education in navigation');assert.equal(navResearchIndex,navCredentialsIndex+1,'Research follows Credentials in navigation');
  assert.equal(await page.locator('.site-header').count(),1,'The reference-led design needs a persistent full-width header');
@@ -39,7 +41,7 @@ const out=path.resolve(process.env.TEST_OUTPUT_DIR||'local_docs/redesign-qa');fs
  await page.locator('#project-search').fill('context atlas');assert.equal(await page.locator('.project-record:not([hidden])').count(),1);
  await page.evaluate(()=>{history.pushState(null,'','#project-openbrowser');dispatchEvent(new HashChangeEvent('hashchange'));});
  await page.waitForFunction(()=>!document.getElementById('project-openbrowser').hidden);
- const fold=page.locator('#experience .section-toggle');assert.equal(await fold.getAttribute('aria-expanded'),'true');assert.equal(await page.locator('#experience-body').isVisible(),true);
+ const fold=page.locator('#experience .section-toggle');assert.equal(await fold.getAttribute('aria-expanded'),'true','Show all details leaves sections open');assert.equal(await page.locator('#experience-body').isVisible(),true);
  assert.equal((await fold.textContent()).trim(),'Collapse section','The toggle names its action while the section is open');assert.equal(await fold.getAttribute('aria-label'),'Collapse section: Experience');
  await fold.click();assert.equal(await fold.getAttribute('aria-expanded'),'false','The section toggle collapses its own section');assert.equal(await page.locator('#experience-body').isVisible(),false);
  assert.equal((await fold.textContent()).trim(),'Expand section','The toggle names its action while the section is closed');assert.equal(await fold.getAttribute('aria-label'),'Expand section: Experience');
