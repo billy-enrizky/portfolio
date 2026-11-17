@@ -21,10 +21,11 @@
     const text = button.querySelector(".section-toggle-label");
     if (text) text.textContent = label;
     if (heading) button.setAttribute("aria-label", label + ": " + heading.textContent.trim());
-    if (body) body.hidden = !open;
+    if (body) body.classList.toggle("is-open", open);
+    document.dispatchEvent(new CustomEvent("portfolio:fold"));
   }
   foldButtons.forEach(function (button) {
-    setSection(button, button.getAttribute("aria-expanded") !== "false");
+    setSection(button, button.getAttribute("aria-expanded") === "true");
   });
   foldButtons.forEach(function (button) {
     button.addEventListener("click", function () {
