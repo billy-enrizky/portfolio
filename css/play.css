@@ -34,13 +34,9 @@
 
 .ledger-date{display:inline-block;padding:3px 12px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
 
-.skills-tabs button:nth-child(odd){rotate:-1deg}
-.skills-tabs button:nth-child(even){rotate:.8deg}
 
 
-/* Projects sit on a full-width kraft band, with each record pinned like a taped print. The band
-   uses a box shadow clipped to the section, so it reaches the viewport edges without a wider box. */
-#projects{border-top:0;background:var(--accent-soft);box-shadow:0 0 0 100vmax var(--accent-soft);clip-path:inset(0 -100vmax)}
+/* Find a project sits on the page paper. Record cards and their hover lift are set in redesign-skills.css. */
 #projects .project-grid{gap:72px 48px}
 #projects .project-record{position:relative;rotate:-.7deg;padding:36px 28px 30px;background:var(--surface);border:1px solid var(--rule);border-radius:4px;box-shadow:0 28px 36px -32px rgba(16,16,16,.5)}
 #projects .project-record:nth-child(even){rotate:.6deg}
