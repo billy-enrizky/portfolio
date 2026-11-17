@@ -87,3 +87,10 @@
 @media print{
   .section-sky{display:none}
 }
+
+/* The original artwork link stays in the DOM with its href and label. Pointer events pass through it, so a
+   click on the photo opens the record. Keyboard users still reach the link. */
+.record-frame .project-image-link{position:absolute;inset:0;display:block;margin:0;pointer-events:none}
+@media print{
+  .record-disclosure>summary::after{display:none}
+}
