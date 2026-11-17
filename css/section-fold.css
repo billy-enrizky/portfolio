@@ -31,15 +31,16 @@ html:not(.js) .section-toggle{display:none}
   .section-toggle{position:static;grid-column:3;justify-self:end;align-self:end}
 }
 @media(max-width:900px){
-  .section-heading{padding-top:64px}
+  html.js .section-heading{padding-top:64px}
   .section-toggle{top:0}
 }
 @media(max-width:700px){
-  .section-heading{padding-top:56px}
+  html.js .section-heading{padding-top:56px}
   .section-toggle{min-height:44px;padding:11px 14px 11px 16px}
 }
 
 @media print{
   .section-toggle{display:none}
+  html.js .section-heading{padding-top:0}
   html.js .section-body{display:block}
 }
