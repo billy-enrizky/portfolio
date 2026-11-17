@@ -2,5 +2,6 @@
    redesign-skills.css, on the page paper, so it has no kraft wash, torn edges, tape or tilt. Motion is gated by
 .motion-on. */
 
-/* Graph-paper sheet for the skills section. Hairlines use the page rule colour at 45 percent. */
-#skills{background-color:var(--paper);background-image:linear-gradient(to right,color-mix(in srgb,var(--rule) 45%,transparent) 1px,transparent 1px),linear-gradient(to bottom,color-mix(in srgb,var(--rule) 45%,transparent) 1px,transparent 1px);background-size:28px 28px}
+/* Graph-paper sheet under the skills board and the tools catalogue, which sit next to each other. Hairlines use
+   the page rule colour at 45 percent. */
+#skills,#tools{background-color:var(--paper);background-image:linear-gradient(to right,color-mix(in srgb,var(--rule) 45%,transparent) 1px,transparent 1px),linear-gradient(to bottom,color-mix(in srgb,var(--rule) 45%,transparent) 1px,transparent 1px);background-size:28px 28px}

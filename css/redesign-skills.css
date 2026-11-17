@@ -34,10 +34,8 @@
 .motion-on .skill-panel:not([hidden])>*{animation:skill-rise 200ms var(--ease-arrive) 40ms both}
 @keyframes skill-rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
-/* The tools disclosure sits on the board as a quiet row, not a card. */
-#skills>.detail-block{margin-top:24px;border-top:1px solid var(--rule)}
-#skills>.detail-block>summary{padding:18px 0;color:var(--ink);font-weight:500}
-#skills>.text-link-row{margin-top:8px}
+/* The tools catalogue and its Certifications and learning button live in their own section after this board.
+   They are styled in tools-catalogue.css. */
 
 /* ---- Find a project: one ground, no kraft wash, no double band ---- */
 #projects{background:var(--paper);background-image:none;box-shadow:none;clip-path:none;border-top:0;color:var(--ink)}
