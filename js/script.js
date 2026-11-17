@@ -10,6 +10,23 @@
   const sections = Array.from(document.querySelectorAll("main > section[id]"));
   const detailPanels = Array.from(document.querySelectorAll("main details"));
   const detailButton = document.getElementById("details-toggle");
+  const foldButtons = Array.from(document.querySelectorAll(".section-toggle"));
+
+  function setSection(button, open) {
+    const body = document.getElementById(button.getAttribute("aria-controls"));
+    button.setAttribute("aria-expanded", String(open));
+    if (body) body.hidden = !open;
+  }
+  foldButtons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      setSection(button, button.getAttribute("aria-expanded") !== "true");
+    });
+  });
+  function expandSection(node) {
+    const section = node.closest("main > section[id]");
+    const button = section && section.querySelector(".section-toggle");
+    if (button) setSection(button, true);
+  }
 
   function setMenu(open, restoreFocus) {
     if (open) appearanceControl.open = false;
@@ -77,6 +94,7 @@
   detailButton.addEventListener("click", function () {
     const open = !detailPanels.every(function (panel) { return panel.open; });
     detailPanels.forEach(function (panel) { panel.open = open; });
+    if (open) foldButtons.forEach(function (button) { setSection(button, true); });
     syncDetailsButton();
   });
   document.addEventListener("toggle", function (event) {
@@ -153,6 +171,7 @@
     if (card && card.hidden) { search.value = ""; category = "All"; applyFilters(); }
     let parent = target.closest("details");
     while (parent) { parent.open = true; parent = parent.parentElement.closest("details"); }
+    expandSection(target);
     if (target.matches("article")) target.querySelectorAll(":scope > details").forEach(function (d) { d.open = true; });
     const section = target.closest("main > section[id]");
     if (section) setCurrent(section.id);
@@ -186,14 +205,19 @@
   else showHash(false);
 
   let printState = null;
+  let printSections = null;
   window.addEventListener("beforeprint", function () {
     printState = detailPanels.map(function (panel) { return panel.open; });
+    printSections = foldButtons.map(function (button) { return button.getAttribute("aria-expanded") === "true"; });
     detailPanels.forEach(function (panel) { panel.open = true; });
+    foldButtons.forEach(function (button) { setSection(button, true); });
   });
   window.addEventListener("afterprint", function () {
     if (!printState) return;
     detailPanels.forEach(function (panel, i) { panel.open = printState[i]; });
+    foldButtons.forEach(function (button, i) { setSection(button, printSections[i]); });
     printState = null;
+    printSections = null;
   });
   document.documentElement.classList.add("navigation-ready");
 
