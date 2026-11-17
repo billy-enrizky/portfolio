@@ -1,0 +1,82 @@
+/* Playful layer. This stylesheet only restyles the existing markup and adds one decorative sky,
+   drawn in SVG with no text, links or images. Records, ids, anchors, links and handlers are
+   unchanged. Motion is gated by .motion-on (js/motion.js), so reduced motion, Pause motion,
+   ?noanim and no JavaScript all render the complete static page. Colour comes from the existing
+   tokens, so every accent and theme keeps its contrast. */
+
+/* Closing band tokens. The band is ink in light theme and paper in dark theme. */
+:root{--band-bg:#101010;--band-ink:#f1f1f1;--band-accent:var(--accent-dark);--band-button-ink:#101010;--band-muted:#b4b4b4;--band-rule:#373737}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--band-bg:#f1f1f1;--band-ink:#101010;--band-accent:var(--accent-light);--band-button-ink:#f1f1f1;--band-muted:#595959;--band-rule:#d6d6d6}}
+:root[data-theme=dark]{--band-bg:#f1f1f1;--band-ink:#101010;--band-accent:var(--accent-light);--band-button-ink:#f1f1f1;--band-muted:#595959;--band-rule:#d6d6d6}
+
+/* Hero: a drawn sky above the name. */
+.profile-hero{position:relative;padding-top:calc(clamp(96px,11vw,150px) + 28px)}
+.hero-sky{position:absolute;top:0;left:0;width:100%;height:clamp(96px,11vw,150px);overflow:visible;pointer-events:none}
+.hero-sky .cloud{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5;stroke-linejoin:round}
+.hero-sky .bird{fill:none;stroke:var(--ink);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.hero-sky .bird.accent{stroke:var(--accent)}
+.profile-hero .hero-name{font-size:clamp(7rem,15.6vw,17rem);letter-spacing:-.055em;line-height:.82}
+.profile-hero .hero-name-line:last-of-type{padding-left:.42em}
+.motion-on .hero-sky .drift{animation:drift 14s ease-in-out infinite alternate}
+.motion-on .hero-sky .drift.slow{animation-duration:21s;animation-delay:-6s}
+.motion-on .hero-sky .drift.quick{animation-duration:11s;animation-delay:-3s}
+@keyframes drift{from{transform:translate(-14px,0)}to{transform:translate(16px,-4px)}}
+@media(hover:hover) and (pointer:fine){
+  .motion-on .profile-hero .hero-name-line{transition:transform 620ms var(--ease-arrive)}
+  .motion-on .profile-hero .hero-name-line:hover{transform:rotate(-2deg)}
+}
+
+/* Section headings draw an accent rule as they reveal. Without motion the rule is simply shown. */
+.section-heading h2{position:relative;display:inline-block}
+.section-heading h2::after{content:"";position:absolute;left:0;right:0;bottom:-.14em;height:max(3px,.06em);border-radius:999px;background:var(--accent);transform-origin:0 50%}
+.motion-on .section-heading h2::after{transform:scaleX(0);transition:transform 900ms var(--ease-arrive) 240ms}
+.motion-on .section-heading h2:has(.is-revealed)::after{transform:scaleX(1)}
+
+/* Record titles draw an accent underline on hover and on keyboard focus. The rule is a pseudo-element, so no gradient sits behind the link text. */
+.record-heading h3 a,.project-record>h3 a,.paper-record>h3 a{position:relative}
+.record-heading h3 a::after,.project-record>h3 a::after,.paper-record>h3 a::after{content:"";position:absolute;left:0;right:0;bottom:-.12em;height:2px;background:var(--accent);transform:scaleX(0);transform-origin:0 50%;transition:transform 360ms var(--ease-arrive)}
+.record-heading h3 a:hover::after,.project-record>h3 a:hover::after,.paper-record>h3 a:hover::after,.record-heading h3 a:focus-visible::after,.project-record>h3 a:focus-visible::after,.paper-record>h3 a:focus-visible::after{transform:scaleX(1)}
+
+.ledger-date{display:inline-block;padding:3px 12px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+
+.skills-tabs button:nth-child(odd){rotate:-1deg}
+.skills-tabs button:nth-child(even){rotate:.8deg}
+
+
+/* Projects sit on a full-width kraft band, with each record pinned like a taped print. The band
+   uses a box shadow clipped to the section, so it reaches the viewport edges without a wider box. */
+#projects{border-top:0;background:var(--accent-soft);box-shadow:0 0 0 100vmax var(--accent-soft);clip-path:inset(0 -100vmax)}
+#projects .project-grid{gap:72px 48px}
+#projects .project-record{position:relative;rotate:-.7deg;padding:36px 28px 30px;background:var(--surface);border:1px solid var(--rule);border-radius:4px;box-shadow:0 28px 36px -32px rgba(16,16,16,.5)}
+#projects .project-record:nth-child(even){rotate:.6deg}
+#projects .project-record::before{content:"";position:absolute;top:-17px;left:50%;width:120px;height:32px;translate:-50% 0;rotate:-3deg;background:color-mix(in srgb,var(--paper) 70%,transparent);border:1px solid color-mix(in srgb,var(--rule) 80%,transparent);box-shadow:0 1px 2px rgba(16,16,16,.08)}
+#projects .project-record:nth-child(even)::before{rotate:2.5deg}
+#projects #project-openbrowser,#projects #project-context-atlas,#projects #project-mtp{rotate:0deg;padding:44px 40px 40px}
+#projects #project-openbrowser::before,#projects #project-context-atlas::before,#projects #project-mtp::before{width:150px;rotate:-1deg}
+@media(hover:hover) and (pointer:fine){
+  #projects .project-record:hover{rotate:0deg;box-shadow:0 36px 44px -34px rgba(16,16,16,.55)}
+}
+
+/* The closing band inverts the page: ink ground, paper type, and the accent that reads on it. */
+#contact .button-primary{background:var(--accent);border-color:var(--accent);color:var(--band-button-ink)}
+#contact .button-primary:hover{background:var(--band-ink);border-color:var(--band-ink);color:var(--band-bg)}
+#contact{--paper:var(--band-bg);--surface:var(--band-bg);--ink:var(--band-ink);--muted:var(--band-muted);--rule:var(--band-rule);--accent:var(--band-accent);position:relative;border-top:0;background:var(--band-bg);color:var(--band-ink);box-shadow:0 0 0 100vmax var(--band-bg);clip-path:inset(0 -100vmax)}
+
+@media(max-width:700px){
+  #projects .project-record,#projects #project-openbrowser{min-width:0;padding-inline:20px}
+  #projects #project-openbrowser>h3,#projects #project-context-atlas>h3,#projects #project-mtp>h3{font-size:clamp(2rem,9.5vw,2.6rem);overflow-wrap:anywhere}
+  #projects .project-record>h3 a{overflow-wrap:anywhere}
+  .profile-hero{padding-top:calc(clamp(88px,22vw,120px) + 18px)}
+  .hero-sky{height:clamp(88px,22vw,120px)}
+  .profile-hero .hero-name{font-size:clamp(3.4rem,17.2vw,5.6rem)}
+  .profile-hero .hero-name-line:last-of-type{padding-left:0}
+  #projects .project-grid{gap:60px 0}
+  #projects .project-record::before{width:96px}
+}
+
+@media print{
+  .hero-sky,#projects .project-record::before,.section-heading h2::after{display:none}
+  #projects,#contact{background:none;box-shadow:none;clip-path:none;--paper:#fff;--surface:#fff;--ink:#101010;--muted:#333;--rule:#999;--accent:#101010;color:#101010}
+  #projects .project-record{rotate:0deg;box-shadow:none}
+  .profile-hero{padding-top:0}
+}
