@@ -1,7 +1,7 @@
 /* Tools catalogue, on its own section after the skills board. Each category is a row: its name, then its tools
    as chips. Every chip carries one mark (a licensed brand logo, a Commons logo, or a Lucide line icon) and its
    name. The comma after each name stays visible, as written: the visible wording is protected, so no CSS hides
-   it. */
+   it. The section closes with the Certifications and learning button. */
 
 #tools .section-heading h2{max-width:22ch}
 #tools .tools-list{display:grid;grid-template-columns:minmax(0,1fr);gap:0;padding:0 0 12px}
@@ -16,13 +16,18 @@
 .tool-chip .tool-mark{color:var(--accent)}
 .tool-name{white-space:normal}
 
+.tools-more{display:flex;flex-wrap:wrap;gap:12px;margin:28px 0 0}
+.tools-more .button{gap:10px}
+.tools-more .button-mark{width:18px;height:18px;flex:0 0 auto;color:var(--accent);overflow:visible}
+
 @media(max-width:700px){
   #tools .tools-list>div{grid-template-columns:minmax(0,1fr);gap:8px 0;padding:14px 0}
   #tools .tools-list dt{padding-top:0}
   .tool-chip{min-height:32px;font-size:13px;padding:4px 11px 4px 6px}
+  .tools-more{margin-top:22px}
 }
 
 @media print{
-  .tool-mark{display:none}
+  .tool-mark,.tools-more .button-mark{display:none}
   .tool-chip{border:0;padding:0}
 }
