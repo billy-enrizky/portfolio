@@ -96,6 +96,7 @@ input::placeholder{color:var(--muted);opacity:1}
 .detail-block strong,.detail-block em{color:var(--ink);font-style:normal;font-weight:500}
 .detail-block ul,.detail-block ol{padding-left:19px}
 .detail-block ul.ledger-list{padding-left:0}
+.detail-block ul.funding-list{margin:0 0 20px}
 .detail-block li+li{margin-top:8px}
 .detail-block h4{margin:16px 0 10px;color:var(--ink);overflow-wrap:anywhere}
 .detail-block h4:first-child{margin-top:0}
