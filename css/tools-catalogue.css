@@ -1,6 +1,6 @@
 /* Tools catalogue. Each category is a row: its name, then its tools as chips. Every chip carries one mark
-   (a licensed brand logo, a Commons logo, or a Lucide line icon) and its name. The comma after each name stays in
-   the markup as text, and it is hidden visually with CSS, so the wording is unchanged for everyone. */
+   (a licensed brand logo, a Commons logo, or a Lucide line icon) and its name. The comma after each name stays
+   visible, as written: the visible wording is protected, so no CSS hides it. */
 
 #skills>.detail-block .tools-list{display:grid;grid-template-columns:minmax(0,1fr);gap:0;padding:0 0 12px}
 #skills>.detail-block .tools-list>div{display:grid;grid-template-columns:minmax(0,200px) minmax(0,1fr);gap:0 28px;align-items:start;padding:16px 0;border-top:1px solid var(--rule)}
