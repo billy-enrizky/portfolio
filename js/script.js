@@ -153,6 +153,7 @@
     if (card && card.hidden) { search.value = ""; category = "All"; applyFilters(); }
     let parent = target.closest("details");
     while (parent) { parent.open = true; parent = parent.parentElement.closest("details"); }
+    if (target.matches("article")) target.querySelectorAll(":scope > details").forEach(function (d) { d.open = true; });
     const section = target.closest("main > section[id]");
     if (section) setCurrent(section.id);
     document.dispatchEvent(new CustomEvent("portfolio:navigate", { detail: { id: id } }));
@@ -184,6 +185,16 @@
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { showHash(false); });
   else showHash(false);
 
+  let printState = null;
+  window.addEventListener("beforeprint", function () {
+    printState = detailPanels.map(function (panel) { return panel.open; });
+    detailPanels.forEach(function (panel) { panel.open = true; });
+  });
+  window.addEventListener("afterprint", function () {
+    if (!printState) return;
+    detailPanels.forEach(function (panel, i) { panel.open = printState[i]; });
+    printState = null;
+  });
   document.documentElement.classList.add("navigation-ready");
 
 })();

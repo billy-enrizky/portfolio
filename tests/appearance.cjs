@@ -130,7 +130,7 @@ function contrast(a,b) { const x=luminance(a),y=luminance(b);return (Math.max(x,
   assert.equal(await bp.locator('html').getAttribute('data-theme'),'light');await blocked.close();
   const nojs=await browser.newContext({javaScriptEnabled:false,colorScheme:'dark',viewport:{width:390,height:844}});
   const np=await nojs.newPage();await np.goto(URL);assert.equal(await np.locator('.appearance-controls').isVisible(),false);assert.equal(await np.locator('.project-record').count(),30);
-  assert.equal(await np.locator('body').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(16, 16, 16)');await np.locator('#experience-ibm summary').click();assert.equal(await np.locator('#experience-ibm details').getAttribute('open'),'');await nojs.close();
+  assert.equal(await np.locator('body').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(16, 16, 16)');await np.locator('#experience-ibm > details.record-disclosure > summary').click();assert.equal(await np.locator('#experience-ibm > details.record-disclosure').getAttribute('open'),'');await nojs.close();
   results.push('Storage-blocked and no-JavaScript fallbacks work; all existing records and core interactions remain');
   assert.deepEqual(errors,[]);
   fs.writeFileSync(OUT+'/browser-results.json',JSON.stringify(results,null,2));
