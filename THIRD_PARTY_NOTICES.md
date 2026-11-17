@@ -66,3 +66,5 @@ Each licence below is the one listed on the file's Commons page. Each mark was c
 | OpenAI | OpenAI logo 2025 (wordmark).svg | Public domain |
 | Microsoft | Microsoft logo.svg | Public domain |
 | Amazon Web Services | Amazon Web Services Logo.svg | Apache License 2.0 (Amazon.com Inc.) |
+| OpenAI (symbol, tools list) | OpenAI logo 2025 (symbol).svg | Public domain |
+| ChatGPT (tools list) | ChatGPT logo Square.svg | Public domain |
