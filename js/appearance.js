@@ -12,8 +12,8 @@
     let saved;
     try { saved = JSON.parse(value); } catch (_) { saved = null; }
     return {
-      theme: themes.includes(saved?.theme) ? saved.theme : "system",
-      color: typeof saved?.color === "string" && Object.hasOwn(colors, saved.color) ? saved.color : "orange"
+      theme: themes.includes(saved?.theme) ? saved.theme : "light",
+      color: typeof saved?.color === "string" && Object.hasOwn(colors, saved.color) ? saved.color : "blue"
     };
   }
 
