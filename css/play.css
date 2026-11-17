@@ -51,10 +51,10 @@
 /* The closing band inverts the page: ink ground, paper type, and the accent that reads on it. */
 #contact .button-primary{background:var(--accent);border-color:var(--accent);color:var(--band-button-ink)}
 #contact .button-primary:hover{background:var(--band-ink);border-color:var(--band-ink);color:var(--band-bg)}
-/* The secondary action keeps the outline idiom, but its rule must read on the ink ground: the section tokens are
-   remapped for this band, so --ink is the band's light type and --paper its dark ground. */
-#contact .button-secondary{background:transparent;border-color:color-mix(in srgb,var(--ink) 45%,transparent);color:var(--ink)}
-#contact .button-secondary:hover{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+/* The secondary action is a white box with black type on the band, and its box takes the current accent on hover
+   or focus. Every accent used on the band is a light variant, so black type stays readable on all of them. */
+#contact .button-secondary{background:#fff;border-color:#fff;color:#101010}
+#contact .button-secondary:hover,#contact .button-secondary:focus-visible{background:var(--accent);border-color:var(--accent);color:#101010}
 #contact{--paper:var(--band-bg);--surface:var(--band-bg);--ink:var(--band-ink);--muted:var(--band-muted);--rule:var(--band-rule);--accent:var(--band-accent);position:relative;border-top:0;background:var(--band-bg);color:var(--band-ink);box-shadow:0 0 0 100vmax var(--band-bg);clip-path:inset(0 -100vmax)}
 
 @media(max-width:700px){
