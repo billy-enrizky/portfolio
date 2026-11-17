@@ -412,14 +412,19 @@ async function inspectResource(page,{wrapper,link,article,text,href}){
  const found=await page.evaluate(({wrapper,link,article})=>{
   const w=document.querySelectorAll('#'+wrapper);
   const el=w[0];
-  const outcome=el&&el.parentElement.querySelector(':scope > p.project-outcome');
+  const body=el&&el.parentElement;
+  const disclosure=body&&body.parentElement;
+  const record=disclosure&&disclosure.parentElement;
+  const outcome=body&&body.querySelector(':scope > p.project-outcome');
   return {
    count:w.length,
    linkCount:document.querySelectorAll('a#'+link).length,
    tag:el&&el.tagName,
    hasClass:Boolean(el)&&el.classList.contains('project-resource-actions'),
-   parentId:el&&el.closest('article')&&el.closest('article').id,
-   inRecord:Boolean(el)&&Boolean(el.closest('article'))&&el.closest('article').id===article,
+   bodyClass:body?body.className:null,
+   disclosureClass:disclosure?disclosure.className:null,
+   recordId:record?record.id:null,
+   recordTag:record?record.tagName:null,
    afterOutcome:Boolean(outcome)&&Boolean(outcome.compareDocumentPosition(el)&Node.DOCUMENT_POSITION_FOLLOWING),
    outsideDetails:Boolean(el)&&!el.closest('details.detail-block'),
    children:el?[...el.children].map(c=>({tag:c.tagName,id:c.id,href:c.getAttribute('href'),text:c.textContent.trim()})):[],
@@ -427,7 +432,7 @@ async function inspectResource(page,{wrapper,link,article,text,href}){
   };
  },{wrapper,link,article});
  assert.deepEqual(found,{
-  count:1,linkCount:1,tag:'P',hasClass:true,parentId:article,inRecord:true,afterOutcome:true,outsideDetails:true,
+  count:1,linkCount:1,tag:'P',hasClass:true,bodyClass:'record-body',disclosureClass:'record-disclosure is-framed',recordId:article,recordTag:'ARTICLE',afterOutcome:true,outsideDetails:true,
   children:[{tag:'A',id:link,href,text}],ownText:text,
  },`Resource paragraph #${wrapper} is exact`);
 }
