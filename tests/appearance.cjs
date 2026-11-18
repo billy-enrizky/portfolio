@@ -102,7 +102,8 @@ function contrast(a,b) { const x=luminance(a),y=luminance(b);return (Math.max(x,
   results.push('Preference changes synchronize between tabs');
   for(const width of [320,390,768,900,901,1024,1440]) {
    await page.setViewportSize({width,height:width<701?844:1000});
-   await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
+   // Viewport-unit styles land a commit after the resize; two frames can still read the old width.
+   await page.waitForFunction(()=>document.documentElement.scrollWidth<=innerWidth,null,{timeout:5000});
    const m=await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth}));
    assert.ok(m.scroll<=m.width,JSON.stringify(m));results.push(m);
   }
