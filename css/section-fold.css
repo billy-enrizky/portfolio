@@ -8,6 +8,9 @@
 .section-heading{position:relative}
 /* Balance the intro's lines so a short last line never strands one or two words. */
 .section-heading>p{text-wrap:balance}
+/* One mark per section, set inline with the display heading so it rides the same masked reveal. */
+.section-heading h2 .section-mark{display:inline-block;width:.42em;height:.42em;margin-right:.16em;color:var(--accent);vertical-align:baseline;transform:translateY(-.02em)}
+.section-heading h2 .section-mark svg{display:block;width:100%;height:100%}
 .section-toggle{position:absolute;top:6px;right:0;display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:12px 16px 12px 20px;border:1px solid var(--accent);border-radius:999px;background:var(--surface);color:var(--accent);font:inherit;font-size:14px;font-weight:500;letter-spacing:-.01em;line-height:1.2;cursor:pointer;white-space:nowrap}
 /* The chevron is two borders on a square, so it stays crisp at any zoom. Its translate centres the drawn shape on the label. */
 .section-toggle::before{content:"";order:2;width:9px;height:9px;flex:0 0 auto;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-3px) rotate(45deg)}
