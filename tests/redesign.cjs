@@ -42,9 +42,9 @@ const out=path.resolve(process.env.TEST_OUTPUT_DIR||'local_docs/redesign-qa');fs
  await page.evaluate(()=>{history.pushState(null,'','#project-openbrowser');dispatchEvent(new HashChangeEvent('hashchange'));});
  await page.waitForFunction(()=>!document.getElementById('project-openbrowser').hidden);
  const fold=page.locator('#experience .section-toggle');assert.equal(await fold.getAttribute('aria-expanded'),'true','Show all details leaves sections open');assert.equal(await page.locator('#experience-body').isVisible(),true);
- assert.equal((await fold.textContent()).trim(),'Collapse section','The toggle names its action while the section is open');assert.equal(await fold.getAttribute('aria-label'),'Collapse section: Experience');
+ assert.equal((await fold.textContent()).trim(),'','The toggle shows a triangle, not a label, while the section is open');assert.equal(await fold.getAttribute('aria-label'),'Collapse section: Experience');
  await fold.click();assert.equal(await fold.getAttribute('aria-expanded'),'false','The section toggle collapses its own section');assert.equal(await page.locator('#experience-body').isVisible(),false);
- assert.equal((await fold.textContent()).trim(),'Expand section','The toggle names its action while the section is closed');assert.equal(await fold.getAttribute('aria-label'),'Expand section: Experience');
+ assert.equal((await fold.textContent()).trim(),'','The toggle shows a triangle, not a label, while the section is closed');assert.equal(await fold.getAttribute('aria-label'),'Expand section: Experience');
  await page.evaluate(()=>{location.hash='#experience-ibm';dispatchEvent(new HashChangeEvent('hashchange'));});
  await page.waitForFunction(()=>document.getElementById('experience-body').offsetParent!==null);assert.equal(await fold.getAttribute('aria-expanded'),'true','A deep link reopens its section');
  await fold.focus();await page.keyboard.press('Enter');assert.equal(await fold.getAttribute('aria-expanded'),'false','Enter collapses the section');await page.keyboard.press('Enter');assert.equal(await fold.getAttribute('aria-expanded'),'true');

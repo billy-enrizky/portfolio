@@ -18,8 +18,6 @@
     const section = button.closest("section");
     const heading = section && section.querySelector("h2");
     button.setAttribute("aria-expanded", String(open));
-    const text = button.querySelector(".section-toggle-label");
-    if (text) text.textContent = label;
     if (heading) button.setAttribute("aria-label", label + ": " + heading.textContent.trim());
     if (body) body.classList.toggle("is-open", open);
     document.dispatchEvent(new CustomEvent("portfolio:fold"));
