@@ -132,7 +132,8 @@ async function expandAllDetails(page){
 async function assertNoOverflow(page,label){
  for(const width of WIDTHS){
   await page.setViewportSize({width,height:width<=700?844:1000});
-  await settle(page);
+  // Viewport-unit styles land a commit after the resize; wait for the real layout rather than two frames.
+  await page.waitForFunction(()=>document.documentElement.scrollWidth<=innerWidth,null,{timeout:5000});
   const m=await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth}));
   assert.ok(m.scroll<=m.width,`${label} overflows horizontally at ${width}: ${JSON.stringify(m)}`);
  }

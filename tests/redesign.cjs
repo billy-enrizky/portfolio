@@ -18,7 +18,10 @@ const out=path.resolve(process.env.TEST_OUTPUT_DIR||'local_docs/redesign-qa');fs
  assert.equal(await page.locator('.site-index').isVisible(),false);
  const sizes=[];
  for(const width of [320,390,700,768,900,901,1024,1440,1920]){
-  await page.setViewportSize({width,height:width<=700?844:1000});await page.evaluate(()=>scrollTo({top:0,behavior:'instant'}));await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
+  await page.setViewportSize({width,height:width<=700?844:1000});await page.evaluate(()=>scrollTo({top:0,behavior:'instant'}));
+  // Chromium applies viewport-unit and media-query styles a commit after setViewportSize, so wait for the real layout
+  // instead of two frames, which can still read the previous width's clamp() value.
+  await page.waitForFunction(w=>document.documentElement.scrollWidth<=innerWidth&&parseFloat(getComputedStyle(document.querySelector('h1')).fontSize)>=(w>=1024?100:50),width,{timeout:5000});
   const r=await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth,mainLeft:document.querySelector('main').getBoundingClientRect().left,header:getComputedStyle(document.querySelector('.site-header')).position,actionsBottom:document.querySelector('.hero-actions').getBoundingClientRect().bottom,height:innerHeight,heroFont:parseFloat(getComputedStyle(document.querySelector('h1')).fontSize)}));
   assert.ok(r.scroll<=r.width,JSON.stringify(r));assert.equal(r.header,'fixed');assert.ok(r.mainLeft<=Math.max(0,(width-1680)/2)+2,JSON.stringify(r));assert.ok(r.actionsBottom<r.height,JSON.stringify(r));assert.ok(r.heroFont>=(width>=1024?100:50),JSON.stringify(r));sizes.push(r);
  }
@@ -33,7 +36,7 @@ const out=path.resolve(process.env.TEST_OUTPUT_DIR||'local_docs/redesign-qa');fs
  await page.getByRole('radio',{name:'Dark',exact:true}).check();await page.getByRole('radio',{name:'Blue',exact:true}).check();
  await page.locator('#experience h2').click();assert.equal(await page.locator('.appearance-controls').getAttribute('open'),null,'Outside interaction should dismiss appearance');
  await page.getByRole('button',{name:'Sections',exact:true}).click();await page.getByRole('button',{name:'Show all details',exact:true}).click();
- for(const width of [320,390,768,1440]){await page.setViewportSize({width,height:1000});await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Expanded records must not overflow at '+width);}
+ for(const width of [320,390,768,1440]){await page.setViewportSize({width,height:1000});const fits=await page.waitForFunction(()=>document.documentElement.scrollWidth<=innerWidth,null,{timeout:4000}).then(()=>true,()=>false);assert.ok(fits,'Expanded records must not overflow at '+width);}
  await page.getByRole('button',{name:'Hide extra details',exact:true}).click();await page.keyboard.press('Escape');
  assert.equal(await page.locator('.role-record').count(),11);assert.equal(await page.locator('.project-record').count(),30);assert.equal(await page.locator('.paper-record').count(),2);assert.equal(await page.locator('#credentials .credential-group').count(),8);assert.equal(await page.locator('#credentials .credential-group li').count(),47);
  const credentialCounts=await page.locator('#credentials .credential-group').evaluateAll(groups=>groups.map(group=>{const label=group.querySelector('summary').textContent.trim();const listed=Number(label.match(/\((\d+)\)$/)?.[1]??-1);return {label,listed,actual:group.querySelectorAll('li').length};}));assert.ok(credentialCounts.every(group=>group.listed===group.actual),JSON.stringify(credentialCounts));
