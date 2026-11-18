@@ -68,3 +68,12 @@ Each licence below is the one listed on the file's Commons page. Each mark was c
 | Amazon Web Services | Amazon Web Services Logo.svg | Apache License 2.0 (Amazon.com Inc.) |
 | OpenAI (symbol, tools list) | OpenAI logo 2025 (symbol).svg | Public domain |
 | ChatGPT (tools list) | ChatGPT logo Square.svg | Public domain |
+
+## Sound effects (CC0 1.0)
+
+Two short interface sounds are bundled under `assets/sfx/` and play only when a visitor turns sound on.
+
+- "Classic Click" by adh.dreaming, https://freesound.org/people/adh.dreaming/sounds/671105/, CC0 1.0.
+- "Click / Tick" by Squirrel_404, https://freesound.org/people/Squirrel_404/sounds/683048/, CC0 1.0.
+
+The ambient track `assets/background-music.mp3` was supplied by the site owner. Its source and licence are not recorded here; confirm them before wide distribution.
