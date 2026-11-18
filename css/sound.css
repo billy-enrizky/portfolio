@@ -1,12 +1,16 @@
-/* Sound toggle in the header. The music and the interaction sounds stay off until a visitor turns them on, because
-   browsers block audible autoplay and because sound on arrival is a surprise. The active state takes the accent. */
+/* Sound control. It is filled with the accent while sound is on, so it reads as an active control rather than a
+   second outline button, and falls back to the quiet outline while off. The volume mark comes from the same Lucide
+   sprite as the rest of the page. */
 
-.sound-toggle{min-height:44px;padding:9px 16px;border:1px solid var(--rule);border-radius:999px;background:transparent;color:var(--ink);font:inherit;font-size:13px;font-weight:500;line-height:1.2;cursor:pointer;white-space:nowrap}
-.sound-toggle[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
-.motion-on .sound-toggle{transition:color 160ms,border-color 160ms,transform 160ms var(--ease-arrive)}
+.sound-toggle{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:8px 16px;border:1px solid var(--accent);border-radius:999px;background:var(--accent);color:var(--paper);font:inherit;font-size:13px;font-weight:600;line-height:1.2;cursor:pointer;white-space:nowrap}
+.sound-mark{display:block;width:16px;height:16px;flex:0 0 auto}
+.sound-mark svg{display:block;width:100%;height:100%}
+.sound-toggle[aria-pressed="false"]{background:transparent;border-color:color-mix(in srgb,var(--ink) 55%,transparent);color:var(--ink)}
+.motion-on .sound-toggle{transition:background-color 160ms,color 160ms,border-color 160ms,transform 160ms var(--ease-arrive)}
 .motion-on .sound-toggle:active{transform:scale(.97)}
 @media(hover:hover) and (pointer:fine){
-  .sound-toggle:hover{border-color:var(--accent);color:var(--accent)}
+  .sound-toggle:hover{background:color-mix(in srgb,var(--accent) 85%,var(--ink));border-color:color-mix(in srgb,var(--accent) 85%,var(--ink))}
+  .sound-toggle[aria-pressed="false"]:hover{background:transparent;border-color:var(--accent);color:var(--accent)}
 }
 .sound-toggle:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 html:not(.js) .sound-toggle{display:none}
@@ -15,7 +19,7 @@ html:not(.js) .sound-toggle{display:none}
 @media(max-width:700px){
   /* The header is too tight for a third pill on phones, so the control moves into the section drawer. */
   .sound-toggle-header{display:none}
-  .sound-toggle-drawer{display:inline-flex;min-height:36px;padding:7px 12px;font-size:12px}
+  .sound-toggle-drawer{display:inline-flex;width:100%;min-height:40px;padding:9px 12px;font-size:13px}
 }
 
 @media print{

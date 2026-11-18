@@ -15,15 +15,19 @@
   music.volume = 0.32;
 
   var finePointer = window.matchMedia("(hover:hover) and (pointer:fine)").matches;
-  var enabled = false;
+  var enabled = true;
   var started = false;
 
-  try { enabled = localStorage.getItem(KEY) === "on"; } catch (_) { /* Storage is optional. */ }
+  // Sound is on unless a visitor turned it off. Browsers still need a gesture before audible playback.
+  try { var stored = localStorage.getItem(KEY); enabled = stored !== "off"; } catch (_) { /* Storage is optional. */ }
 
   function reflect() {
+    var label = enabled ? "Sound on" : "Sound off";
     buttons.forEach(function (button) {
       button.setAttribute("aria-pressed", String(enabled));
-      button.textContent = enabled ? "Sound on" : "Sound off";
+      var text = button.querySelector(".sound-label");
+      if (text) text.textContent = label;
+      else button.textContent = label;
     });
   }
 
@@ -94,6 +98,7 @@
 
   reflect();
   if (enabled) {
+    // Returning visitors and first-time visitors both start the track on their first gesture.
     var once = function () { startMusic(); document.removeEventListener("pointerdown", once, true); };
     document.addEventListener("pointerdown", once, true);
   }
