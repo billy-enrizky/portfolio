@@ -96,3 +96,9 @@
 @media print{
   .record-disclosure>summary::after{display:none}
 }
+
+/* Experience detail lists. The grid resets the native marker, so each bullet is a filled dot in the accent, drawn
+   with a pseudo-element and centred on the first line of text. The dot is a circle rather than the glyph, so it
+   keeps the same size and weight in every font. */
+.role-record .ledger-list>li{position:relative;padding-left:1.45em}
+.role-record .ledger-list>li::before{content:"";position:absolute;left:.15em;top:.625em;width:.46em;height:.46em;border-radius:50%;background:var(--accent)}
