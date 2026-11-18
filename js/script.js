@@ -30,6 +30,14 @@
       setSection(button, button.getAttribute("aria-expanded") !== "true");
     });
   });
+  // The whole heading is a pointer target, so the words open their section as readily as the triangle.
+  document.querySelectorAll("main > section > .section-heading").forEach(function (heading) {
+    heading.addEventListener("click", function (event) {
+      if (event.target.closest("a,button,summary,input,select,label")) return;
+      const button = heading.querySelector(".section-toggle");
+      if (button) setSection(button, button.getAttribute("aria-expanded") !== "true");
+    });
+  });
   function expandSection(node) {
     const section = node.closest("main > section[id]");
     const button = section && section.querySelector(".section-toggle");

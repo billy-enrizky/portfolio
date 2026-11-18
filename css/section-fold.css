@@ -14,6 +14,7 @@
 .section-heading h2 .section-mark svg{display:block;width:100%;height:100%}
 
 .section-title{display:flex;align-items:baseline;gap:12px;min-width:0}
+html.js .section-heading{cursor:pointer}
 .section-title h2{min-width:0}
 .section-toggle{display:inline-flex;align-items:flex-end;justify-content:center;flex:0 0 auto;width:28px;height:28px;margin:0;padding:0;border:0;background:none;color:var(--accent);cursor:pointer}
 .section-toggle::before{content:"";width:0;height:0;border-left:15px solid currentColor;border-top:9px solid transparent;border-bottom:9px solid transparent;transform-origin:35% 50%;transform:translateY(-5px)}
