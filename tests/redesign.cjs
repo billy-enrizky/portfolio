@@ -48,6 +48,10 @@ const out=path.resolve(process.env.TEST_OUTPUT_DIR||'local_docs/redesign-qa');fs
  await page.evaluate(()=>{location.hash='#experience-ibm';dispatchEvent(new HashChangeEvent('hashchange'));});
  await page.waitForFunction(()=>document.getElementById('experience-body').offsetParent!==null);assert.equal(await fold.getAttribute('aria-expanded'),'true','A deep link reopens its section');
  await fold.focus();await page.keyboard.press('Enter');assert.equal(await fold.getAttribute('aria-expanded'),'false','Enter collapses the section');await page.keyboard.press('Enter');assert.equal(await fold.getAttribute('aria-expanded'),'true');
+ await page.evaluate(()=>document.querySelectorAll('.section-toggle[aria-expanded=true]').forEach(button=>button.click()));
+ const headerFold=page.locator('#education .section-toggle');assert.equal(await headerFold.getAttribute('aria-expanded'),'false');
+ await page.locator('#education .section-heading > p').click();assert.equal(await headerFold.getAttribute('aria-expanded'),'true','Clicking the intro copy opens its section');
+ await page.locator('#education .section-heading > p').click();assert.equal(await headerFold.getAttribute('aria-expanded'),'false','Clicking the intro copy closes it again');
  const nojs=await browser.newPage({viewport:{width:390,height:844},javaScriptEnabled:false,colorScheme:'dark'});await nojs.goto(base);
  assert.equal(await nojs.locator('.site-index').isVisible(),true);assert.equal(await nojs.locator('.project-record').count(),30);await nojs.locator('#experience-ibm > details.record-disclosure > summary').click();assert.equal(await nojs.locator('#experience-ibm > details.record-disclosure').getAttribute('open'),'');await nojs.locator('#experience-ibm details.detail-block > summary').click();assert.equal(await nojs.locator('#experience-ibm details.detail-block').getAttribute('open'),'');
  assert.deepEqual(errors,[]);fs.writeFileSync(path.join(out,'redesign-results.json'),JSON.stringify({sizes,consoleErrors:errors},null,2));
