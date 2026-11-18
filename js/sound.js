@@ -17,25 +17,58 @@
   var finePointer = window.matchMedia("(hover:hover) and (pointer:fine)").matches;
   var enabled = true;
   var started = false;
+  var starting = false;
+  var blocked = false;
 
-  // Sound is on unless a visitor turned it off. Browsers still need a gesture before audible playback.
+  // Sound is on unless a visitor turned it off.
   try { var stored = localStorage.getItem(KEY); enabled = stored !== "off"; } catch (_) { /* Storage is optional. */ }
 
   function reflect() {
-    var label = enabled ? "Sound on" : "Sound off";
+    // Three honest states: playing, enabled but waiting for the browser, and turned off.
+    var state = !enabled ? "off" : (started ? "on" : (blocked ? "paused" : "starting"));
+    var label = state === "off" ? "Sound off" : state === "paused" ? "Start sound" : "Sound on";
     buttons.forEach(function (button) {
       button.setAttribute("aria-pressed", String(enabled));
+      button.setAttribute("data-state", state);
       var text = button.querySelector(".sound-label");
       if (text) text.textContent = label;
       else button.textContent = label;
     });
   }
 
+  // Browsers only allow audible playback after a gesture, or on a domain the visitor has used before. Try straight
+  // away so a returning visitor hears the track on load, and fall back to the first activation event otherwise.
+  var activations = ["pointerdown", "pointerup", "keydown", "touchend", "click"];
+  function onActivation() { startMusic(); }
+
+  function clearActivations() {
+    activations.forEach(function (name) { document.removeEventListener(name, onActivation, true); });
+  }
+
   function startMusic() {
-    if (!enabled || started) return;
-    started = true;
+    if (!enabled || started || starting) return;
+    starting = true;
     var played = music.play();
-    if (played && played.catch) played.catch(function () { started = false; });
+    if (played && played.then) {
+      played.then(function () {
+        starting = false;
+        started = true;
+        blocked = false;
+        clearActivations();
+        reflect();
+      }).catch(function () {
+        starting = false;
+        started = false;
+        blocked = true;
+        reflect();
+      });
+    } else {
+      starting = false;
+      started = true;
+      blocked = false;
+      clearActivations();
+      reflect();
+    }
   }
 
   function clip(sound, rate) {
@@ -60,25 +93,28 @@
   function setEnabled(on) {
     enabled = on;
     try { localStorage.setItem(KEY, on ? "on" : "off"); } catch (_) { /* Storage is optional. */ }
+    if (on) { startMusic(); }
+    else { started = false; blocked = false; music.pause(); clearActivations(); }
     reflect();
-    if (on) startMusic();
-    else { started = false; music.pause(); }
   }
 
   buttons.forEach(function (button) {
     button.addEventListener("click", function () {
       var turningOn = !enabled;
-      if (enabled) clip(clickSound, 1);
       setEnabled(turningOn);
       if (turningOn) clip(clickSound, 1);
     });
   });
 
-  document.addEventListener("pointerdown", function (event) {
+  // Every click makes a sound, including a click on section text that opens or closes a section. Capture runs before
+  // the control's own handler, so turning sound off still plays the click that turned it off.
+  document.addEventListener("click", function () {
     if (!enabled) return;
+    clip(clickSound, 1);
+  }, true);
+
+  document.addEventListener("pointerdown", function () {
     startMusic();
-    if (event.target.closest(".sound-toggle")) return;
-    if (event.target.closest("a,button,summary,input,select,label")) clip(clickSound, 1);
   }, true);
 
   document.addEventListener("pointerover", function (event) {
@@ -98,8 +134,10 @@
 
   reflect();
   if (enabled) {
-    // Returning visitors and first-time visitors both start the track on their first gesture.
-    var once = function () { startMusic(); document.removeEventListener("pointerdown", once, true); };
-    document.addEventListener("pointerdown", once, true);
+    activations.forEach(function (name) {
+      document.addEventListener(name, onActivation, true);
+    });
+    // First attempt happens here, with no gesture: returning visitors and allowlisted browsers start immediately.
+    startMusic();
   }
 })();
