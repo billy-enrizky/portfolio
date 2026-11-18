@@ -76,4 +76,4 @@ Two short interface sounds are bundled under `assets/sfx/` and play only when a 
 - "Classic Click" by adh.dreaming, https://freesound.org/people/adh.dreaming/sounds/671105/, CC0 1.0.
 - "Click / Tick" by Squirrel_404, https://freesound.org/people/Squirrel_404/sounds/683048/, CC0 1.0.
 
-The ambient track `assets/background-music.mp3` was supplied by the site owner. Its source and licence are not recorded here; confirm them before wide distribution.
+The ambient track `assets/background-music.mp3` was supplied by the site owner. The page plays `assets/background-music-loop.m4a`, a trimmed loop of it made for this site; the original is kept beside it. Its source and licence are not recorded here; confirm them before wide distribution.
