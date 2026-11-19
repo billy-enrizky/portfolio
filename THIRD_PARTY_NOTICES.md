@@ -77,3 +77,12 @@ Two short interface sounds are bundled under `assets/sfx/` and play only when a 
 - "Click / Tick" by Squirrel_404, https://freesound.org/people/Squirrel_404/sounds/683048/, CC0 1.0.
 
 The ambient track `assets/background-music.mp3` was supplied by the site owner. The page plays `assets/background-music-loop.m4a`, a trimmed loop of it made for this site; the original is kept beside it. Its source and licence are not recorded here; confirm them before wide distribution.
+
+## The introduction film (assets/intro-film.mp4, assets/intro-film-poster.jpg)
+
+The film is the site owner's own work, rendered from code in a separate project. Its sound is licensed stock:
+
+- Music: "Cat Walk" by Arulo, Mixkit, under the Mixkit Stock Music Free License, https://mixkit.co/license/#musicFree. The track is edited at bar lines for the film and its level is adjusted.
+- Sound effects: eleven Mixkit sound effects under the Mixkit Sound Effects Free License, https://mixkit.co/license/#sfxFree, inside the film's own mix.
+
+Both licences were read again on 18 November 2026 at the licence pages above: commercial use and use on the web and in social media are allowed. The Mixkit audio is used inside the film only and is not offered for download on its own from this site.

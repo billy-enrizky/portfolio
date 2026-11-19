@@ -1,0 +1,51 @@
+/* The introduction film, the first block after the hero. The hero states who he is in one line; the film shows the work
+   in thirty seconds, so it sits directly under the name and above every other section.
+
+   The page ships a poster and one play control, not a video element. Pressing the control builds the video, hands it the
+   browser's own controls and starts it, so nothing is fetched or decoded until a visitor asks for it. Playback never
+   starts on its own, which keeps reduced motion honest. While the film plays, js/intro-film.js pauses the ambient track
+   so two pieces of music never run at once. Without JavaScript the same control is a plain link to the MP4.
+
+   The film sits in a frame: a mat of the page's surface colour, a hairline on the rule and a soft shadow with a real
+   offset, so the picture reads as a framed piece on the page rather than a card or a bare rectangle. */
+
+.intro-film{padding:4px 0 56px}
+
+.film-head{max-width:760px;margin-bottom:20px}
+.film-head h2{display:flex;align-items:center;gap:.36em;margin:0;font-size:clamp(1.5rem,2vw,1.95rem);font-weight:600;line-height:1.15;letter-spacing:-.02em}
+.film-head h2 .film-mark{display:block;width:.62em;height:.62em;flex:0 0 auto;color:var(--accent)}
+.film-head h2 .film-mark svg{display:block;width:100%;height:100%;overflow:visible}
+.film-head p{margin:8px 0 0;max-width:62ch;color:var(--muted);font-size:16px;line-height:1.6}
+
+.film-frame{margin:0;max-width:min(100%,1120px);padding:10px;border:1px solid var(--rule);border-radius:calc(var(--radius) + 6px);background:var(--surface);box-shadow:0 22px 48px -32px rgba(13,15,16,.55)}
+.film-stage{position:relative;display:block;border-radius:2px;background:var(--ink)}
+.film-poster{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:2px}
+.film-stage video{display:block;width:100%;height:auto;aspect-ratio:16/9;border-radius:2px;background:var(--ink);color:var(--muted)}
+
+.film-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-decoration:none}
+.film-play-pill{display:inline-flex;align-items:center;gap:12px;min-height:58px;padding:0 26px;border-radius:999px;background:var(--ink);color:var(--paper);font-size:16px;font-weight:600;letter-spacing:-.01em;box-shadow:0 16px 32px -16px rgba(13,15,16,.7)}
+.film-play-icon{width:0;height:0;flex:0 0 auto;margin-left:3px;border-left:13px solid currentColor;border-top:8px solid transparent;border-bottom:8px solid transparent}
+.motion-on .film-play-pill{transition:background-color 160ms var(--ease-arrive),transform 160ms var(--ease-arrive)}
+.motion-on .film-play:active .film-play-pill{transform:scale(.97)}
+.film-play:focus-visible{outline:none}
+.film-play:focus-visible .film-play-pill{outline:3px solid var(--accent);outline-offset:4px}
+@media(hover:hover) and (pointer:fine){
+  .film-play:hover .film-play-pill{background:var(--accent)}
+}
+
+@media(max-width:900px){
+  .intro-film{padding:4px 0 44px}
+  .film-head{margin-bottom:16px}
+}
+
+@media(max-width:700px){
+  .intro-film{padding:2px 0 36px}
+  .film-head p{font-size:15px}
+  .film-frame{padding:6px;border-radius:calc(var(--radius) + 4px);box-shadow:0 14px 30px -22px rgba(13,15,16,.55)}
+  .film-play-pill{min-height:50px;padding:0 20px;font-size:15px;gap:10px}
+}
+
+@media print{
+  .film-frame{max-width:100%;box-shadow:none}
+  .film-play{display:none}
+}
