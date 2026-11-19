@@ -1,23 +1,33 @@
-/* Tools catalogue, on its own section after the skills board. Each category is a native disclosure: its name is
-   the summary, its tools are the content. Every chip carries one mark (a licensed brand logo, a Commons logo, or a
-   Lucide line icon) and its name. The section closes with the Certifications and learning button.
+/* Tools catalogue, on its own section after the skills board. Each category is a native disclosure: its icon and
+   name are the summary, its tools are the content. Every chip carries one mark (a licensed brand logo, a Commons
+   logo, or a Lucide line icon) and its name. The section closes with the Certifications and learning button.
 
    The groups start closed so the catalogue scans as a short list of areas. Opening one is a native details
-   toggle, so it works without JavaScript, and Show all details and print open every group. */
+   toggle, so it works without JavaScript, and Show all details and print open every group.
+
+   The group icon sits beside the label, matching the issuer mark in a Credentials group summary. It rests in the
+   muted colour and takes the accent when its group is open or hovered, so a group stays quieter than the marks of
+   the tools inside it. */
 
 #tools .section-heading h2{max-width:22ch}
 #tools .tools-list{display:grid;grid-template-columns:minmax(0,1fr);gap:0;padding:0 0 12px}
 
 .tool-group{border-top:1px solid var(--rule)}
 #tools .tools-list>.tool-group:first-child{border-top:0}
-.tool-group>summary{display:flex;align-items:center;gap:12px;padding:16px 0;color:var(--ink);font-size:15px;font-weight:600;line-height:1.35;cursor:pointer;list-style:none}
+.tool-group>summary{display:flex;align-items:center;gap:10px;padding:16px 0;color:var(--ink);font-size:15px;font-weight:600;line-height:1.35;cursor:pointer;list-style:none}
 .tool-group>summary::-webkit-details-marker{display:none}
 .tool-group>summary::before{content:"";width:7px;height:7px;flex:0 0 auto;border-right:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);transform:rotate(-45deg)}
 .tool-group[open]>summary::before{transform:rotate(45deg);border-color:var(--accent)}
+.group-icon{display:block;width:18px;height:18px;flex:0 0 auto;color:var(--muted);overflow:visible}
+.tool-group[open]>summary .group-icon{color:var(--accent)}
 .motion-on .tool-group>summary::before{transition:transform 180ms var(--ease-arrive),border-color 160ms}
+.motion-on .tool-group>summary .group-icon{transition:color 160ms var(--ease-arrive)}
+.motion-on .tool-group>summary{transition:transform 120ms var(--ease-arrive)}
+.motion-on .tool-group>summary:active{transform:scale(.995)}
 @media(hover:hover) and (pointer:fine){
   .tool-group>summary:hover{color:var(--accent)}
   .tool-group>summary:hover::before{border-color:var(--accent)}
+  .tool-group>summary:hover .group-icon{color:var(--accent)}
 }
 .tool-group>summary:focus-visible{outline:3px solid var(--accent);outline-offset:4px;border-radius:4px}
 
