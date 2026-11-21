@@ -1,0 +1,65 @@
+{
+ "items": [
+  {
+   "file": "../public/assets/clouds-a.jpg",
+   "sha256": "21412fdbc0ab083826a82c08f3fb0b0c09fd48cde448beef19a1066107b759e4",
+   "bytes": 751175,
+   "kind": "photo",
+   "width": 2880,
+   "height": 1920,
+   "title": "Airplane Above Clouds",
+   "author": null,
+   "source": "ISO Republic",
+   "provider": "ISO Republic",
+   "ref": "isorepublic:airplane-above-clouds",
+   "page": "https://isorepublic.com/photo/airplane-above-clouds/",
+   "file_url": "https://isorepublic.com/wp-content/uploads/2018/11/airplane-above-clouds.jpg",
+   "licence": "CC0 1.0 (public domain dedication)",
+   "licence_id": "cc0",
+   "licence_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "credit_required": false,
+   "credit": null,
+   "licence_seen": {
+    "quote": "All photo and video downloads on ISORepublic.com are free for both personal and commercial use and come with a CC0 license.",
+    "url": "https://isorepublic.com/license/",
+    "date": "2026-10-28"
+   },
+   "limits": null,
+   "notes": [],
+   "checked": "2026-11-18",
+   "modifications": null,
+   "shown_on_screen": false
+  },
+  {
+   "file": "../public/assets/clouds-b.jpg",
+   "sha256": "128f2fde37f81986f00a966f1ffb9f56b00964639f70d22c36112062be79cb9b",
+   "bytes": 1319217,
+   "kind": "photo",
+   "width": 3840,
+   "height": 2560,
+   "title": "View from Te Mata Peak above clouds north",
+   "author": "Pseudopanax at English Wikipedia",
+   "source": "Wikimedia Commons",
+   "provider": "Wikimedia Commons",
+   "ref": "commons:135674478",
+   "page": "https://commons.wikimedia.org/wiki/File:View_from_Te_Mata_Peak_above_clouds_north.jpg",
+   "file_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c0/View_from_Te_Mata_Peak_above_clouds_north.jpg/3840px-View_from_Te_Mata_Peak_above_clouds_north.jpg",
+   "licence": "public domain",
+   "licence_id": "pd",
+   "licence_url": "https://creativecommons.org/publicdomain/mark/1.0/",
+   "credit_required": false,
+   "credit": null,
+   "licence_seen": {
+    "quote": "This work has been identified as being free of known restrictions under copyright law.",
+    "url": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "date": "2026-10-24"
+   },
+   "limits": null,
+   "notes": [],
+   "checked": "2026-11-18",
+   "modifications": null,
+   "shown_on_screen": false
+  }
+ ],
+ "about": "Private licence record of this film's imagery (scripts/assets.mjs). Never shown on screen. Licences marked credit_required false need no credit."
+}

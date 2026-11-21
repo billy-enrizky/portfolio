@@ -1,0 +1,186 @@
+{
+ "version": 1,
+ "tool": "brand.py",
+ "name": "Enrizky Brillian",
+ "colours": {
+  "source": "supplied",
+  "accent": "#1854B4",
+  "stage": "light",
+  "list": [
+   {
+    "hex": "#1854B4",
+    "role": "accent",
+    "L": 0.4677,
+    "C": 0.1643,
+    "h": 259.9152,
+    "label": "--accent"
+   },
+   {
+    "hex": "#101010",
+    "role": "ink",
+    "L": 0.173,
+    "C": 0.0,
+    "h": 89.8756,
+    "label": "ink"
+   },
+   {
+    "hex": "#F1F1F1",
+    "role": "ground",
+    "L": 0.9581,
+    "C": 0.0,
+    "h": 89.8756,
+    "label": "paper"
+   },
+   {
+    "hex": "#8EB5FF",
+    "role": "extra",
+    "L": 0.7737,
+    "C": 0.1148,
+    "h": 262.6602,
+    "label": "accentLift"
+   },
+   {
+    "hex": "#595959",
+    "role": "extra",
+    "L": 0.464,
+    "C": 0.0,
+    "h": 89.8756,
+    "label": "mute"
+   },
+   {
+    "hex": "#FFFFFF",
+    "role": "extra",
+    "L": 1.0,
+    "C": 0.0,
+    "h": 89.8756,
+    "label": "white"
+   },
+   {
+    "hex": "#101010",
+    "role": "extra",
+    "L": 0.173,
+    "C": 0.0,
+    "h": 89.8756,
+    "label": "ink"
+   },
+   {
+    "hex": "#F1F1F1",
+    "role": "extra",
+    "L": 0.9581,
+    "C": 0.0,
+    "h": 89.8756,
+    "label": "paper"
+   },
+   {
+    "hex": "#8EB5FF",
+    "role": "extra",
+    "L": 0.7737,
+    "C": 0.1148,
+    "h": 262.6602,
+    "label": "accentLift"
+   },
+   {
+    "hex": "#595959",
+    "role": "extra",
+    "L": 0.464,
+    "C": 0.0,
+    "h": 89.8756,
+    "label": "mute"
+   },
+   {
+    "hex": "#FFFFFF",
+    "role": "extra",
+    "L": 1.0,
+    "C": 0.0,
+    "h": 89.8756,
+    "label": "white"
+   }
+  ],
+  "second_hues": [],
+  "checks": {
+   "stage": "light",
+   "statements": 16.85,
+   "accent_on_stage": 6.27,
+   "accent_on_paper": 6.27,
+   "accent_lift_on_slate": 3.74,
+   "type_on_slate": 6.2
+  },
+  "tokens": {
+   "ink": {
+    "hex": "#101010",
+    "supplied": true
+   },
+   "ink2": {
+    "hex": "#1B1B1B",
+    "supplied": false
+   },
+   "paper": {
+    "hex": "#F1F1F1",
+    "supplied": true
+   },
+   "mist": {
+    "hex": "#E7E7E7",
+    "supplied": false
+   },
+   "line": {
+    "hex": "#CACACA",
+    "supplied": false
+   },
+   "mute": {
+    "hex": "#595959",
+    "supplied": true
+   },
+   "white": {
+    "hex": "#FFFFFF",
+    "supplied": false
+   },
+   "accent": {
+    "hex": "#1854B4",
+    "supplied": true
+   },
+   "slate": {
+    "hex": "#595959",
+    "supplied": true
+   },
+   "slateRaised": {
+    "hex": "#484848",
+    "supplied": false
+   },
+   "accentLift": {
+    "hex": "#98BFFE",
+    "supplied": true
+   }
+  }
+ },
+ "fonts": {
+  "family": "Geist",
+  "google": "Geist",
+  "faces": [],
+  "skipped": []
+ },
+ "logo": {
+  "mark": {
+   "file": "logo.svg",
+   "split": "leaves",
+   "parts": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H"
+   ],
+   "leaves": 8,
+   "viewBox": "0 0 24 24"
+  },
+  "wordmark": null,
+  "raster": null
+ },
+ "screenshots": [],
+ "photos": [],
+ "notes": [],
+ "warnings": [],
+ "fails": []
+}

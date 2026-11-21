@@ -1,0 +1,21 @@
+node_modules/
+out/*
+!out/cues.json
+out/cache/
+.DS_Store
+*.log
+__pycache__/
+.venv-film/
+
+# Audio is not in the repository. The music and several effects are Mixkit files, and the Mixkit licences
+# allow them inside a finished film but not as files on their own, so the soundtrack, the kit takes and the
+# library copies stay local. The rendered film in assets/intro-film.mp4 is the finished work and is committed.
+public/audio/
+audio/kit/*.wav
+audio/kit/*.lock.json
+audio/sfx/
+audio/music/
+
+# Renders and test encodes are local only
+*.mp4
+*.wav

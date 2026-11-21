@@ -1,0 +1,350 @@
+{
+ "about": "The real marks this film shows: where each file came from, its licence and its trademark owner. A private record for the film and its delivery notes: never shown on screen. Written by scripts/logos.mjs.",
+ "logos": {
+  "microsoft-azure": {
+   "name": "Microsoft Azure",
+   "owner": "Microsoft Corporation",
+   "site": "https://azure.microsoft.com/",
+   "hex": null,
+   "guidelines": "https://azure.microsoft.com",
+   "tone": "colour",
+   "tile": "none",
+   "files": {
+    "mark": {
+     "path": "logos/microsoft-azure.svg",
+     "aspect": 1.058,
+     "from": "gilbarbara",
+     "url": "https://raw.githubusercontent.com/gilbarbara/logos/main/logos/microsoft-azure.svg",
+     "file": "microsoft-azure.svg"
+    },
+    "white": {
+     "path": "logos/microsoft-azure.white.svg",
+     "aspect": 1.058,
+     "from": "gilbarbara",
+     "url": "https://raw.githubusercontent.com/gilbarbara/logos/main/logos/microsoft-azure.svg",
+     "file": "microsoft-azure.svg",
+     "derived": "a silhouette of the full-colour mark (no matching one-colour file in the open collections)"
+    },
+    "black": {
+     "path": "logos/microsoft-azure.black.svg",
+     "aspect": 1.058,
+     "from": "gilbarbara",
+     "url": "https://raw.githubusercontent.com/gilbarbara/logos/main/logos/microsoft-azure.svg",
+     "file": "microsoft-azure.svg",
+     "derived": "a silhouette of the full-colour mark (no matching one-colour file in the open collections)"
+    }
+   },
+   "sources": {
+    "gilbarbara": {
+     "collection": "SVG Logos (gilbarbara/logos)",
+     "page": "https://github.com/gilbarbara/logos",
+     "licence": "CC0-1.0",
+     "licenceUrl": "https://github.com/gilbarbara/logos/blob/main/LICENSE.txt",
+     "seen": {
+      "quote": "CC0 1.0 Universal",
+      "url": "https://raw.githubusercontent.com/gilbarbara/logos/main/LICENSE.txt"
+     }
+    }
+   },
+   "version": {
+    "status": "current",
+    "since": null,
+    "what": "the A in gradient",
+    "checked": "2026-10-29",
+    "page": "https://azure.microsoft.com"
+   },
+   "trademark": "Microsoft Azure is a trademark of Microsoft Corporation. Shown only for what the product works with, imports from, runs on or names; no endorsement or partnership implied. Colours and proportions as published.",
+   "fetched": "2026-11-18"
+  },
+  "google-cloud": {
+   "name": "Google Cloud",
+   "owner": "Google LLC",
+   "site": "https://cloud.google.com/",
+   "hex": "#4285F4",
+   "guidelines": "https://cloud.google.com",
+   "tone": "colour",
+   "tile": "none",
+   "files": {
+    "mark": {
+     "path": "logos/google-cloud.svg",
+     "aspect": 1.243,
+     "from": "gilbarbara",
+     "url": "https://raw.githubusercontent.com/gilbarbara/logos/main/logos/google-cloud.svg",
+     "file": "google-cloud.svg"
+    },
+    "mono": {
+     "path": "logos/google-cloud.mono.svg",
+     "aspect": 1.246,
+     "from": "simple-icons",
+     "url": "https://cdn.jsdelivr.net/npm/simple-icons@16/icons/googlecloud.svg",
+     "trimmed": true
+    },
+    "white": {
+     "path": "logos/google-cloud.white.svg",
+     "aspect": 1.246,
+     "from": "simple-icons",
+     "url": "https://cdn.jsdelivr.net/npm/simple-icons@16/icons/googlecloud.svg",
+     "trimmed": true
+    },
+    "black": {
+     "path": "logos/google-cloud.black.svg",
+     "aspect": 1.246,
+     "from": "simple-icons",
+     "url": "https://cdn.jsdelivr.net/npm/simple-icons@16/icons/googlecloud.svg",
+     "trimmed": true
+    }
+   },
+   "sources": {
+    "gilbarbara": {
+     "collection": "SVG Logos (gilbarbara/logos)",
+     "page": "https://github.com/gilbarbara/logos",
+     "licence": "CC0-1.0",
+     "licenceUrl": "https://github.com/gilbarbara/logos/blob/main/LICENSE.txt",
+     "seen": {
+      "quote": "CC0 1.0 Universal",
+      "url": "https://raw.githubusercontent.com/gilbarbara/logos/main/LICENSE.txt"
+     }
+    },
+    "simple-icons": {
+     "collection": "Simple Icons",
+     "page": "https://simpleicons.org",
+     "licence": "CC0-1.0",
+     "licenceUrl": "https://github.com/simple-icons/simple-icons/blob/develop/LICENSE.md",
+     "seen": {
+      "quote": "Please see individual licenses where available.",
+      "url": "https://github.com/simple-icons/simple-icons/blob/develop/DISCLAIMER.md"
+     }
+    }
+   },
+   "version": {
+    "status": "current",
+    "since": null,
+    "what": "the four-colour cloud",
+    "checked": "2026-10-29",
+    "page": "https://cloud.google.com"
+   },
+   "trademark": "Google Cloud is a trademark of Google LLC. Shown only for what the product works with, imports from, runs on or names; no endorsement or partnership implied. Colours and proportions as published.",
+   "fetched": "2026-11-18"
+  },
+  "terraform": {
+   "name": "Terraform",
+   "owner": "HashiCorp, Inc.",
+   "site": "https://terraform.io",
+   "hex": "#844FBA",
+   "guidelines": "https://www.hashicorp.com/brand",
+   "tone": "colour",
+   "tile": "none",
+   "files": {
+    "mark": {
+     "path": "logos/terraform.svg",
+     "aspect": 0.88,
+     "from": "gilbarbara",
+     "url": "https://raw.githubusercontent.com/gilbarbara/logos/main/logos/terraform-icon.svg",
+     "file": "terraform-icon.svg"
+    },
+    "wordmark": {
+     "path": "logos/terraform.wordmark.svg",
+     "aspect": 4.163,
+     "from": "gilbarbara",
+     "url": "https://raw.githubusercontent.com/gilbarbara/logos/main/logos/terraform.svg",
+     "file": "terraform.svg"
+    },
+    "wordmarkDark": {
+     "path": "logos/terraform.wordmark.dark.svg",
+     "aspect": 4.163,
+     "from": "gilbarbara",
+     "url": "https://raw.githubusercontent.com/gilbarbara/logos/main/logos/terraform.svg",
+     "file": "terraform.svg",
+     "derived": "wordmark with its neutrals reversed for dark grounds"
+    },
+    "mono": {
+     "path": "logos/terraform.mono.svg",
+     "aspect": 0.88,
+     "from": "simple-icons",
+     "url": "https://cdn.jsdelivr.net/npm/simple-icons@16/icons/terraform.svg",
+     "trimmed": true
+    },
+    "white": {
+     "path": "logos/terraform.white.svg",
+     "aspect": 0.88,
+     "from": "simple-icons",
+     "url": "https://cdn.jsdelivr.net/npm/simple-icons@16/icons/terraform.svg",
+     "trimmed": true
+    },
+    "black": {
+     "path": "logos/terraform.black.svg",
+     "aspect": 0.88,
+     "from": "simple-icons",
+     "url": "https://cdn.jsdelivr.net/npm/simple-icons@16/icons/terraform.svg",
+     "trimmed": true
+    }
+   },
+   "sources": {
+    "gilbarbara": {
+     "collection": "SVG Logos (gilbarbara/logos)",
+     "page": "https://github.com/gilbarbara/logos",
+     "licence": "CC0-1.0",
+     "licenceUrl": "https://github.com/gilbarbara/logos/blob/main/LICENSE.txt",
+     "seen": {
+      "quote": "CC0 1.0 Universal",
+      "url": "https://raw.githubusercontent.com/gilbarbara/logos/main/LICENSE.txt"
+     }
+    },
+    "simple-icons": {
+     "collection": "Simple Icons",
+     "page": "https://simpleicons.org",
+     "licence": "CC0-1.0",
+     "licenceUrl": "https://github.com/simple-icons/simple-icons/blob/develop/LICENSE.md",
+     "seen": {
+      "quote": "Please see individual licenses where available.",
+      "url": "https://github.com/simple-icons/simple-icons/blob/develop/DISCLAIMER.md"
+     }
+    }
+   },
+   "trademark": "Terraform is a trademark of HashiCorp, Inc.. Shown only for what the product works with, imports from, runs on or names; no endorsement or partnership implied. Colours and proportions as published.",
+   "fetched": "2026-11-18"
+  },
+  "python": {
+   "name": "Python",
+   "owner": "Python Software Foundation",
+   "site": "https://www.python.org/",
+   "hex": "#3776AB",
+   "guidelines": "https://www.python.org/community/logos/",
+   "tone": "colour",
+   "tile": "none",
+   "files": {
+    "mark": {
+     "path": "logos/python.svg",
+     "aspect": 1.005,
+     "from": "gilbarbara",
+     "url": "https://raw.githubusercontent.com/gilbarbara/logos/main/logos/python.svg",
+     "file": "python.svg",
+     "trimmed": true
+    },
+    "mono": {
+     "path": "logos/python.mono.svg",
+     "aspect": 0.989,
+     "from": "simple-icons",
+     "url": "https://cdn.jsdelivr.net/npm/simple-icons@16/icons/python.svg",
+     "trimmed": true
+    },
+    "white": {
+     "path": "logos/python.white.svg",
+     "aspect": 0.989,
+     "from": "simple-icons",
+     "url": "https://cdn.jsdelivr.net/npm/simple-icons@16/icons/python.svg",
+     "trimmed": true
+    },
+    "black": {
+     "path": "logos/python.black.svg",
+     "aspect": 0.989,
+     "from": "simple-icons",
+     "url": "https://cdn.jsdelivr.net/npm/simple-icons@16/icons/python.svg",
+     "trimmed": true
+    }
+   },
+   "sources": {
+    "gilbarbara": {
+     "collection": "SVG Logos (gilbarbara/logos)",
+     "page": "https://github.com/gilbarbara/logos",
+     "licence": "CC0-1.0",
+     "licenceUrl": "https://github.com/gilbarbara/logos/blob/main/LICENSE.txt",
+     "seen": {
+      "quote": "CC0 1.0 Universal",
+      "url": "https://raw.githubusercontent.com/gilbarbara/logos/main/LICENSE.txt"
+     }
+    },
+    "simple-icons": {
+     "collection": "Simple Icons",
+     "page": "https://simpleicons.org",
+     "licence": "CC0-1.0",
+     "licenceUrl": "https://github.com/simple-icons/simple-icons/blob/develop/LICENSE.md",
+     "seen": {
+      "quote": "Please see individual licenses where available.",
+      "url": "https://github.com/simple-icons/simple-icons/blob/develop/DISCLAIMER.md"
+     }
+    }
+   },
+   "trademark": "Python is a trademark of Python Software Foundation. Shown only for what the product works with, imports from, runs on or names; no endorsement or partnership implied. Colours and proportions as published.",
+   "fetched": "2026-11-18"
+  },
+  "docker": {
+   "name": "Docker",
+   "owner": "Docker, Inc.",
+   "site": "https://www.docker.com/",
+   "hex": "#2496ED",
+   "guidelines": "https://www.docker.com/company/newsroom/media-resources/",
+   "tone": "colour",
+   "tile": "none",
+   "files": {
+    "mark": {
+     "path": "logos/docker.svg",
+     "aspect": 1.384,
+     "from": "gilbarbara",
+     "url": "https://raw.githubusercontent.com/gilbarbara/logos/main/logos/docker-icon.svg",
+     "file": "docker-icon.svg"
+    },
+    "wordmark": {
+     "path": "logos/docker.wordmark.svg",
+     "aspect": 3.934,
+     "from": "gilbarbara",
+     "url": "https://raw.githubusercontent.com/gilbarbara/logos/main/logos/docker.svg",
+     "file": "docker.svg",
+     "trimmed": true
+    },
+    "mono": {
+     "path": "logos/docker.mono.svg",
+     "aspect": 1.394,
+     "from": "simple-icons",
+     "url": "https://cdn.jsdelivr.net/npm/simple-icons@16/icons/docker.svg",
+     "trimmed": true
+    },
+    "white": {
+     "path": "logos/docker.white.svg",
+     "aspect": 1.394,
+     "from": "simple-icons",
+     "url": "https://cdn.jsdelivr.net/npm/simple-icons@16/icons/docker.svg",
+     "trimmed": true
+    },
+    "black": {
+     "path": "logos/docker.black.svg",
+     "aspect": 1.394,
+     "from": "simple-icons",
+     "url": "https://cdn.jsdelivr.net/npm/simple-icons@16/icons/docker.svg",
+     "trimmed": true
+    }
+   },
+   "sources": {
+    "gilbarbara": {
+     "collection": "SVG Logos (gilbarbara/logos)",
+     "page": "https://github.com/gilbarbara/logos",
+     "licence": "CC0-1.0",
+     "licenceUrl": "https://github.com/gilbarbara/logos/blob/main/LICENSE.txt",
+     "seen": {
+      "quote": "CC0 1.0 Universal",
+      "url": "https://raw.githubusercontent.com/gilbarbara/logos/main/LICENSE.txt"
+     }
+    },
+    "simple-icons": {
+     "collection": "Simple Icons",
+     "page": "https://simpleicons.org",
+     "licence": "CC0-1.0",
+     "licenceUrl": "https://github.com/simple-icons/simple-icons/blob/develop/LICENSE.md",
+     "seen": {
+      "quote": "Please see individual licenses where available.",
+      "url": "https://github.com/simple-icons/simple-icons/blob/develop/DISCLAIMER.md"
+     }
+    }
+   },
+   "version": {
+    "status": "current",
+    "since": null,
+    "what": "the whale",
+    "checked": "2026-10-29",
+    "page": "https://www.docker.com/company/newsroom/media-resources/"
+   },
+   "trademark": "Docker is a trademark of Docker, Inc.. Shown only for what the product works with, imports from, runs on or names; no endorsement or partnership implied. Colours and proportions as published.",
+   "fetched": "2026-11-18"
+  }
+ }
+}
