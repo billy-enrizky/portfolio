@@ -12,7 +12,7 @@ I build the systems between AI research and production: agent runtimes, browser 
 
 A thirty-second film opens the page: one sentence followed through five acts, from a typed request to the shipped result to the name. Watch it with sound in the film section at the top of the site, or open the encoded file, [assets/intro-film.mp4](assets/intro-film.mp4), 6,803,822 bytes.
 
-GitHub does not play a repository MP4 inline, so the preview above is the first six seconds of the film as a GIF. The source that builds the film, its Remotion scenes, its sound plan and its render checks, lives in [film/](film/). The audio is licensed for the finished film only, so the raw music and effect files stay out of the repository; `film/README.md` explains how to restore them.
+GitHub does not play a repository MP4 inline, so the preview above is five seconds of the film as a GIF: the request typed and sent. The source that builds the film, its Remotion scenes, its sound plan and its render checks, lives in [film/](film/). The audio is licensed for the finished film only, so the raw music and effect files stay out of the repository; `film/README.md` explains how to restore them.
 
 ## Complete record
 
