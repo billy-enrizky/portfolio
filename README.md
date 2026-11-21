@@ -6,6 +6,14 @@ A complete static portfolio covering professional work, academic and healthcare 
 
 I build the systems between AI research and production: agent runtimes, browser infrastructure, applied ML, and the data platforms around them.
 
+## The film
+
+[![A preview of the introduction film](assets/intro-film-preview.gif)](https://billy-enrizky.github.io/portfolio/#film)
+
+A thirty-second film opens the page: one sentence followed through five acts, from a typed request to the shipped result to the name. Watch it with sound in the film section at the top of the site, or open the encoded file, [assets/intro-film.mp4](assets/intro-film.mp4), 6,803,822 bytes.
+
+GitHub does not play a repository MP4 inline, so the preview above is the first six seconds of the film as a GIF. The source that builds the film, its Remotion scenes, its sound plan and its render checks, lives in [film/](film/). The audio is licensed for the finished film only, so the raw music and effect files stay out of the repository; `film/README.md` explains how to restore them.
+
 ## Complete record
 
 The page follows Summary, Skills, Experience, Education, Credentials, Research, My work, Contact.
@@ -18,8 +26,6 @@ The page follows Summary, Skills, Experience, Education, Credentials, Research, 
 **View my work** leads to the complete **Find a project** collection. Search matches every entered word against a project's full text, including its disclosure. Category filters, result counts, an empty state, and Clear search support the full collection. Clear search resets both query and category. A role selector, keyboard skill tabs, and **Show all details** provide other entry points.
 
 ## Visual system
-
-The presentation follows the editorial direction of [leonlin.de](https://leonlin.de/), with this portfolio's own identity, projects, and evidence. It uses locally hosted variable Geist, large two-line identity type, neutral light and dark palettes, rounded actions, and flat source-record grids. JetBrains Mono remains the code face.
 
 A full-width fixed header contains the name, desktop GitHub and CV links, an independent **Appearance** popover, and **Sections**. Sections opens a drawer from the right on every screen size. The hero is the name, the introduction and two actions, with one decorative sky behind the name. The sky is original SVG drawing, aria-hidden, and holds no text, link, or image. It does not borrow the reference's imagery, identity, claims, or contact details. There is no author portrait in page content, social-preview metadata, or image preloads. The existing favicon remains.
 
